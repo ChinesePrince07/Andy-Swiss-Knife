@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Canvas//EN
+BEGIN:VEVENT
+DTSTAMP:20260419T232200Z
+UID:event-assignment-99999
+DTSTART:20260421T235900Z
+DTEND:20260421T235900Z
+CLASS:PUBLIC
+DESCRIPTION:Once you've finished and submitted the hash for your histogram l
+ ab\, feel free to try this optional version that is more difficult:\n\nMod
+ ify your program so it prints a histogram of years instead of months from
+ the included data file.\n\nThink it through and give it a try!
+SEQUENCE:0
+SUMMARY:Histogram Lab (Optional Extension) [AP Computer Science]
+END:VEVENT
+END:VCALENDAR

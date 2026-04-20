@@ -19,7 +19,7 @@ struct ICSEvent: Hashable, Sendable {
 enum ICSParser {
     static func parse(_ source: String) throws -> [ICSEvent] {
         let unfolded = unfold(source)
-        let lines = unfolded.split(whereSeparator: { $0 == "\n" || $0 == "\r\n" }).map(String.init)
+        let lines = unfolded.components(separatedBy: "\n")
 
         var events: [ICSEvent] = []
         var current: [String: String] = [:]
@@ -44,17 +44,25 @@ enum ICSParser {
     }
 
     private static func unfold(_ s: String) -> String {
+        // Normalize line endings so unfold only has to look for \n.
+        // ICS uses CRLF; in Swift, "\r\n" can collapse into a single grapheme,
+        // which broke the previous character-by-character scan.
+        let normalized = s
+            .replacingOccurrences(of: "\r\n", with: "\n")
+            .replacingOccurrences(of: "\r", with: "\n")
+
         var out = ""
-        var i = s.startIndex
-        while i < s.endIndex {
-            let c = s[i]
-            out.append(c)
-            let next = s.index(after: i)
-            if c == "\n", next < s.endIndex, (s[next] == " " || s[next] == "\t") {
-                out.removeLast()
-                i = s.index(after: next)
+        var i = normalized.startIndex
+        while i < normalized.endIndex {
+            let c = normalized[i]
+            let next = normalized.index(after: i)
+            if c == "\n", next < normalized.endIndex,
+               (normalized[next] == " " || normalized[next] == "\t") {
+                // Drop both the newline and the leading whitespace — merge the line.
+                i = normalized.index(after: next)
                 continue
             }
+            out.append(c)
             i = next
         }
         return out

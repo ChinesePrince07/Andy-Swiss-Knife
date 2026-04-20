@@ -14,6 +14,19 @@ final class ICSParserTests: XCTestCase {
         XCTAssertTrue(events[1].isAllDay)
     }
 
+    func testUnfoldsCRLFContinuationDescriptions() throws {
+        let data = try TestFixture.load("ics-folded-description.ics")
+        let src = String(data: data, encoding: .utf8) ?? ""
+        let events = try ICSParser.parse(src)
+        XCTAssertEqual(events.count, 1)
+        let d = events[0].description ?? ""
+        XCTAssertTrue(d.contains("Once you've finished"), "Got: \(d)")
+        XCTAssertTrue(d.contains("more difficult"),
+                      "DESCRIPTION truncated at first fold. Got: \(d)")
+        XCTAssertTrue(d.contains("Think it through"),
+                      "DESCRIPTION truncated at second fold. Got: \(d)")
+    }
+
     func testExpandsWeeklyRRule() throws {
         let data = try TestFixture.load("ics-weekly.ics")
         let src = String(data: data, encoding: .utf8) ?? ""

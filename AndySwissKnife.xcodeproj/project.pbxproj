@@ -15,6 +15,7 @@
 		23B5CB82B87DD93CE4BA4FE6 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E486C027EFB8572A128000A /* Todo.swift */; };
 		24A34537B6B25F0D48995DA8 /* SwissKnifeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EDF3E97540E4D17E8C7D79 /* SwissKnifeApp.swift */; };
 		328FA42CAE93A0C4E3E3D304 /* AssignmentsSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCAF5A288944379AC9A965BC /* AssignmentsSyncService.swift */; };
+		37B9B26C19AC5CEFE90ECC04 /* ics-folded-description.ics in Resources */ = {isa = PBXBuildFile; fileRef = C851A753B87D83DE7D673B96 /* ics-folded-description.ics */; };
 		380FFF025F1FABF0E3D1E62F /* dining-broken.html in Resources */ = {isa = PBXBuildFile; fileRef = 7B7D1DD1592E151C2F873A7C /* dining-broken.html */; };
 		3CC6023542F8E9F571CFD93A /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD881A24D30AD5D90747EC7 /* Secrets.swift */; };
 		3E45D666B6A04BCC6D1C1D6A /* AssignmentsSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6508432714136EC18A423DF /* AssignmentsSyncServiceTests.swift */; };
@@ -98,6 +99,7 @@
 		B81CE12C09B1455EB90BA07F /* TodoEditSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoEditSheet.swift; sourceTree = "<group>"; };
 		B9714F48D41526FB4B96674D /* CachedMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedMenu.swift; sourceTree = "<group>"; };
 		C8509D41A53C3763789F4834 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		C851A753B87D83DE7D673B96 /* ics-folded-description.ics */ = {isa = PBXFileReference; path = "ics-folded-description.ics"; sourceTree = "<group>"; };
 		CB7D2D6E1D577D8FEF8CD8DA /* dining-normal.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "dining-normal.html"; sourceTree = "<group>"; };
 		CDD58B20274EFCFC29596675 /* PomodoroTimerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerTests.swift; sourceTree = "<group>"; };
 		D5506D877B14199368003177 /* AssignmentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsView.swift; sourceTree = "<group>"; };
@@ -239,6 +241,7 @@
 				CB7D2D6E1D577D8FEF8CD8DA /* dining-normal.html */,
 				44599103D2235A4560C56824 /* ics-canvas-updated.ics */,
 				74DE5711E91ED38B80461908 /* ics-canvas.ics */,
+				C851A753B87D83DE7D673B96 /* ics-folded-description.ics */,
 				3E718826D524695FC534A2C7 /* ics-simple.ics */,
 				B0598C29456DBF862E0E8699 /* ics-weekly.ics */,
 			);
@@ -395,6 +398,7 @@
 				1F6A060549E64A8426D5C4F2 /* dining-normal.html in Resources */,
 				F69FDE14BCF1649B947EFC9A /* ics-canvas-updated.ics in Resources */,
 				9649F903A9FA482FD030BAD6 /* ics-canvas.ics in Resources */,
+				37B9B26C19AC5CEFE90ECC04 /* ics-folded-description.ics in Resources */,
 				41A80C606A7A7E61DE9CEADA /* ics-simple.ics in Resources */,
 				6AFDDD1CDC8C66BD33FA5DBA /* ics-weekly.ics in Resources */,
 			);

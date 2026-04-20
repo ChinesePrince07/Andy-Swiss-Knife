@@ -1,4 +1,4 @@
-import Foundation
+ import Foundation
 
 let schedule: [ClassPeriod] = [
     ClassPeriod(
