@@ -36,6 +36,7 @@
 		9649F903A9FA482FD030BAD6 /* ics-canvas.ics in Resources */ = {isa = PBXBuildFile; fileRef = 74DE5711E91ED38B80461908 /* ics-canvas.ics */; };
 		9B87CB22ECC0839242385559 /* ClassesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8978F63D082125B6793831 /* ClassesView.swift */; };
 		A78E163702C3538167B6CF2F /* PomodoroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E55C4BDF127A9C0CEF67ED /* PomodoroView.swift */; };
+		AD226FBED0B0DE1B575AE845 /* HardcodedMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34562D182035B64382B586B7 /* HardcodedMenu.swift */; };
 		B020D56A7AB742D316572B94 /* DiningService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1573D420C3E8959C3983BAF0 /* DiningService.swift */; };
 		BEA805C3CCC8CB2B182AE83D /* MealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A106A618866B97560536365 /* MealView.swift */; };
 		C4C2C05CE3E736696204AAF6 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB90B7ED16E641F907E43170 /* Theme.swift */; };
@@ -78,6 +79,7 @@
 		2E3D6B91A2E210F4B3FD23E0 /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
 		2E486C027EFB8572A128000A /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
 		330E9BB2B8C13CDA343D7295 /* PersonalEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalEvent.swift; sourceTree = "<group>"; };
+		34562D182035B64382B586B7 /* HardcodedMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HardcodedMenu.swift; sourceTree = "<group>"; };
 		3D6F0ACE8F87DDCC97438137 /* AppModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelContainer.swift; sourceTree = "<group>"; };
 		3E718826D524695FC534A2C7 /* ics-simple.ics */ = {isa = PBXFileReference; path = "ics-simple.ics"; sourceTree = "<group>"; };
 		44599103D2235A4560C56824 /* ics-canvas-updated.ics */ = {isa = PBXFileReference; path = "ics-canvas-updated.ics"; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 				AF68A95B24C59E22AFE2ED9F /* DiningParser.swift */,
 				1573D420C3E8959C3983BAF0 /* DiningService.swift */,
 				05214FF5A0D20A717DC0B5F3 /* EventsService.swift */,
+				34562D182035B64382B586B7 /* HardcodedMenu.swift */,
 				9DE29B303DD49919976371BC /* HTTPClient.swift */,
 				FC56A94C67FB83CEF05AD3DF /* ICSParser.swift */,
 				C8509D41A53C3763789F4834 /* NotificationService.swift */,
@@ -454,6 +457,7 @@
 				95558A4BEC52FC6E042306AA /* EventsService.swift in Sources */,
 				C7C8FE0BE830A1201AEF0AEC /* EventsView.swift in Sources */,
 				CCF7AFE7DBB40BE619BD40C0 /* HTTPClient.swift in Sources */,
+				AD226FBED0B0DE1B575AE845 /* HardcodedMenu.swift in Sources */,
 				62FB711B5148CE44AF4ACE8A /* ICSParser.swift in Sources */,
 				BEA805C3CCC8CB2B182AE83D /* MealView.swift in Sources */,
 				E4EC6B68423C1E51F2D1F2D8 /* NotificationService.swift in Sources */,

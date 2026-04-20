@@ -19,16 +19,11 @@ final class DiningService {
         self.calendar = calendar
     }
 
-    /// Temporary: Suffield posts the menu weekly. When a new week hasn't dropped yet,
-    /// we peek at the most recent posted day. Remove once the new week is live.
-    static var debugMenuDate: Date? = {
-        var c = DateComponents()
-        c.year = 2026; c.month = 4; c.day = 19
-        return Calendar.current.date(from: c)
-    }()
-
     func todaysMeal(now: Date = .now) async throws -> Meal {
-        let now = Self.debugMenuDate ?? now
+        // Prefer hardcoded menu if covers today — site is frequently behind.
+        if let hard = HardcodedMenu.meal(for: now, calendar: calendar) {
+            return hard
+        }
         let key = Self.dateKey(for: now, calendar: calendar)
 
         if let cached = try fetchCached(dateKey: key),
