@@ -11,6 +11,7 @@
 		0D2614F7B2E6DE465C9B9BC6 /* TodoSweeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C72A38932D974ACFFE72627 /* TodoSweeper.swift */; };
 		150E552F1886255256FE86DA /* PomodoroTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC26334910ED03B763FD900 /* PomodoroTimer.swift */; };
 		19F46B57038614191321347A /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6F0ACE8F87DDCC97438137 /* AppModelContainer.swift */; };
+		1C831A5BE4D2FD88A34FADBA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A4C5BA3B543E15F98EB3514 /* Assets.xcassets */; };
 		1F6A060549E64A8426D5C4F2 /* dining-normal.html in Resources */ = {isa = PBXBuildFile; fileRef = CB7D2D6E1D577D8FEF8CD8DA /* dining-normal.html */; };
 		20D162DDF5FAD5F0E6F02789 /* CachedMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9714F48D41526FB4B96674D /* CachedMenu.swift */; };
 		23B5CB82B87DD93CE4BA4FE6 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E486C027EFB8572A128000A /* Todo.swift */; };
@@ -86,6 +87,7 @@
 		45D0EFCF6D41836BAEF58433 /* ClassPeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassPeriod.swift; sourceTree = "<group>"; };
 		51EDF3E97540E4D17E8C7D79 /* SwissKnifeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwissKnifeApp.swift; sourceTree = "<group>"; };
 		5EE826936B7B41BFA75FBF71 /* TodayDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayDashboardView.swift; sourceTree = "<group>"; };
+		6A4C5BA3B543E15F98EB3514 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6C72A38932D974ACFFE72627 /* TodoSweeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoSweeper.swift; sourceTree = "<group>"; };
 		700361F6356B9A0A54B91DBD /* DiningParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningParserTests.swift; sourceTree = "<group>"; };
 		74DE5711E91ED38B80461908 /* ics-canvas.ics */ = {isa = PBXFileReference; path = "ics-canvas.ics"; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 		82F3F419614EE0435CAFC436 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				6A4C5BA3B543E15F98EB3514 /* Assets.xcassets */,
 				896B8600107023AA631023CC /* Info.plist */,
 				9A39F271EA3ED78C622844F8 /* Models */,
 				137FFFB5428C5940043B41B8 /* Services */,
@@ -339,6 +342,7 @@
 			buildConfigurationList = 9744E49393CE72E6DCC496FB /* Build configuration list for PBXNativeTarget "AndySwissKnife" */;
 			buildPhases = (
 				7A31470CD24EC1E7D2D42D74 /* Sources */,
+				765B5FF991F592EE55F837A2 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -421,6 +425,14 @@
 				37B9B26C19AC5CEFE90ECC04 /* ics-folded-description.ics in Resources */,
 				41A80C606A7A7E61DE9CEADA /* ics-simple.ics in Resources */,
 				6AFDDD1CDC8C66BD33FA5DBA /* ics-weekly.ics in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		765B5FF991F592EE55F837A2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1C831A5BE4D2FD88A34FADBA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
