@@ -59,7 +59,14 @@ enum DiningParser {
         let lines = s.components(separatedBy: "\n")
             .map { $0.trimmingCharacters(in: .whitespaces) }
             .filter { !$0.isEmpty }
+            .filter { !isTimeRangeLine($0) }
         return lines.joined(separator: "\n")
+    }
+
+    private static func isTimeRangeLine(_ line: String) -> Bool {
+        // Matches "Brunch: 10:00-12:30", "Dinner: 5:30-7:00", etc.
+        let pattern = #"^[A-Za-z]+:\s*\d{1,2}:\d{2}\s*[-–]\s*\d{1,2}:\d{2}\s*$"#
+        return line.range(of: pattern, options: .regularExpression) != nil
     }
 
     private static func sectionStarting(with day: String, in text: String, upTo others: [String]) -> String {
@@ -98,7 +105,9 @@ enum DiningParser {
                     cut = r.lowerBound
                 }
             }
-            return String(tail[..<cut])
+            let raw = String(tail[..<cut]).trimmingCharacters(in: .whitespacesAndNewlines)
+            return raw
+                .trimmingCharacters(in: CharacterSet(charactersIn: ": "))
                 .trimmingCharacters(in: .whitespacesAndNewlines)
         }
         return ""

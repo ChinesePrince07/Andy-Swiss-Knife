@@ -19,22 +19,26 @@ struct TodoRow: View {
             }
             .buttonStyle(.plain)
 
-            VStack(alignment: .leading, spacing: 3) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(todo.title)
                     .font(AppType.body)
                     .foregroundStyle(todo.isDone ? AppColors.tertiary : AppColors.primary)
                     .strikethrough(todo.isDone)
-                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 if let notes = todo.notes?.trimmingCharacters(in: .whitespacesAndNewlines),
                    !notes.isEmpty {
                     Text(notes)
                         .font(AppType.caption)
                         .foregroundStyle(AppColors.secondary)
-                        .lineLimit(2)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
 
-            Spacer()
+            Spacer(minLength: 8)
 
             if let status = dueLabel {
                 Text(status.text)

@@ -135,14 +135,22 @@ struct TodayDashboardView: View {
         .buttonStyle(.plain)
     }
 
+    private var visibleCanvasTodos: [Todo] {
+        let startOfToday = Calendar.current.startOfDay(for: .now)
+        return canvasTodos.filter { todo in
+            guard let due = todo.dueDate else { return true }
+            return due >= startOfToday
+        }
+    }
+
     private var canvasPrimary: String {
-        let open = canvasTodos.filter { !$0.isDone }.count
+        let open = visibleCanvasTodos.filter { !$0.isDone }.count
         if open == 0 { return "All clear" }
         return "\(open) open"
     }
 
     private var canvasSecondary: String {
-        let open = canvasTodos.filter { !$0.isDone }
+        let open = visibleCanvasTodos.filter { !$0.isDone }
         guard let next = open.compactMap(\.dueDate).sorted().first else { return "—" }
         return "Next \(Self.shortDue.string(from: next))"
     }
