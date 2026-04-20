@@ -185,15 +185,17 @@ struct TodayDashboardView: View {
 
     private var lunchPrimary: String {
         if mealError { return "Unavailable" }
-        guard let meal = todaysMeal, !meal.lunch.isEmpty else { return "—" }
-        return firstLine(meal.lunch)
+        guard let meal = todaysMeal, !meal.lunch.isEmpty else { return "Loading…" }
+        return meal.lunch
+            .replacingOccurrences(of: "\n", with: ", ")
+            .replacingOccurrences(of: ", ,", with: ",")
     }
 
     private var lunchSecondary: String {
         if mealError { return "Tap for Safari" }
-        guard let meal = todaysMeal, !meal.lunch.isEmpty else { return "No menu yet" }
-        let lines = meal.lunch.split(separator: "\n").map(String.init)
-        return lines.dropFirst().first ?? ""
+        guard let meal = todaysMeal, !meal.lunch.isEmpty else { return "—" }
+        let age = Int(Date.now.timeIntervalSince(meal.fetchedAt) / 3600)
+        return age >= 4 ? "as of \(age)h ago" : "Tap for full menu"
     }
 
     private var nextEventPrimary: String {
@@ -260,16 +262,21 @@ struct GlanceCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             SectionLabel(text: label)
+                .frame(maxWidth: .infinity, alignment: .leading)
             Text(primary)
                 .font(AppType.bodyMedium)
                 .foregroundStyle(error ? AppColors.accent : AppColors.primary)
-                .lineLimit(1)
+                .lineLimit(2)
                 .truncationMode(.tail)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
             Text(secondary)
                 .font(AppType.caption)
                 .foregroundStyle(AppColors.secondary)
                 .lineLimit(1)
                 .truncationMode(.tail)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)

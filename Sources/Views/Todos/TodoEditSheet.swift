@@ -45,24 +45,19 @@ struct TodoEditSheet: View {
                     }
                 }
 
-                if isReadOnly || !notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    Section("Notes") {
-                        if isReadOnly {
-                            Text(notes.isEmpty ? "—" : notes)
-                                .font(AppType.body)
-                                .foregroundStyle(AppColors.secondary)
-                                .textSelection(.enabled)
-                        } else {
-                            TextField("Optional", text: $notes, axis: .vertical)
-                                .font(AppType.body)
-                                .lineLimit(3...8)
-                        }
-                    }
-                } else {
-                    Section("Notes") {
+                Section("Notes") {
+                    if isReadOnly {
+                        Text(notes.isEmpty ? "—" : notes)
+                            .font(AppType.body)
+                            .foregroundStyle(AppColors.primary)
+                            .textSelection(.enabled)
+                            .multilineTextAlignment(.leading)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    } else {
                         TextField("Optional", text: $notes, axis: .vertical)
                             .font(AppType.body)
-                            .lineLimit(3...8)
+                            .lineLimit(3...)
                     }
                 }
             }
