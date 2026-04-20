@@ -19,11 +19,20 @@ struct TodoRow: View {
             }
             .buttonStyle(.plain)
 
-            Text(todo.title)
-                .font(AppType.body)
-                .foregroundStyle(todo.isDone ? AppColors.tertiary : AppColors.primary)
-                .strikethrough(todo.isDone)
-                .lineLimit(2)
+            VStack(alignment: .leading, spacing: 3) {
+                Text(todo.title)
+                    .font(AppType.body)
+                    .foregroundStyle(todo.isDone ? AppColors.tertiary : AppColors.primary)
+                    .strikethrough(todo.isDone)
+                    .lineLimit(2)
+                if let notes = todo.notes?.trimmingCharacters(in: .whitespacesAndNewlines),
+                   !notes.isEmpty {
+                    Text(notes)
+                        .font(AppType.caption)
+                        .foregroundStyle(AppColors.secondary)
+                        .lineLimit(2)
+                }
+            }
 
             Spacer()
 

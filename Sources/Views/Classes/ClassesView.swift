@@ -25,7 +25,7 @@ struct ClassesView: View {
                                     .foregroundStyle(AppColors.secondary)
                                 Text(cls.name)
                                     .font(AppType.bodyMedium)
-                                    .foregroundStyle(AppColors.primary)
+                                    .foregroundStyle(cls.kind == .lunch ? AppColors.secondary : AppColors.primary)
                                 if let room = cls.room {
                                     Text(room)
                                         .font(AppType.caption)

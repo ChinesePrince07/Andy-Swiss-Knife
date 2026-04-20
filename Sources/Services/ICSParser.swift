@@ -8,6 +8,7 @@ enum ICSParserError: Error, Equatable {
 struct ICSEvent: Hashable, Sendable {
     let uid: String
     let summary: String
+    let description: String?
     let start: Date
     let end: Date
     let location: String?
@@ -69,6 +70,7 @@ enum ICSParser {
     private static func makeEvent(from props: [String: String]) throws -> ICSEvent {
         guard let uid = props["UID"] else { throw ICSParserError.missingRequiredField("UID") }
         let summary = unescape(props["SUMMARY"] ?? "")
+        let description = props["DESCRIPTION"].map(unescape)
         let location = props["LOCATION"].map(unescape)
 
         let dtStartRaw = props.first(where: { $0.key.hasPrefix("DTSTART") })
@@ -91,6 +93,7 @@ enum ICSParser {
         return ICSEvent(
             uid: uid,
             summary: summary,
+            description: description,
             start: start,
             end: end,
             location: location,

@@ -6,17 +6,25 @@ struct AssignmentsView: View {
 
     @Environment(\.modelContext) private var modelContext
     @Query(filter: #Predicate<Todo> { $0.externalID != nil })
-    private var canvasTodos: [Todo]
+    private var allCanvasTodos: [Todo]
 
     @State private var isRefreshing = false
     @State private var syncError = false
+
+    private var visibleTodos: [Todo] {
+        let startOfToday = Calendar.current.startOfDay(for: .now)
+        return allCanvasTodos.filter { todo in
+            guard let due = todo.dueDate else { return true }
+            return due >= startOfToday
+        }
+    }
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 header
 
-                if canvasTodos.isEmpty {
+                if visibleTodos.isEmpty {
                     emptyState
                 } else {
                     assignmentsList
@@ -49,8 +57,8 @@ struct AssignmentsView: View {
     }
 
     private var counterLine: String {
-        let open = canvasTodos.filter { !$0.isDone }.count
-        let done = canvasTodos.filter { $0.isDone }.count
+        let open = visibleTodos.filter { !$0.isDone }.count
+        let done = visibleTodos.filter { $0.isDone }.count
         if syncError {
             return "\(open) open · \(done) done · sync error"
         }
@@ -87,7 +95,7 @@ struct AssignmentsView: View {
     }
 
     private var sorted: [Todo] {
-        let open = canvasTodos.filter { !$0.isDone }.sorted { lhs, rhs in
+        let open = visibleTodos.filter { !$0.isDone }.sorted { lhs, rhs in
             switch (lhs.dueDate, rhs.dueDate) {
             case let (.some(l), .some(r)): return l < r
             case (.some, .none): return true
@@ -95,7 +103,7 @@ struct AssignmentsView: View {
             case (.none, .none): return lhs.createdAt > rhs.createdAt
             }
         }
-        let done = canvasTodos.filter { $0.isDone }.sorted { $0.createdAt > $1.createdAt }
+        let done = visibleTodos.filter { $0.isDone }.sorted { $0.createdAt > $1.createdAt }
         return open + done
     }
 

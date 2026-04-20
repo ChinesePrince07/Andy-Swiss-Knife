@@ -1,5 +1,7 @@
 import Foundation
 
+enum ClassKind: Hashable { case academic, lunch }
+
 struct ClassPeriod: Identifiable, Hashable {
     let id: UUID
     let name: String
@@ -8,6 +10,7 @@ struct ClassPeriod: Identifiable, Hashable {
     let daysOfWeek: [Int]
     let startTime: DateComponents
     let endTime: DateComponents
+    let kind: ClassKind
 
     init(
         id: UUID = UUID(),
@@ -16,7 +19,8 @@ struct ClassPeriod: Identifiable, Hashable {
         teacher: String?,
         daysOfWeek: [Int],
         startTime: DateComponents,
-        endTime: DateComponents
+        endTime: DateComponents,
+        kind: ClassKind = .academic
     ) {
         self.id = id
         self.name = name
@@ -25,6 +29,7 @@ struct ClassPeriod: Identifiable, Hashable {
         self.daysOfWeek = daysOfWeek
         self.startTime = startTime
         self.endTime = endTime
+        self.kind = kind
     }
 
     func occursOn(weekday: Int) -> Bool {
@@ -58,7 +63,8 @@ extension Array where Element == ClassPeriod {
     }
 
     func next(after now: Date = .now, calendar: Calendar = .current) -> (ClassPeriod, Date)? {
-        let todays = today(now, calendar: calendar)
+        let academic = self.filter { $0.kind == .academic }
+        let todays = academic.today(now, calendar: calendar)
         for c in todays {
             if let start = c.startDate(on: now, calendar: calendar), start > now {
                 return (c, start)
@@ -67,7 +73,7 @@ extension Array where Element == ClassPeriod {
         for offset in 1...7 {
             guard let day = calendar.date(byAdding: .day, value: offset, to: now) else { continue }
             let iso = isoWeekday(from: day, calendar: calendar)
-            let classes = self
+            let classes = academic
                 .filter { $0.occursOn(weekday: iso) }
                 .sorted {
                     ($0.startTime.hour ?? 0, $0.startTime.minute ?? 0) <

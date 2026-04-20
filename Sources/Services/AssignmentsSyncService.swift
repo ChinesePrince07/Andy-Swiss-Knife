@@ -36,13 +36,15 @@ final class AssignmentsSyncService {
                 if !todo.userEdited {
                     todo.title = e.summary
                     todo.dueDate = e.end
+                    todo.notes = e.description
                 }
             } else {
                 let todo = Todo(
                     title: e.summary,
                     dueDate: e.end,
                     source: .canvas,
-                    externalID: e.uid
+                    externalID: e.uid,
+                    notes: e.description
                 )
                 context.insert(todo)
             }

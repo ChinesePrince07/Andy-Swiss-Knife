@@ -133,4 +133,19 @@ let schedule: [ClassPeriod] = [
         startTime: DateComponents(hour: 8, minute: 20),
         endTime: DateComponents(hour: 9, minute: 25)
     ),
+
+    ClassPeriod(
+        name: "Lunch", room: nil, teacher: nil,
+        daysOfWeek: [1, 2, 4, 5],
+        startTime: DateComponents(hour: 12, minute: 20),
+        endTime: DateComponents(hour: 13, minute: 0),
+        kind: .lunch
+    ),
+    ClassPeriod(
+        name: "Lunch", room: nil, teacher: nil,
+        daysOfWeek: [3, 6],
+        startTime: DateComponents(hour: 11, minute: 30),
+        endTime: DateComponents(hour: 12, minute: 30),
+        kind: .lunch
+    ),
 ]

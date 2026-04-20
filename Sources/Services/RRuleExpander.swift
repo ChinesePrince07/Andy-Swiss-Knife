@@ -67,6 +67,7 @@ enum RRuleExpander {
                 out.append(ICSEvent(
                     uid: "\(event.uid)-\(Int(s.timeIntervalSince1970))",
                     summary: event.summary,
+                    description: event.description,
                     start: s,
                     end: e,
                     location: event.location,
