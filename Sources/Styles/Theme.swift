@@ -139,7 +139,7 @@ struct Theme: Identifiable, Hashable {
         cardKind: .glass
     )
 
-    static let all: [Theme] = [.bauhaus, .warmOrange, .pastel, .brutalist, .glass]
+    static let all: [Theme] = [.bauhaus, .brutalist]
 }
 
 @Observable

@@ -77,9 +77,9 @@ struct ThemedCard: ViewModifier {
                 .padding(14)
                 .background(theme.surface)
                 .overlay(
-                    Rectangle().stroke(theme.primary, lineWidth: theme.borderWidth)
+                    Rectangle()
+                        .strokeBorder(theme.primary, lineWidth: theme.borderWidth)
                 )
-                .shadow(color: theme.primary, radius: 0, x: 4, y: 4)
         case .glass:
             content
                 .padding(14)
