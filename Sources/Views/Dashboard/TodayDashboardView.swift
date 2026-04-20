@@ -5,7 +5,8 @@ struct TodayDashboardView: View {
     let services: Services
 
     @Environment(\.modelContext) private var modelContext
-    @Query private var allTodos: [Todo]
+    @Query(filter: #Predicate<Todo> { $0.externalID == nil })
+    private var allTodos: [Todo]
 
     @State private var todaysMeal: Meal?
     @State private var nextEvent: Event?

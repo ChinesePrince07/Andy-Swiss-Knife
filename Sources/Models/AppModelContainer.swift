@@ -6,7 +6,8 @@ enum AppModelContainer {
         let schema = Schema([
             Todo.self,
             CachedMenu.self,
-            CachedEvent.self
+            CachedEvent.self,
+            PersonalEvent.self
         ])
         let config = ModelConfiguration(
             schema: schema,

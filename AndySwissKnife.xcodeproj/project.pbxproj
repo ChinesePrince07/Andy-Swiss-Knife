@@ -22,11 +22,13 @@
 		49DB9E3A914167B8D7F4F7F8 /* MockHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77A3CD2FD912DFBD93D361A /* MockHTTPClient.swift */; };
 		4EBB22022A56B0E83E26D8FB /* TodoEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B81CE12C09B1455EB90BA07F /* TodoEditSheet.swift */; };
 		541997E4DB1BDC2195C62FD9 /* DiningParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700361F6356B9A0A54B91DBD /* DiningParserTests.swift */; };
+		6138315DA6DE72E429B50E33 /* PersonalEventEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E5E6B2240DDDDD99C4D10E /* PersonalEventEditSheet.swift */; };
 		62FB711B5148CE44AF4ACE8A /* ICSParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC56A94C67FB83CEF05AD3DF /* ICSParser.swift */; };
 		680BE98A63A71521C12E6513 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4F36C6B48E2FB444CF3DE0 /* SettingsView.swift */; };
 		6AFDDD1CDC8C66BD33FA5DBA /* ics-weekly.ics in Resources */ = {isa = PBXBuildFile; fileRef = B0598C29456DBF862E0E8699 /* ics-weekly.ics */; };
 		7F4A5068F4652A98FB9A7DC0 /* TodoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA4ED3E8FB6B70780EECF42 /* TodoRow.swift */; };
 		8757CC5D0E21AB8072DF3955 /* TodayDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE826936B7B41BFA75FBF71 /* TodayDashboardView.swift */; };
+		891BDC73F544C44B7B26053F /* PersonalEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330E9BB2B8C13CDA343D7295 /* PersonalEvent.swift */; };
 		95558A4BEC52FC6E042306AA /* EventsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05214FF5A0D20A717DC0B5F3 /* EventsService.swift */; };
 		9649F903A9FA482FD030BAD6 /* ics-canvas.ics in Resources */ = {isa = PBXBuildFile; fileRef = 74DE5711E91ED38B80461908 /* ics-canvas.ics */; };
 		9B87CB22ECC0839242385559 /* ClassesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8978F63D082125B6793831 /* ClassesView.swift */; };
@@ -34,7 +36,9 @@
 		B020D56A7AB742D316572B94 /* DiningService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1573D420C3E8959C3983BAF0 /* DiningService.swift */; };
 		BEA805C3CCC8CB2B182AE83D /* MealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A106A618866B97560536365 /* MealView.swift */; };
 		C7C8FE0BE830A1201AEF0AEC /* EventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 136DCB9AE73DA4324A3F14DF /* EventsView.swift */; };
+		CB7663856201DAC527E545C9 /* PersonalCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7914539FD8CC3CFC11001E19 /* PersonalCalendarView.swift */; };
 		CCF7AFE7DBB40BE619BD40C0 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE29B303DD49919976371BC /* HTTPClient.swift */; };
+		D520747D77E76A38D1AE079B /* AssignmentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5506D877B14199368003177 /* AssignmentsView.swift */; };
 		D8EA24F60E247FB348E5062B /* ICSParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 070D2B25BE3B190E6C1D33BE /* ICSParserTests.swift */; };
 		DC8F742DC5FE8163BAE9AFBF /* DTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A377EBC72BD04D506FF4E8D /* DTOs.swift */; };
 		E4EC6B68423C1E51F2D1F2D8 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8509D41A53C3763789F4834 /* NotificationService.swift */; };
@@ -68,6 +72,7 @@
 		2CC26334910ED03B763FD900 /* PomodoroTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimer.swift; sourceTree = "<group>"; };
 		2E3D6B91A2E210F4B3FD23E0 /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
 		2E486C027EFB8572A128000A /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
+		330E9BB2B8C13CDA343D7295 /* PersonalEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalEvent.swift; sourceTree = "<group>"; };
 		3D6F0ACE8F87DDCC97438137 /* AppModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelContainer.swift; sourceTree = "<group>"; };
 		3E718826D524695FC534A2C7 /* ics-simple.ics */ = {isa = PBXFileReference; path = "ics-simple.ics"; sourceTree = "<group>"; };
 		44599103D2235A4560C56824 /* ics-canvas-updated.ics */ = {isa = PBXFileReference; path = "ics-canvas-updated.ics"; sourceTree = "<group>"; };
@@ -76,6 +81,7 @@
 		5EE826936B7B41BFA75FBF71 /* TodayDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayDashboardView.swift; sourceTree = "<group>"; };
 		700361F6356B9A0A54B91DBD /* DiningParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningParserTests.swift; sourceTree = "<group>"; };
 		74DE5711E91ED38B80461908 /* ics-canvas.ics */ = {isa = PBXFileReference; path = "ics-canvas.ics"; sourceTree = "<group>"; };
+		7914539FD8CC3CFC11001E19 /* PersonalCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalCalendarView.swift; sourceTree = "<group>"; };
 		7B7D1DD1592E151C2F873A7C /* dining-broken.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "dining-broken.html"; sourceTree = "<group>"; };
 		88E55C4BDF127A9C0CEF67ED /* PomodoroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroView.swift; sourceTree = "<group>"; };
 		896B8600107023AA631023CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -87,11 +93,13 @@
 		AF68A95B24C59E22AFE2ED9F /* DiningParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningParser.swift; sourceTree = "<group>"; };
 		B0598C29456DBF862E0E8699 /* ics-weekly.ics */ = {isa = PBXFileReference; path = "ics-weekly.ics"; sourceTree = "<group>"; };
 		B573D2B21443B0B64EB94686 /* RRuleExpander.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RRuleExpander.swift; sourceTree = "<group>"; };
+		B6E5E6B2240DDDDD99C4D10E /* PersonalEventEditSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalEventEditSheet.swift; sourceTree = "<group>"; };
 		B81CE12C09B1455EB90BA07F /* TodoEditSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoEditSheet.swift; sourceTree = "<group>"; };
 		B9714F48D41526FB4B96674D /* CachedMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedMenu.swift; sourceTree = "<group>"; };
 		C8509D41A53C3763789F4834 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		CB7D2D6E1D577D8FEF8CD8DA /* dining-normal.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "dining-normal.html"; sourceTree = "<group>"; };
 		CDD58B20274EFCFC29596675 /* PomodoroTimerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerTests.swift; sourceTree = "<group>"; };
+		D5506D877B14199368003177 /* AssignmentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsView.swift; sourceTree = "<group>"; };
 		D77A3CD2FD912DFBD93D361A /* MockHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHTTPClient.swift; sourceTree = "<group>"; };
 		DD5C761A7E9E3E201B1D3969 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 		E04B318D66BEDB598FF72C21 /* AndySwissKnife.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = AndySwissKnife.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -115,6 +123,8 @@
 			isa = PBXGroup;
 			children = (
 				51EDF3E97540E4D17E8C7D79 /* SwissKnifeApp.swift */,
+				7D9293169823088B0E282278 /* Assignments */,
+				EF242A95A435DAF62BB2717E /* Calendar */,
 				6EAF4C86391B2C81C0595B62 /* Classes */,
 				05D0AAD2A688DB9864EBB0CB /* Dashboard */,
 				C1EB1D48B4BAF7AD7270197A /* Events */,
@@ -192,6 +202,14 @@
 			path = Classes;
 			sourceTree = "<group>";
 		};
+		7D9293169823088B0E282278 /* Assignments */ = {
+			isa = PBXGroup;
+			children = (
+				D5506D877B14199368003177 /* AssignmentsView.swift */,
+			);
+			path = Assignments;
+			sourceTree = "<group>";
+		};
 		82F3F419614EE0435CAFC436 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
@@ -234,6 +252,7 @@
 				B9714F48D41526FB4B96674D /* CachedMenu.swift */,
 				45D0EFCF6D41836BAEF58433 /* ClassPeriod.swift */,
 				9A377EBC72BD04D506FF4E8D /* DTOs.swift */,
+				330E9BB2B8C13CDA343D7295 /* PersonalEvent.swift */,
 				2E486C027EFB8572A128000A /* Todo.swift */,
 			);
 			path = Models;
@@ -277,6 +296,15 @@
 				BA11035E181C79B8A119C2F3 /* Tests */,
 				8B68B1DE4A0F02FA43A08E1B /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		EF242A95A435DAF62BB2717E /* Calendar */ = {
+			isa = PBXGroup;
+			children = (
+				7914539FD8CC3CFC11001E19 /* PersonalCalendarView.swift */,
+				B6E5E6B2240DDDDD99C4D10E /* PersonalEventEditSheet.swift */,
+			);
+			path = Calendar;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -392,6 +420,7 @@
 			files = (
 				19F46B57038614191321347A /* AppModelContainer.swift in Sources */,
 				328FA42CAE93A0C4E3E3D304 /* AssignmentsSyncService.swift in Sources */,
+				D520747D77E76A38D1AE079B /* AssignmentsView.swift in Sources */,
 				F8F4B82C4879AB6A90B9272E /* CachedEvent.swift in Sources */,
 				20D162DDF5FAD5F0E6F02789 /* CachedMenu.swift in Sources */,
 				F2763BDE5CFAE679FA1E99B6 /* ClassPeriod.swift in Sources */,
@@ -406,6 +435,9 @@
 				62FB711B5148CE44AF4ACE8A /* ICSParser.swift in Sources */,
 				BEA805C3CCC8CB2B182AE83D /* MealView.swift in Sources */,
 				E4EC6B68423C1E51F2D1F2D8 /* NotificationService.swift in Sources */,
+				CB7663856201DAC527E545C9 /* PersonalCalendarView.swift in Sources */,
+				891BDC73F544C44B7B26053F /* PersonalEvent.swift in Sources */,
+				6138315DA6DE72E429B50E33 /* PersonalEventEditSheet.swift in Sources */,
 				150E552F1886255256FE86DA /* PomodoroTimer.swift in Sources */,
 				A78E163702C3538167B6CF2F /* PomodoroView.swift in Sources */,
 				46939DF60D01F028D2032318 /* RRuleExpander.swift in Sources */,

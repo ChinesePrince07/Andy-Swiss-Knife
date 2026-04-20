@@ -67,6 +67,17 @@ One Swift package target. No sub-packages.
 
 ```swift
 @Model
+final class PersonalEvent {
+    var id: UUID
+    var title: String
+    var date: Date
+    var notes: String?
+    var notificationID: String?
+    var isAllDay: Bool
+    var createdAt: Date
+}
+
+@Model
 final class Todo {
     var id: UUID
     var title: String
@@ -188,7 +199,9 @@ func cancel(for todo: Todo) async
 
 ## Screens
 
-### Dashboard (root)
+The app uses a 3-tab bottom bar: **Today** (dashboard), **Canvas** (assignments), **Calendar** (personal reminders). Each tab is its own `NavigationStack`.
+
+### Today tab — Dashboard (root)
 
 ```
 ┌───────────────────────────────┐
@@ -214,11 +227,26 @@ func cancel(for todo: Todo) async
 └───────────────────────────────┘
 ```
 
+- The dashboard todo list shows **manual todos only** — Canvas assignments live in the Canvas tab.
 - Pull-to-refresh runs `DiningService`, `EventsService`, `AssignmentsSyncService` in parallel.
-- Tap a todo row to toggle. Swipe left to delete (manual only — Canvas todos can't be deleted, but can be checked off). Tap `+` → add sheet.
+- Tap a todo row to toggle. Swipe left to delete. Tap `+` → add sheet.
 - Todo ordering: open items first, sorted by due date ascending (no due date sinks to the bottom of open). Completed items render below in strikethrough, newest first.
-- Canvas-sourced and manual todos look identical in the list — the source distinction reveals itself only in the detail sheet. (Matches the "no emoji / no decoration" Bauhaus style.)
-- Tap any glance card → push to the corresponding detail screen.
+- Tap any glance card → push to the corresponding detail screen (Classes, Meal, Pomodoro, School Events).
+
+### Canvas tab
+
+- Shows only `Todo`s where `externalID != nil` (i.e., imported from the Canvas `.ics` feed).
+- Same row UI as manual todos: checkbox + title + due date chip.
+- Swipe-to-delete is disabled — deleted canvas items just reappear on next sync.
+- Pull-to-refresh calls `AssignmentsSyncService.syncCanvas()`. Sync errors surface in the counter line ("N open · N done · sync error") with a Retry button when the list is empty.
+
+### Calendar tab — Personal reminders
+
+- Separate from school events. For things like "pick up suit Sunday 4pm".
+- Backed by the `PersonalEvent` SwiftData model.
+- List grouped by day, sorted chronologically. Past events hide automatically.
+- Add/edit sheet: title, all-day toggle, date/time, notes, notify toggle.
+- Notifications scheduled through the same `NotificationService` as todos.
 
 ### Todo detail/add sheet
 

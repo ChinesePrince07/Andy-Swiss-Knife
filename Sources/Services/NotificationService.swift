@@ -54,4 +54,48 @@ final class NotificationService {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id])
         todo.notificationID = nil
     }
+
+    func schedule(for event: PersonalEvent) async {
+        guard event.date > .now else { return }
+        let granted = await requestAuthorizationIfNeeded()
+        guard granted else { return }
+
+        let center = UNUserNotificationCenter.current()
+        if let existingID = event.notificationID {
+            center.removePendingNotificationRequests(withIdentifiers: [existingID])
+        }
+
+        let content = UNMutableNotificationContent()
+        content.title = event.title
+        if let notes = event.notes, !notes.isEmpty {
+            content.body = notes
+        } else {
+            content.body = event.isAllDay ? "Today" : "Starting now"
+        }
+        content.sound = .default
+
+        let components: Set<Calendar.Component> = event.isAllDay
+            ? [.year, .month, .day]
+            : [.year, .month, .day, .hour, .minute]
+
+        let trigger = UNCalendarNotificationTrigger(
+            dateMatching: Calendar.current.dateComponents(components, from: event.date),
+            repeats: false
+        )
+
+        let identifier = event.notificationID ?? UUID().uuidString
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+        do {
+            try await center.add(request)
+            event.notificationID = identifier
+        } catch {
+            event.notificationID = nil
+        }
+    }
+
+    func cancel(for event: PersonalEvent) {
+        guard let id = event.notificationID else { return }
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id])
+        event.notificationID = nil
+    }
 }
