@@ -7,6 +7,10 @@ struct TodayDashboardView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(filter: #Predicate<Todo> { $0.externalID == nil })
     private var allTodos: [Todo]
+    @Query(filter: #Predicate<Todo> { $0.externalID != nil })
+    private var canvasTodos: [Todo]
+    @Query(sort: \PersonalEvent.date, order: .forward)
+    private var personalEvents: [PersonalEvent]
 
     @State private var todaysMeal: Meal?
     @State private var nextEvent: Event?
@@ -115,6 +119,12 @@ struct TodayDashboardView: View {
             NavigationLink { MealView(services: services) } label: {
                 GlanceCard(label: "Lunch", primary: lunchPrimary, secondary: lunchSecondary, error: mealError)
             }
+            NavigationLink { AssignmentsView(services: services) } label: {
+                GlanceCard(label: "Canvas", primary: canvasPrimary, secondary: canvasSecondary)
+            }
+            NavigationLink { PersonalCalendarView(services: services) } label: {
+                GlanceCard(label: "Reminders", primary: remindersPrimary, secondary: remindersSecondary)
+            }
             NavigationLink { PomodoroView(services: services) } label: {
                 GlanceCard(label: "Pomodoro", primary: "Start", secondary: "25 min focus")
             }
@@ -124,6 +134,36 @@ struct TodayDashboardView: View {
         }
         .buttonStyle(.plain)
     }
+
+    private var canvasPrimary: String {
+        let open = canvasTodos.filter { !$0.isDone }.count
+        if open == 0 { return "All clear" }
+        return "\(open) open"
+    }
+
+    private var canvasSecondary: String {
+        let open = canvasTodos.filter { !$0.isDone }
+        guard let next = open.compactMap(\.dueDate).sorted().first else { return "—" }
+        return "Next \(Self.shortDue.string(from: next))"
+    }
+
+    private var remindersPrimary: String {
+        let upcoming = personalEvents.filter { $0.date >= .now }
+        if upcoming.isEmpty { return "None" }
+        return upcoming.first?.title ?? "—"
+    }
+
+    private var remindersSecondary: String {
+        let upcoming = personalEvents.filter { $0.date >= .now }
+        guard let next = upcoming.first else { return "—" }
+        return Self.shortDue.string(from: next.date)
+    }
+
+    static let shortDue: DateFormatter = {
+        let df = DateFormatter()
+        df.dateFormat = "MMM d"
+        return df
+    }()
 
     private var nextClassPrimary: String {
         guard let (next, _) = schedule.next(after: .now) else { return "None" }

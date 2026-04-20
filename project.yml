@@ -14,14 +14,10 @@ settings:
   base:
     SWIFT_VERSION: "6.0"
     IPHONEOS_DEPLOYMENT_TARGET: "17.0"
-    TARGETED_DEVICE_FAMILY: "1"     # iPhone only
+    TARGETED_DEVICE_FAMILY: "1"
     ENABLE_USER_SCRIPT_SANDBOXING: NO
     DEVELOPMENT_TEAM: ""
     CODE_SIGN_STYLE: Automatic
-
-configFiles:
-  Debug: Config/Secrets.xcconfig
-  Release: Config/Secrets.xcconfig
 
 targets:
   AndySwissKnife:
@@ -30,6 +26,8 @@ targets:
     sources:
       - path: Sources
       - path: Schedule.swift
+      - path: Config/Secrets.swift
+        optional: true
     info:
       path: Sources/Info.plist
       properties:
@@ -40,7 +38,6 @@ targets:
         UIStatusBarStyle: UIStatusBarStyleDefault
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
-        CANVAS_FEED_URL: "$(CANVAS_FEED_URL)"
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.andyzhang.AndySwissKnife

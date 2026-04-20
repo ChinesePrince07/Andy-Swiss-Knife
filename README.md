@@ -41,8 +41,8 @@ AndySwissKnife/
 ├── AndySwissKnife.xcodeproj
 ├── Schedule.swift              # user-edited per semester
 ├── Config/
-│   ├── Secrets.xcconfig        # gitignored
-│   └── Secrets.xcconfig.example
+│   ├── Secrets.swift           # gitignored; holds Canvas feed URL
+│   └── Secrets.swift.example
 ├── Sources/
 │   ├── Models/                 # SwiftData @Models + value types
 │   ├── Services/               # Dining, Events, AssignmentsSync, Notifications, Pomodoro
@@ -199,9 +199,9 @@ func cancel(for todo: Todo) async
 
 ## Screens
 
-The app uses a 3-tab bottom bar: **Today** (dashboard), **Canvas** (assignments), **Calendar** (personal reminders). Each tab is its own `NavigationStack`.
+Single-dashboard app (no bottom tab bar). Dashboard has a todo list + a 2×3 glance grid of cards that push to detail screens via `NavigationStack`.
 
-### Today tab — Dashboard (root)
+### Dashboard (root)
 
 ```
 ┌───────────────────────────────┐
@@ -227,20 +227,27 @@ The app uses a 3-tab bottom bar: **Today** (dashboard), **Canvas** (assignments)
 └───────────────────────────────┘
 ```
 
-- The dashboard todo list shows **manual todos only** — Canvas assignments live in the Canvas tab.
+- The dashboard todo list shows **manual todos only** — Canvas assignments live behind the Canvas glance card.
 - Pull-to-refresh runs `DiningService`, `EventsService`, `AssignmentsSyncService` in parallel.
 - Tap a todo row to toggle. Swipe left to delete. Tap `+` → add sheet.
 - Todo ordering: open items first, sorted by due date ascending (no due date sinks to the bottom of open). Completed items render below in strikethrough, newest first.
-- Tap any glance card → push to the corresponding detail screen (Classes, Meal, Pomodoro, School Events).
 
-### Canvas tab
+**2×3 glance grid** (each card pushes to its own screen):
 
-- Shows only `Todo`s where `externalID != nil` (i.e., imported from the Canvas `.ics` feed).
+| | |
+|---|---|
+| Next class | Lunch |
+| Canvas (open count) | Reminders (next personal event) |
+| Pomodoro | School events |
+
+### Canvas detail screen
+
+- Shows only `Todo`s where `externalID != nil` (imported from the Canvas `.ics` feed).
 - Same row UI as manual todos: checkbox + title + due date chip.
-- Swipe-to-delete is disabled — deleted canvas items just reappear on next sync.
+- Swipe-to-delete is disabled — deleted canvas items would reappear on next sync.
 - Pull-to-refresh calls `AssignmentsSyncService.syncCanvas()`. Sync errors surface in the counter line ("N open · N done · sync error") with a Retry button when the list is empty.
 
-### Calendar tab — Personal reminders
+### Reminders detail screen (personal calendar)
 
 - Separate from school events. For things like "pick up suit Sunday 4pm".
 - Backed by the `PersonalEvent` SwiftData model.
@@ -289,9 +296,9 @@ No blocking spinners. Cards render from cache instantly; a hairline "refreshing�
 
 ## Secrets
 
-- Canvas `.ics` URL is a personal token. Stored in `Config/Secrets.xcconfig`, added to `.gitignore`.
-- `Config/Secrets.xcconfig.example` is committed with placeholder values and a comment explaining how to obtain the Canvas feed URL.
-- `Info.plist` references `$(CANVAS_FEED_URL)` → `Config.swift` reads it from `Bundle.main.infoDictionary`.
+- Canvas `.ics` URL is a personal token. Stored in `Config/Secrets.swift`, gitignored.
+- `Config/Secrets.swift.example` is committed as a template. Copy it to `Secrets.swift` and paste your real URL. The file is a single Swift `enum` with a `canvasFeedURL` string.
+- `Config.swift` reads `Secrets.canvasFeedURL` directly — no `Info.plist`/xcconfig substitution needed.
 - No Keychain needed — the URL is not personally sensitive beyond "someone could read your assignment list".
 
 ## Testing

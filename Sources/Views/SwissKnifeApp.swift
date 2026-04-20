@@ -48,27 +48,8 @@ struct RootView: View {
     var body: some View {
         Group {
             if let services {
-                TabView {
-                    NavigationStack {
-                        TodayDashboardView(services: services)
-                    }
-                    .tabItem {
-                        Label("Today", systemImage: "square.grid.2x2")
-                    }
-
-                    NavigationStack {
-                        AssignmentsView(services: services)
-                    }
-                    .tabItem {
-                        Label("Canvas", systemImage: "book")
-                    }
-
-                    NavigationStack {
-                        PersonalCalendarView(services: services)
-                    }
-                    .tabItem {
-                        Label("Calendar", systemImage: "calendar")
-                    }
+                NavigationStack {
+                    TodayDashboardView(services: services)
                 }
             } else {
                 Color.clear

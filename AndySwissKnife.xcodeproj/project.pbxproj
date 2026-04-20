@@ -16,6 +16,7 @@
 		24A34537B6B25F0D48995DA8 /* SwissKnifeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EDF3E97540E4D17E8C7D79 /* SwissKnifeApp.swift */; };
 		328FA42CAE93A0C4E3E3D304 /* AssignmentsSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCAF5A288944379AC9A965BC /* AssignmentsSyncService.swift */; };
 		380FFF025F1FABF0E3D1E62F /* dining-broken.html in Resources */ = {isa = PBXBuildFile; fileRef = 7B7D1DD1592E151C2F873A7C /* dining-broken.html */; };
+		3CC6023542F8E9F571CFD93A /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD881A24D30AD5D90747EC7 /* Secrets.swift */; };
 		3E45D666B6A04BCC6D1C1D6A /* AssignmentsSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6508432714136EC18A423DF /* AssignmentsSyncServiceTests.swift */; };
 		41A80C606A7A7E61DE9CEADA /* ics-simple.ics in Resources */ = {isa = PBXBuildFile; fileRef = 3E718826D524695FC534A2C7 /* ics-simple.ics */; };
 		46939DF60D01F028D2032318 /* RRuleExpander.swift in Sources */ = {isa = PBXBuildFile; fileRef = B573D2B21443B0B64EB94686 /* RRuleExpander.swift */; };
@@ -101,7 +102,7 @@
 		CDD58B20274EFCFC29596675 /* PomodoroTimerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerTests.swift; sourceTree = "<group>"; };
 		D5506D877B14199368003177 /* AssignmentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsView.swift; sourceTree = "<group>"; };
 		D77A3CD2FD912DFBD93D361A /* MockHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHTTPClient.swift; sourceTree = "<group>"; };
-		DD5C761A7E9E3E201B1D3969 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		DDD881A24D30AD5D90747EC7 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		E04B318D66BEDB598FF72C21 /* AndySwissKnife.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = AndySwissKnife.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6508432714136EC18A423DF /* AssignmentsSyncServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsSyncServiceTests.swift; sourceTree = "<group>"; };
 		EB8978F63D082125B6793831 /* ClassesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassesView.swift; sourceTree = "<group>"; };
@@ -172,7 +173,7 @@
 		46E386360FF834691D3DC46F /* Config */ = {
 			isa = PBXGroup;
 			children = (
-				DD5C761A7E9E3E201B1D3969 /* Secrets.xcconfig */,
+				DDD881A24D30AD5D90747EC7 /* Secrets.swift */,
 			);
 			path = Config;
 			sourceTree = "<group>";
@@ -442,6 +443,7 @@
 				A78E163702C3538167B6CF2F /* PomodoroView.swift in Sources */,
 				46939DF60D01F028D2032318 /* RRuleExpander.swift in Sources */,
 				F1BD2818783E7EBBEEFB2BFF /* Schedule.swift in Sources */,
+				3CC6023542F8E9F571CFD93A /* Secrets.swift in Sources */,
 				680BE98A63A71521C12E6513 /* SettingsView.swift in Sources */,
 				07F399E92345871AAC1232E8 /* Style.swift in Sources */,
 				24A34537B6B25F0D48995DA8 /* SwissKnifeApp.swift in Sources */,
@@ -517,7 +519,6 @@
 		};
 		C111DC5BD82443214850DE2A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD5C761A7E9E3E201B1D3969 /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -594,7 +595,6 @@
 		};
 		ECAAAAAA6F04C4495F028F47 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DD5C761A7E9E3E201B1D3969 /* Secrets.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;

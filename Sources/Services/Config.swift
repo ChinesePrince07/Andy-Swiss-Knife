@@ -2,10 +2,8 @@ import Foundation
 
 enum Config {
     static var canvasFeedURL: URL? {
-        guard let raw = Bundle.main.object(forInfoDictionaryKey: "CANVAS_FEED_URL") as? String,
-              !raw.contains("REPLACE_WITH_YOUR_TOKEN"),
-              let url = URL(string: raw)
-        else { return nil }
+        let raw = Secrets.canvasFeedURL.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !raw.isEmpty, let url = URL(string: raw) else { return nil }
         return url
     }
 
