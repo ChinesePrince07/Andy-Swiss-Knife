@@ -32,8 +32,9 @@ struct TodoRow: View {
                     Text(notes)
                         .font(AppType.caption)
                         .foregroundStyle(AppColors.secondary)
+                        .lineLimit(2)
+                        .truncationMode(.tail)
                         .multilineTextAlignment(.leading)
-                        .fixedSize(horizontal: false, vertical: true)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
