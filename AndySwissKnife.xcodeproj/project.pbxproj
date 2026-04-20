@@ -1,0 +1,664 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		07F399E92345871AAC1232E8 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3D6B91A2E210F4B3FD23E0 /* Style.swift */; };
+		150E552F1886255256FE86DA /* PomodoroTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC26334910ED03B763FD900 /* PomodoroTimer.swift */; };
+		19F46B57038614191321347A /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6F0ACE8F87DDCC97438137 /* AppModelContainer.swift */; };
+		1F6A060549E64A8426D5C4F2 /* dining-normal.html in Resources */ = {isa = PBXBuildFile; fileRef = CB7D2D6E1D577D8FEF8CD8DA /* dining-normal.html */; };
+		20D162DDF5FAD5F0E6F02789 /* CachedMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9714F48D41526FB4B96674D /* CachedMenu.swift */; };
+		23B5CB82B87DD93CE4BA4FE6 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E486C027EFB8572A128000A /* Todo.swift */; };
+		24A34537B6B25F0D48995DA8 /* SwissKnifeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EDF3E97540E4D17E8C7D79 /* SwissKnifeApp.swift */; };
+		328FA42CAE93A0C4E3E3D304 /* AssignmentsSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCAF5A288944379AC9A965BC /* AssignmentsSyncService.swift */; };
+		380FFF025F1FABF0E3D1E62F /* dining-broken.html in Resources */ = {isa = PBXBuildFile; fileRef = 7B7D1DD1592E151C2F873A7C /* dining-broken.html */; };
+		3E45D666B6A04BCC6D1C1D6A /* AssignmentsSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6508432714136EC18A423DF /* AssignmentsSyncServiceTests.swift */; };
+		41A80C606A7A7E61DE9CEADA /* ics-simple.ics in Resources */ = {isa = PBXBuildFile; fileRef = 3E718826D524695FC534A2C7 /* ics-simple.ics */; };
+		46939DF60D01F028D2032318 /* RRuleExpander.swift in Sources */ = {isa = PBXBuildFile; fileRef = B573D2B21443B0B64EB94686 /* RRuleExpander.swift */; };
+		49DB9E3A914167B8D7F4F7F8 /* MockHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77A3CD2FD912DFBD93D361A /* MockHTTPClient.swift */; };
+		4EBB22022A56B0E83E26D8FB /* TodoEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B81CE12C09B1455EB90BA07F /* TodoEditSheet.swift */; };
+		541997E4DB1BDC2195C62FD9 /* DiningParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700361F6356B9A0A54B91DBD /* DiningParserTests.swift */; };
+		62FB711B5148CE44AF4ACE8A /* ICSParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC56A94C67FB83CEF05AD3DF /* ICSParser.swift */; };
+		680BE98A63A71521C12E6513 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4F36C6B48E2FB444CF3DE0 /* SettingsView.swift */; };
+		6AFDDD1CDC8C66BD33FA5DBA /* ics-weekly.ics in Resources */ = {isa = PBXBuildFile; fileRef = B0598C29456DBF862E0E8699 /* ics-weekly.ics */; };
+		7F4A5068F4652A98FB9A7DC0 /* TodoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA4ED3E8FB6B70780EECF42 /* TodoRow.swift */; };
+		8757CC5D0E21AB8072DF3955 /* TodayDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE826936B7B41BFA75FBF71 /* TodayDashboardView.swift */; };
+		95558A4BEC52FC6E042306AA /* EventsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05214FF5A0D20A717DC0B5F3 /* EventsService.swift */; };
+		9649F903A9FA482FD030BAD6 /* ics-canvas.ics in Resources */ = {isa = PBXBuildFile; fileRef = 74DE5711E91ED38B80461908 /* ics-canvas.ics */; };
+		9B87CB22ECC0839242385559 /* ClassesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8978F63D082125B6793831 /* ClassesView.swift */; };
+		A78E163702C3538167B6CF2F /* PomodoroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E55C4BDF127A9C0CEF67ED /* PomodoroView.swift */; };
+		B020D56A7AB742D316572B94 /* DiningService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1573D420C3E8959C3983BAF0 /* DiningService.swift */; };
+		BEA805C3CCC8CB2B182AE83D /* MealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A106A618866B97560536365 /* MealView.swift */; };
+		C7C8FE0BE830A1201AEF0AEC /* EventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 136DCB9AE73DA4324A3F14DF /* EventsView.swift */; };
+		CCF7AFE7DBB40BE619BD40C0 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE29B303DD49919976371BC /* HTTPClient.swift */; };
+		D8EA24F60E247FB348E5062B /* ICSParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 070D2B25BE3B190E6C1D33BE /* ICSParserTests.swift */; };
+		DC8F742DC5FE8163BAE9AFBF /* DTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A377EBC72BD04D506FF4E8D /* DTOs.swift */; };
+		E4EC6B68423C1E51F2D1F2D8 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8509D41A53C3763789F4834 /* NotificationService.swift */; };
+		F1BD2818783E7EBBEEFB2BFF /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2160A5C955F771E7E1EB7D4F /* Schedule.swift */; };
+		F269CE4B5A777BAEB6A0D96D /* DiningParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF68A95B24C59E22AFE2ED9F /* DiningParser.swift */; };
+		F2763BDE5CFAE679FA1E99B6 /* ClassPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D0EFCF6D41836BAEF58433 /* ClassPeriod.swift */; };
+		F68FBB533C1E845412A32FDC /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C9228AB7BB53CF525E1AA35 /* Config.swift */; };
+		F69FDE14BCF1649B947EFC9A /* ics-canvas-updated.ics in Resources */ = {isa = PBXBuildFile; fileRef = 44599103D2235A4560C56824 /* ics-canvas-updated.ics */; };
+		F8F4B82C4879AB6A90B9272E /* CachedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFF8210D8128B55B70DE84F /* CachedEvent.swift */; };
+		FC2162E5F84A795FF566EB47 /* PomodoroTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDD58B20274EFCFC29596675 /* PomodoroTimerTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F868A28CDEE33F3B95D2811F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F254BE7906BCCAF43DF475DB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 77935422F82DF462C8CBFED0;
+			remoteInfo = AndySwissKnife;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		05214FF5A0D20A717DC0B5F3 /* EventsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsService.swift; sourceTree = "<group>"; };
+		070D2B25BE3B190E6C1D33BE /* ICSParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICSParserTests.swift; sourceTree = "<group>"; };
+		0A106A618866B97560536365 /* MealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealView.swift; sourceTree = "<group>"; };
+		136DCB9AE73DA4324A3F14DF /* EventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsView.swift; sourceTree = "<group>"; };
+		1573D420C3E8959C3983BAF0 /* DiningService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningService.swift; sourceTree = "<group>"; };
+		1C9228AB7BB53CF525E1AA35 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		2160A5C955F771E7E1EB7D4F /* Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule.swift; sourceTree = "<group>"; };
+		2CC26334910ED03B763FD900 /* PomodoroTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimer.swift; sourceTree = "<group>"; };
+		2E3D6B91A2E210F4B3FD23E0 /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
+		2E486C027EFB8572A128000A /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
+		3D6F0ACE8F87DDCC97438137 /* AppModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelContainer.swift; sourceTree = "<group>"; };
+		3E718826D524695FC534A2C7 /* ics-simple.ics */ = {isa = PBXFileReference; path = "ics-simple.ics"; sourceTree = "<group>"; };
+		44599103D2235A4560C56824 /* ics-canvas-updated.ics */ = {isa = PBXFileReference; path = "ics-canvas-updated.ics"; sourceTree = "<group>"; };
+		45D0EFCF6D41836BAEF58433 /* ClassPeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassPeriod.swift; sourceTree = "<group>"; };
+		51EDF3E97540E4D17E8C7D79 /* SwissKnifeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwissKnifeApp.swift; sourceTree = "<group>"; };
+		5EE826936B7B41BFA75FBF71 /* TodayDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayDashboardView.swift; sourceTree = "<group>"; };
+		700361F6356B9A0A54B91DBD /* DiningParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningParserTests.swift; sourceTree = "<group>"; };
+		74DE5711E91ED38B80461908 /* ics-canvas.ics */ = {isa = PBXFileReference; path = "ics-canvas.ics"; sourceTree = "<group>"; };
+		7B7D1DD1592E151C2F873A7C /* dining-broken.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "dining-broken.html"; sourceTree = "<group>"; };
+		88E55C4BDF127A9C0CEF67ED /* PomodoroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroView.swift; sourceTree = "<group>"; };
+		896B8600107023AA631023CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8C4F36C6B48E2FB444CF3DE0 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		8CA4ED3E8FB6B70780EECF42 /* TodoRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoRow.swift; sourceTree = "<group>"; };
+		972D7E648764DEFAD68BBF71 /* AndySwissKnifeTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = AndySwissKnifeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A377EBC72BD04D506FF4E8D /* DTOs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTOs.swift; sourceTree = "<group>"; };
+		9DE29B303DD49919976371BC /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
+		AF68A95B24C59E22AFE2ED9F /* DiningParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningParser.swift; sourceTree = "<group>"; };
+		B0598C29456DBF862E0E8699 /* ics-weekly.ics */ = {isa = PBXFileReference; path = "ics-weekly.ics"; sourceTree = "<group>"; };
+		B573D2B21443B0B64EB94686 /* RRuleExpander.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RRuleExpander.swift; sourceTree = "<group>"; };
+		B81CE12C09B1455EB90BA07F /* TodoEditSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoEditSheet.swift; sourceTree = "<group>"; };
+		B9714F48D41526FB4B96674D /* CachedMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedMenu.swift; sourceTree = "<group>"; };
+		C8509D41A53C3763789F4834 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		CB7D2D6E1D577D8FEF8CD8DA /* dining-normal.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "dining-normal.html"; sourceTree = "<group>"; };
+		CDD58B20274EFCFC29596675 /* PomodoroTimerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerTests.swift; sourceTree = "<group>"; };
+		D77A3CD2FD912DFBD93D361A /* MockHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHTTPClient.swift; sourceTree = "<group>"; };
+		DD5C761A7E9E3E201B1D3969 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
+		E04B318D66BEDB598FF72C21 /* AndySwissKnife.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = AndySwissKnife.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6508432714136EC18A423DF /* AssignmentsSyncServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsSyncServiceTests.swift; sourceTree = "<group>"; };
+		EB8978F63D082125B6793831 /* ClassesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassesView.swift; sourceTree = "<group>"; };
+		EEFF8210D8128B55B70DE84F /* CachedEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedEvent.swift; sourceTree = "<group>"; };
+		FC56A94C67FB83CEF05AD3DF /* ICSParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICSParser.swift; sourceTree = "<group>"; };
+		FCAF5A288944379AC9A965BC /* AssignmentsSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsSyncService.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		04B7276D91F855AA467C2C25 /* Styles */ = {
+			isa = PBXGroup;
+			children = (
+				2E3D6B91A2E210F4B3FD23E0 /* Style.swift */,
+			);
+			path = Styles;
+			sourceTree = "<group>";
+		};
+		04D394E117232674376DF508 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				51EDF3E97540E4D17E8C7D79 /* SwissKnifeApp.swift */,
+				6EAF4C86391B2C81C0595B62 /* Classes */,
+				05D0AAD2A688DB9864EBB0CB /* Dashboard */,
+				C1EB1D48B4BAF7AD7270197A /* Events */,
+				49CA173B660F28656F7BA3DA /* Meal */,
+				2321A6DCB0593BCDB4B04D66 /* Pomodoro */,
+				D31AE3AB0610EC8CD4FF0B1D /* Settings */,
+				534C259B3418B0E0A2DB1C26 /* Todos */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		05D0AAD2A688DB9864EBB0CB /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				5EE826936B7B41BFA75FBF71 /* TodayDashboardView.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		137FFFB5428C5940043B41B8 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				FCAF5A288944379AC9A965BC /* AssignmentsSyncService.swift */,
+				1C9228AB7BB53CF525E1AA35 /* Config.swift */,
+				AF68A95B24C59E22AFE2ED9F /* DiningParser.swift */,
+				1573D420C3E8959C3983BAF0 /* DiningService.swift */,
+				05214FF5A0D20A717DC0B5F3 /* EventsService.swift */,
+				9DE29B303DD49919976371BC /* HTTPClient.swift */,
+				FC56A94C67FB83CEF05AD3DF /* ICSParser.swift */,
+				C8509D41A53C3763789F4834 /* NotificationService.swift */,
+				2CC26334910ED03B763FD900 /* PomodoroTimer.swift */,
+				B573D2B21443B0B64EB94686 /* RRuleExpander.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		2321A6DCB0593BCDB4B04D66 /* Pomodoro */ = {
+			isa = PBXGroup;
+			children = (
+				88E55C4BDF127A9C0CEF67ED /* PomodoroView.swift */,
+			);
+			path = Pomodoro;
+			sourceTree = "<group>";
+		};
+		46E386360FF834691D3DC46F /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				DD5C761A7E9E3E201B1D3969 /* Secrets.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		49CA173B660F28656F7BA3DA /* Meal */ = {
+			isa = PBXGroup;
+			children = (
+				0A106A618866B97560536365 /* MealView.swift */,
+			);
+			path = Meal;
+			sourceTree = "<group>";
+		};
+		534C259B3418B0E0A2DB1C26 /* Todos */ = {
+			isa = PBXGroup;
+			children = (
+				B81CE12C09B1455EB90BA07F /* TodoEditSheet.swift */,
+				8CA4ED3E8FB6B70780EECF42 /* TodoRow.swift */,
+			);
+			path = Todos;
+			sourceTree = "<group>";
+		};
+		6EAF4C86391B2C81C0595B62 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				EB8978F63D082125B6793831 /* ClassesView.swift */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		82F3F419614EE0435CAFC436 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				896B8600107023AA631023CC /* Info.plist */,
+				9A39F271EA3ED78C622844F8 /* Models */,
+				137FFFB5428C5940043B41B8 /* Services */,
+				04B7276D91F855AA467C2C25 /* Styles */,
+				04D394E117232674376DF508 /* Views */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		8B68B1DE4A0F02FA43A08E1B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E04B318D66BEDB598FF72C21 /* AndySwissKnife.app */,
+				972D7E648764DEFAD68BBF71 /* AndySwissKnifeTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9483C2E34ACDABC29E5D67CD /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				7B7D1DD1592E151C2F873A7C /* dining-broken.html */,
+				CB7D2D6E1D577D8FEF8CD8DA /* dining-normal.html */,
+				44599103D2235A4560C56824 /* ics-canvas-updated.ics */,
+				74DE5711E91ED38B80461908 /* ics-canvas.ics */,
+				3E718826D524695FC534A2C7 /* ics-simple.ics */,
+				B0598C29456DBF862E0E8699 /* ics-weekly.ics */,
+			);
+			path = Fixtures;
+			sourceTree = "<group>";
+		};
+		9A39F271EA3ED78C622844F8 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				3D6F0ACE8F87DDCC97438137 /* AppModelContainer.swift */,
+				EEFF8210D8128B55B70DE84F /* CachedEvent.swift */,
+				B9714F48D41526FB4B96674D /* CachedMenu.swift */,
+				45D0EFCF6D41836BAEF58433 /* ClassPeriod.swift */,
+				9A377EBC72BD04D506FF4E8D /* DTOs.swift */,
+				2E486C027EFB8572A128000A /* Todo.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		BA11035E181C79B8A119C2F3 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				E6508432714136EC18A423DF /* AssignmentsSyncServiceTests.swift */,
+				700361F6356B9A0A54B91DBD /* DiningParserTests.swift */,
+				070D2B25BE3B190E6C1D33BE /* ICSParserTests.swift */,
+				D77A3CD2FD912DFBD93D361A /* MockHTTPClient.swift */,
+				CDD58B20274EFCFC29596675 /* PomodoroTimerTests.swift */,
+				9483C2E34ACDABC29E5D67CD /* Fixtures */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		C1EB1D48B4BAF7AD7270197A /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				136DCB9AE73DA4324A3F14DF /* EventsView.swift */,
+			);
+			path = Events;
+			sourceTree = "<group>";
+		};
+		D31AE3AB0610EC8CD4FF0B1D /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				8C4F36C6B48E2FB444CF3DE0 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		D649BB896891A1D07555A8C1 = {
+			isa = PBXGroup;
+			children = (
+				2160A5C955F771E7E1EB7D4F /* Schedule.swift */,
+				46E386360FF834691D3DC46F /* Config */,
+				82F3F419614EE0435CAFC436 /* Sources */,
+				BA11035E181C79B8A119C2F3 /* Tests */,
+				8B68B1DE4A0F02FA43A08E1B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		77935422F82DF462C8CBFED0 /* AndySwissKnife */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9744E49393CE72E6DCC496FB /* Build configuration list for PBXNativeTarget "AndySwissKnife" */;
+			buildPhases = (
+				7A31470CD24EC1E7D2D42D74 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AndySwissKnife;
+			packageProductDependencies = (
+			);
+			productName = AndySwissKnife;
+			productReference = E04B318D66BEDB598FF72C21 /* AndySwissKnife.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B4A7FABACAF2B8EAEE55E8CD /* AndySwissKnifeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 34136EBF810313FBC2622FA0 /* Build configuration list for PBXNativeTarget "AndySwissKnifeTests" */;
+			buildPhases = (
+				2BC739E47395C6CD14D2E598 /* Sources */,
+				18B095E892BD5335F0CDFAD6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F4BCDBECB2BD8C22D56E9FB2 /* PBXTargetDependency */,
+			);
+			name = AndySwissKnifeTests;
+			packageProductDependencies = (
+			);
+			productName = AndySwissKnifeTests;
+			productReference = 972D7E648764DEFAD68BBF71 /* AndySwissKnifeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F254BE7906BCCAF43DF475DB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					77935422F82DF462C8CBFED0 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					B4A7FABACAF2B8EAEE55E8CD = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 9CF95053C5A6370B939BF324 /* Build configuration list for PBXProject "AndySwissKnife" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = D649BB896891A1D07555A8C1;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 8B68B1DE4A0F02FA43A08E1B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				77935422F82DF462C8CBFED0 /* AndySwissKnife */,
+				B4A7FABACAF2B8EAEE55E8CD /* AndySwissKnifeTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		18B095E892BD5335F0CDFAD6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				380FFF025F1FABF0E3D1E62F /* dining-broken.html in Resources */,
+				1F6A060549E64A8426D5C4F2 /* dining-normal.html in Resources */,
+				F69FDE14BCF1649B947EFC9A /* ics-canvas-updated.ics in Resources */,
+				9649F903A9FA482FD030BAD6 /* ics-canvas.ics in Resources */,
+				41A80C606A7A7E61DE9CEADA /* ics-simple.ics in Resources */,
+				6AFDDD1CDC8C66BD33FA5DBA /* ics-weekly.ics in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2BC739E47395C6CD14D2E598 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3E45D666B6A04BCC6D1C1D6A /* AssignmentsSyncServiceTests.swift in Sources */,
+				541997E4DB1BDC2195C62FD9 /* DiningParserTests.swift in Sources */,
+				D8EA24F60E247FB348E5062B /* ICSParserTests.swift in Sources */,
+				49DB9E3A914167B8D7F4F7F8 /* MockHTTPClient.swift in Sources */,
+				FC2162E5F84A795FF566EB47 /* PomodoroTimerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A31470CD24EC1E7D2D42D74 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				19F46B57038614191321347A /* AppModelContainer.swift in Sources */,
+				328FA42CAE93A0C4E3E3D304 /* AssignmentsSyncService.swift in Sources */,
+				F8F4B82C4879AB6A90B9272E /* CachedEvent.swift in Sources */,
+				20D162DDF5FAD5F0E6F02789 /* CachedMenu.swift in Sources */,
+				F2763BDE5CFAE679FA1E99B6 /* ClassPeriod.swift in Sources */,
+				9B87CB22ECC0839242385559 /* ClassesView.swift in Sources */,
+				F68FBB533C1E845412A32FDC /* Config.swift in Sources */,
+				DC8F742DC5FE8163BAE9AFBF /* DTOs.swift in Sources */,
+				F269CE4B5A777BAEB6A0D96D /* DiningParser.swift in Sources */,
+				B020D56A7AB742D316572B94 /* DiningService.swift in Sources */,
+				95558A4BEC52FC6E042306AA /* EventsService.swift in Sources */,
+				C7C8FE0BE830A1201AEF0AEC /* EventsView.swift in Sources */,
+				CCF7AFE7DBB40BE619BD40C0 /* HTTPClient.swift in Sources */,
+				62FB711B5148CE44AF4ACE8A /* ICSParser.swift in Sources */,
+				BEA805C3CCC8CB2B182AE83D /* MealView.swift in Sources */,
+				E4EC6B68423C1E51F2D1F2D8 /* NotificationService.swift in Sources */,
+				150E552F1886255256FE86DA /* PomodoroTimer.swift in Sources */,
+				A78E163702C3538167B6CF2F /* PomodoroView.swift in Sources */,
+				46939DF60D01F028D2032318 /* RRuleExpander.swift in Sources */,
+				F1BD2818783E7EBBEEFB2BFF /* Schedule.swift in Sources */,
+				680BE98A63A71521C12E6513 /* SettingsView.swift in Sources */,
+				07F399E92345871AAC1232E8 /* Style.swift in Sources */,
+				24A34537B6B25F0D48995DA8 /* SwissKnifeApp.swift in Sources */,
+				8757CC5D0E21AB8072DF3955 /* TodayDashboardView.swift in Sources */,
+				23B5CB82B87DD93CE4BA4FE6 /* Todo.swift in Sources */,
+				4EBB22022A56B0E83E26D8FB /* TodoEditSheet.swift in Sources */,
+				7F4A5068F4652A98FB9A7DC0 /* TodoRow.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F4BCDBECB2BD8C22D56E9FB2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 77935422F82DF462C8CBFED0 /* AndySwissKnife */;
+			targetProxy = F868A28CDEE33F3B95D2811F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		105302D4A39FD06FB917C7B5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = Sources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.andyzhang.AndySwissKnife;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		46DDD338447E920ED863D17D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = Sources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.andyzhang.AndySwissKnife;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9CEEF42C0716C7E9BA9FDF96 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.andyzhang.AndySwissKnifeTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AndySwissKnife.app/AndySwissKnife";
+			};
+			name = Debug;
+		};
+		C111DC5BD82443214850DE2A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD5C761A7E9E3E201B1D3969 /* Secrets.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		D3C7CC058B496BCF8A943A50 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.andyzhang.AndySwissKnifeTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AndySwissKnife.app/AndySwissKnife";
+			};
+			name = Release;
+		};
+		ECAAAAAA6F04C4495F028F47 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD5C761A7E9E3E201B1D3969 /* Secrets.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		34136EBF810313FBC2622FA0 /* Build configuration list for PBXNativeTarget "AndySwissKnifeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9CEEF42C0716C7E9BA9FDF96 /* Debug */,
+				D3C7CC058B496BCF8A943A50 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		9744E49393CE72E6DCC496FB /* Build configuration list for PBXNativeTarget "AndySwissKnife" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				46DDD338447E920ED863D17D /* Debug */,
+				105302D4A39FD06FB917C7B5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		9CF95053C5A6370B939BF324 /* Build configuration list for PBXProject "AndySwissKnife" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ECAAAAAA6F04C4495F028F47 /* Debug */,
+				C111DC5BD82443214850DE2A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F254BE7906BCCAF43DF475DB /* Project object */;
+}
