@@ -1,15 +1,13 @@
 import SwiftUI
 
 struct PomodoroView: View {
-    @Bindable var timer: PomodoroTimer
+    let timer: PomodoroTimer
     let services: Services
 
     init(services: Services) {
         self.services = services
-        self._timer = Bindable(wrappedValue: services.pomodoro)
+        self.timer = services.pomodoro
     }
-
-    @State private var displayTick = 0
 
     var body: some View {
         VStack(spacing: 40) {
@@ -20,20 +18,23 @@ struct PomodoroView: View {
                 .kerning(1.5)
                 .foregroundStyle(AppColors.secondary)
 
-            ZStack {
-                Circle()
-                    .stroke(AppColors.hairline, lineWidth: 0.5)
-                    .frame(width: 260, height: 260)
+            TimelineView(.periodic(from: .now, by: 1)) { _ in
+                let remaining = timer.remainingSeconds
+                ZStack {
+                    Circle()
+                        .stroke(AppColors.hairline, lineWidth: 0.5)
+                        .frame(width: 260, height: 260)
 
-                Circle()
-                    .trim(from: 0, to: progress)
-                    .stroke(AppColors.primary, style: StrokeStyle(lineWidth: 0.5, lineCap: .butt))
-                    .frame(width: 260, height: 260)
-                    .rotationEffect(.degrees(-90))
+                    Circle()
+                        .trim(from: 0, to: progress(remaining: remaining))
+                        .stroke(AppColors.primary, style: StrokeStyle(lineWidth: 0.5, lineCap: .butt))
+                        .frame(width: 260, height: 260)
+                        .rotationEffect(.degrees(-90))
 
-                Text(formatted(seconds: timer.remainingSeconds))
-                    .font(AppType.mono)
-                    .foregroundStyle(AppColors.primary)
+                    Text(formatted(seconds: remaining))
+                        .font(AppType.mono)
+                        .foregroundStyle(AppColors.primary)
+                }
             }
 
             HStack(spacing: 24) {
@@ -65,9 +66,6 @@ struct PomodoroView: View {
         .background(AppColors.background.ignoresSafeArea())
         .navigationTitle("Pomodoro")
         .navigationBarTitleDisplayMode(.inline)
-        .onReceive(Foundation.Timer.publish(every: 1, on: .main, in: .common).autoconnect()) { _ in
-            displayTick &+= 1
-        }
     }
 
     private var phaseLabel: String {
@@ -79,14 +77,15 @@ struct PomodoroView: View {
         }
     }
 
-    private var progress: Double {
+    private func progress(remaining: Int) -> Double {
         let total: Int
         switch timer.phase {
         case .idle: total = PomodoroTimer.focusLengthSeconds
-        case .paused, .focus: total = timer.phase == .paused ? PomodoroTimer.focusLengthSeconds : PomodoroTimer.focusLengthSeconds
+        case .paused: total = timer.phaseLength > 0 ? timer.phaseLength : PomodoroTimer.focusLengthSeconds
+        case .focus: total = PomodoroTimer.focusLengthSeconds
         case .shortBreak: total = PomodoroTimer.breakLengthSeconds
         }
-        let elapsed = max(0, total - timer.remainingSeconds)
+        let elapsed = max(0, total - remaining)
         return total == 0 ? 0 : Double(elapsed) / Double(total)
     }
 
