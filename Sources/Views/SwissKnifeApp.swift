@@ -17,6 +17,7 @@ struct SwissKnifeApp: App {
         WindowGroup {
             RootView(container: container)
                 .modelContainer(container)
+                .environment(ThemeManager.shared)
                 .tint(AppColors.primary)
                 .preferredColorScheme(.light)
         }

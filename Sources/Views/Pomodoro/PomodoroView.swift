@@ -63,7 +63,7 @@ struct PomodoroView: View {
             Spacer()
         }
         .padding(.horizontal, 24)
-        .background(AppColors.background.ignoresSafeArea())
+        .background(ThemedBackground())
         .navigationTitle("Pomodoro")
         .navigationBarTitleDisplayMode(.inline)
     }

@@ -45,7 +45,7 @@ struct PersonalCalendarView: View {
             .padding(.top, 8)
             .padding(.bottom, 40)
         }
-        .background(AppColors.background.ignoresSafeArea())
+        .background(ThemedBackground())
         .navigationTitle("Calendar")
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showingAdd) {

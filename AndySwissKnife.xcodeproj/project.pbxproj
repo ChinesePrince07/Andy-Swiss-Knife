@@ -37,6 +37,7 @@
 		A78E163702C3538167B6CF2F /* PomodoroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E55C4BDF127A9C0CEF67ED /* PomodoroView.swift */; };
 		B020D56A7AB742D316572B94 /* DiningService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1573D420C3E8959C3983BAF0 /* DiningService.swift */; };
 		BEA805C3CCC8CB2B182AE83D /* MealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A106A618866B97560536365 /* MealView.swift */; };
+		C4C2C05CE3E736696204AAF6 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB90B7ED16E641F907E43170 /* Theme.swift */; };
 		C7C8FE0BE830A1201AEF0AEC /* EventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 136DCB9AE73DA4324A3F14DF /* EventsView.swift */; };
 		CB7663856201DAC527E545C9 /* PersonalCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7914539FD8CC3CFC11001E19 /* PersonalCalendarView.swift */; };
 		CCF7AFE7DBB40BE619BD40C0 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE29B303DD49919976371BC /* HTTPClient.swift */; };
@@ -104,6 +105,7 @@
 		CDD58B20274EFCFC29596675 /* PomodoroTimerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerTests.swift; sourceTree = "<group>"; };
 		D5506D877B14199368003177 /* AssignmentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsView.swift; sourceTree = "<group>"; };
 		D77A3CD2FD912DFBD93D361A /* MockHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHTTPClient.swift; sourceTree = "<group>"; };
+		DB90B7ED16E641F907E43170 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		DDD881A24D30AD5D90747EC7 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		E04B318D66BEDB598FF72C21 /* AndySwissKnife.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = AndySwissKnife.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6508432714136EC18A423DF /* AssignmentsSyncServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsSyncServiceTests.swift; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				2E3D6B91A2E210F4B3FD23E0 /* Style.swift */,
+				DB90B7ED16E641F907E43170 /* Theme.swift */,
 			);
 			path = Styles;
 			sourceTree = "<group>";
@@ -451,6 +454,7 @@
 				680BE98A63A71521C12E6513 /* SettingsView.swift in Sources */,
 				07F399E92345871AAC1232E8 /* Style.swift in Sources */,
 				24A34537B6B25F0D48995DA8 /* SwissKnifeApp.swift in Sources */,
+				C4C2C05CE3E736696204AAF6 /* Theme.swift in Sources */,
 				8757CC5D0E21AB8072DF3955 /* TodayDashboardView.swift in Sources */,
 				23B5CB82B87DD93CE4BA4FE6 /* Todo.swift in Sources */,
 				4EBB22022A56B0E83E26D8FB /* TodoEditSheet.swift in Sources */,

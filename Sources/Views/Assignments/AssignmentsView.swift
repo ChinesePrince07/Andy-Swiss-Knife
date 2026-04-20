@@ -34,7 +34,7 @@ struct AssignmentsView: View {
             .padding(.top, 8)
             .padding(.bottom, 40)
         }
-        .background(AppColors.background.ignoresSafeArea())
+        .background(ThemedBackground())
         .navigationTitle("Canvas")
         .navigationBarTitleDisplayMode(.inline)
         .refreshable {

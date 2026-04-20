@@ -29,7 +29,7 @@ struct TodayDashboardView: View {
             .padding(.top, 8)
             .padding(.bottom, 40)
         }
-        .background(AppColors.background.ignoresSafeArea())
+        .background(ThemedBackground())
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -267,8 +267,11 @@ struct GlanceCard: View {
     let secondary: String
     var error: Bool = false
 
+    @Environment(ThemeManager.self) private var themeManager
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        _ = themeManager.current  // ensure observation
+        return VStack(alignment: .leading, spacing: 6) {
             SectionLabel(text: label)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Text(primary)
@@ -287,10 +290,6 @@ struct GlanceCard: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(14)
-        .overlay(
-            Rectangle()
-                .stroke(AppColors.hairline, lineWidth: 0.5)
-        )
+        .themedCard()
     }
 }

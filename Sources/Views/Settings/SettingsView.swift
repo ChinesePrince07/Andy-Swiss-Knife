@@ -4,6 +4,7 @@ import UserNotifications
 struct SettingsView: View {
     let services: Services
 
+    @Environment(ThemeManager.self) private var themeManager
     @State private var menuSync: Date?
     @State private var eventsSync: Date?
     @State private var canvasSync: Date?
@@ -12,6 +13,27 @@ struct SettingsView: View {
 
     var body: some View {
         List {
+            Section("Theme") {
+                ForEach(Theme.all) { theme in
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            themeManager.select(theme)
+                        }
+                    } label: {
+                        HStack(spacing: 12) {
+                            themeSwatch(theme)
+                            Text(theme.name)
+                                .foregroundStyle(AppColors.primary)
+                            Spacer()
+                            if theme.id == themeManager.current.id {
+                                Image(systemName: "checkmark")
+                                    .foregroundStyle(AppColors.accent)
+                            }
+                        }
+                    }
+                }
+            }
+
             Section("Sync") {
                 syncRow(label: "Menu", date: menuSync)
                 syncRow(label: "Events", date: eventsSync)
@@ -50,6 +72,18 @@ struct SettingsView: View {
             readState()
             await readAuth()
         }
+    }
+
+    private func themeSwatch(_ theme: Theme) -> some View {
+        HStack(spacing: 2) {
+            Rectangle().fill(theme.background).frame(width: 10, height: 22)
+            Rectangle().fill(theme.primary).frame(width: 10, height: 22)
+            Rectangle().fill(theme.accent).frame(width: 10, height: 22)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: theme.cornerRadius > 0 ? 4 : 0))
+        .overlay(
+            Rectangle().stroke(Color(white: 0.7), lineWidth: 0.5)
+        )
     }
 
     private func syncRow(label: String, date: Date?) -> some View {

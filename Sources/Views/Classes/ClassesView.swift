@@ -42,7 +42,7 @@ struct ClassesView: View {
             .padding(.horizontal, 20)
             .padding(.bottom, 40)
         }
-        .background(AppColors.background.ignoresSafeArea())
+        .background(ThemedBackground())
         .navigationTitle("Classes")
         .navigationBarTitleDisplayMode(.inline)
     }

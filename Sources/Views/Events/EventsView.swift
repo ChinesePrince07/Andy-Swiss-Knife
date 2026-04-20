@@ -49,7 +49,7 @@ struct EventsView: View {
             .padding(.horizontal, 20)
             .padding(.bottom, 40)
         }
-        .background(AppColors.background.ignoresSafeArea())
+        .background(ThemedBackground())
         .navigationTitle("Events")
         .navigationBarTitleDisplayMode(.inline)
         .refreshable {
