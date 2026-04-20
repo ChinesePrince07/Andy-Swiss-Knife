@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		07F399E92345871AAC1232E8 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3D6B91A2E210F4B3FD23E0 /* Style.swift */; };
+		0D2614F7B2E6DE465C9B9BC6 /* TodoSweeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C72A38932D974ACFFE72627 /* TodoSweeper.swift */; };
 		150E552F1886255256FE86DA /* PomodoroTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC26334910ED03B763FD900 /* PomodoroTimer.swift */; };
 		19F46B57038614191321347A /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6F0ACE8F87DDCC97438137 /* AppModelContainer.swift */; };
 		1F6A060549E64A8426D5C4F2 /* dining-normal.html in Resources */ = {isa = PBXBuildFile; fileRef = CB7D2D6E1D577D8FEF8CD8DA /* dining-normal.html */; };
@@ -52,6 +53,7 @@
 		F69FDE14BCF1649B947EFC9A /* ics-canvas-updated.ics in Resources */ = {isa = PBXBuildFile; fileRef = 44599103D2235A4560C56824 /* ics-canvas-updated.ics */; };
 		F8F4B82C4879AB6A90B9272E /* CachedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFF8210D8128B55B70DE84F /* CachedEvent.swift */; };
 		FC2162E5F84A795FF566EB47 /* PomodoroTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDD58B20274EFCFC29596675 /* PomodoroTimerTests.swift */; };
+		FF6BABB01888B13B97F313F8 /* TodayV2View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8433D981563165EA3996B85D /* TodayV2View.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,10 +84,12 @@
 		45D0EFCF6D41836BAEF58433 /* ClassPeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassPeriod.swift; sourceTree = "<group>"; };
 		51EDF3E97540E4D17E8C7D79 /* SwissKnifeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwissKnifeApp.swift; sourceTree = "<group>"; };
 		5EE826936B7B41BFA75FBF71 /* TodayDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayDashboardView.swift; sourceTree = "<group>"; };
+		6C72A38932D974ACFFE72627 /* TodoSweeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoSweeper.swift; sourceTree = "<group>"; };
 		700361F6356B9A0A54B91DBD /* DiningParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningParserTests.swift; sourceTree = "<group>"; };
 		74DE5711E91ED38B80461908 /* ics-canvas.ics */ = {isa = PBXFileReference; path = "ics-canvas.ics"; sourceTree = "<group>"; };
 		7914539FD8CC3CFC11001E19 /* PersonalCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalCalendarView.swift; sourceTree = "<group>"; };
 		7B7D1DD1592E151C2F873A7C /* dining-broken.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "dining-broken.html"; sourceTree = "<group>"; };
+		8433D981563165EA3996B85D /* TodayV2View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayV2View.swift; sourceTree = "<group>"; };
 		88E55C4BDF127A9C0CEF67ED /* PomodoroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroView.swift; sourceTree = "<group>"; };
 		896B8600107023AA631023CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8C4F36C6B48E2FB444CF3DE0 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -137,6 +141,7 @@
 				49CA173B660F28656F7BA3DA /* Meal */,
 				2321A6DCB0593BCDB4B04D66 /* Pomodoro */,
 				D31AE3AB0610EC8CD4FF0B1D /* Settings */,
+				F13C9E7125E9B4B5069147C7 /* TodayV2 */,
 				534C259B3418B0E0A2DB1C26 /* Todos */,
 			);
 			path = Views;
@@ -163,6 +168,7 @@
 				C8509D41A53C3763789F4834 /* NotificationService.swift */,
 				2CC26334910ED03B763FD900 /* PomodoroTimer.swift */,
 				B573D2B21443B0B64EB94686 /* RRuleExpander.swift */,
+				6C72A38932D974ACFFE72627 /* TodoSweeper.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -314,6 +320,14 @@
 			path = Calendar;
 			sourceTree = "<group>";
 		};
+		F13C9E7125E9B4B5069147C7 /* TodayV2 */ = {
+			isa = PBXGroup;
+			children = (
+				8433D981563165EA3996B85D /* TodayV2View.swift */,
+			);
+			path = TodayV2;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -456,9 +470,11 @@
 				24A34537B6B25F0D48995DA8 /* SwissKnifeApp.swift in Sources */,
 				C4C2C05CE3E736696204AAF6 /* Theme.swift in Sources */,
 				8757CC5D0E21AB8072DF3955 /* TodayDashboardView.swift in Sources */,
+				FF6BABB01888B13B97F313F8 /* TodayV2View.swift in Sources */,
 				23B5CB82B87DD93CE4BA4FE6 /* Todo.swift in Sources */,
 				4EBB22022A56B0E83E26D8FB /* TodoEditSheet.swift in Sources */,
 				7F4A5068F4652A98FB9A7DC0 /* TodoRow.swift in Sources */,
+				0D2614F7B2E6DE465C9B9BC6 /* TodoSweeper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

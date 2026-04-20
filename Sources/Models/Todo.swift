@@ -18,6 +18,7 @@ final class Todo {
     var externalID: String?
     var userEdited: Bool
     var notes: String?
+    var completedAt: Date?
 
     init(
         id: UUID = UUID(),
@@ -29,7 +30,8 @@ final class Todo {
         source: TodoSource = .manual,
         externalID: String? = nil,
         userEdited: Bool = false,
-        notes: String? = nil
+        notes: String? = nil,
+        completedAt: Date? = nil
     ) {
         self.id = id
         self.title = title
@@ -41,6 +43,7 @@ final class Todo {
         self.externalID = externalID
         self.userEdited = userEdited
         self.notes = notes
+        self.completedAt = completedAt
     }
 
     var isOverdue: Bool {

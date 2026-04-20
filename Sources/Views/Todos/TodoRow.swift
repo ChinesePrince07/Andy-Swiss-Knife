@@ -95,6 +95,7 @@ struct TodoRow: View {
 
     private func toggle() {
         todo.isDone.toggle()
+        todo.completedAt = todo.isDone ? .now : nil
         if todo.isDone {
             services.notifications.cancel(for: todo)
         } else if todo.dueDate != nil, todo.dueDate! > .now {
