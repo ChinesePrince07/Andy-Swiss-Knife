@@ -12,40 +12,43 @@ struct PersonalCalendarView: View {
     @State private var editing: PersonalEvent?
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                header
-                if visibleEvents.isEmpty {
-                    emptyState
-                } else {
-                    ForEach(grouped, id: \.0) { (day, dayEvents) in
-                        SectionLabel(text: Self.dayFormatter.string(from: day))
-                            .padding(.top, 4)
-                        HairlineDivider()
-                        ForEach(dayEvents) { e in
-                            eventRow(e)
+        ZStack {
+            ThemedBackground()
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    header
+                    if visibleEvents.isEmpty {
+                        emptyState
+                    } else {
+                        ForEach(grouped, id: \.0) { (day, dayEvents) in
+                            SectionLabel(text: Self.dayFormatter.string(from: day))
+                                .padding(.top, 4)
                             HairlineDivider()
+                            ForEach(dayEvents) { e in
+                                eventRow(e)
+                                HairlineDivider()
+                            }
                         }
                     }
-                }
 
-                Button {
-                    showingAdd = true
-                } label: {
-                    HStack(spacing: 8) {
-                        Image(systemName: "plus")
-                        Text("Add event")
+                    Button {
+                        showingAdd = true
+                    } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: "plus")
+                            Text("Add event")
+                        }
+                        .font(AppType.body)
+                        .foregroundStyle(AppColors.primary)
+                        .padding(.vertical, 10)
                     }
-                    .font(AppType.body)
-                    .foregroundStyle(AppColors.primary)
-                    .padding(.vertical, 10)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 20)
+                .padding(.top, 8)
+                .padding(.bottom, 40)
             }
-            .padding(.horizontal, 20)
-            .padding(.top, 8)
-            .padding(.bottom, 40)
         }
-        .background(ThemedBackground())
         .navigationTitle("Calendar")
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showingAdd) {

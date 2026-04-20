@@ -52,27 +52,37 @@ struct TodayV2View: View {
     // MARK: - Sections
 
     private var greetingHeader: some View {
-        HStack(alignment: .top) {
-            VStack(alignment: .leading, spacing: 3) {
-                Text(Self.headerDate.string(from: .now).uppercased())
-                    .font(.system(size: 11, weight: .medium))
-                    .kerning(0.5)
-                    .foregroundStyle(V2.accent)
-                (Text("\(greeting),\n").font(.system(size: 24, weight: .medium))
-                 + Text("Andy").font(.system(size: 24, weight: .medium)))
-                    .foregroundStyle(V2.textPrimary)
-                    .lineSpacing(2)
+        TimelineView(.periodic(from: .now, by: 60)) { ctx in
+            let name = UserSettings.shared.displayName
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(Self.headerDate.string(from: ctx.date).uppercased())
+                        .font(.system(size: 11, weight: .medium))
+                        .kerning(0.5)
+                        .foregroundStyle(V2.accent)
+                    (Text("\(UserSettings.shared.greeting(for: ctx.date)),\n")
+                        .font(.system(size: 24, weight: .medium))
+                     + Text(name).font(.system(size: 24, weight: .medium)))
+                        .foregroundStyle(V2.textPrimary)
+                        .lineSpacing(2)
+                }
+                Spacer()
+                ZStack {
+                    Circle().fill(V2.accentBackground).frame(width: 34, height: 34)
+                    Text(initials(of: name))
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundStyle(V2.accent)
+                }
             }
-            Spacer()
-            ZStack {
-                Circle().fill(V2.accentBackground).frame(width: 34, height: 34)
-                Text("AZ")
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(V2.accent)
-            }
+            .padding(.top, 10)
+            .padding(.bottom, 8)
         }
-        .padding(.top, 10)
-        .padding(.bottom, 8)
+    }
+
+    private func initials(of name: String) -> String {
+        let parts = name.split(separator: " ")
+        let chars = parts.compactMap { $0.first.map(String.init) }
+        return chars.prefix(2).joined().uppercased()
     }
 
     private var todosHeader: some View {
@@ -180,20 +190,28 @@ struct TodayV2View: View {
 
     private var nextClassCard: some View {
         NavigationLink { ClassesView() } label: {
-            VStack(alignment: .leading, spacing: 2) {
-                HStack {
-                    Text("NEXT CLASS")
-                        .font(.system(size: 10, weight: .medium))
-                        .kerning(0.5)
-                        .foregroundStyle(V2.accent)
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 9, weight: .medium))
-                        .foregroundStyle(V2.accent)
-                }
-                .padding(.bottom, 8)
+            TimelineView(.periodic(from: .now, by: 60)) { ctx in
+                nextClassContent(now: ctx.date)
+            }
+        }
+        .buttonStyle(.plain)
+    }
 
-                if let (cls, start) = schedule.next(after: .now) {
+    private func nextClassContent(now: Date) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            HStack {
+                Text("NEXT CLASS")
+                    .font(.system(size: 10, weight: .medium))
+                    .kerning(0.5)
+                    .foregroundStyle(V2.accent)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 9, weight: .medium))
+                    .foregroundStyle(V2.accent)
+            }
+            .padding(.bottom, 8)
+
+            if let (cls, start) = schedule.next(after: now) {
                     Text(cls.name)
                         .font(.system(size: 15, weight: .medium))
                         .foregroundStyle(V2.textPrimary)
@@ -236,8 +254,6 @@ struct TodayV2View: View {
                     .stroke(V2.accentBorder, lineWidth: 0.5)
             )
             .clipShape(RoundedRectangle(cornerRadius: 14))
-        }
-        .buttonStyle(.plain)
     }
 
     private var lunchCard: some View {

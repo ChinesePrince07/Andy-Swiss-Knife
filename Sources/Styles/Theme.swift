@@ -139,7 +139,7 @@ struct Theme: Identifiable, Hashable {
         cardKind: .glass
     )
 
-    static let all: [Theme] = [.bauhaus, .brutalist]
+    static let all: [Theme] = [.brutalist]
 }
 
 @Observable
@@ -152,7 +152,7 @@ final class ThemeManager {
 
     init() {
         let raw = UserDefaults.standard.string(forKey: Self.storageKey)
-        self.current = Theme.all.first(where: { $0.id == raw }) ?? .bauhaus
+        self.current = Theme.all.first(where: { $0.id == raw }) ?? .brutalist
     }
 
     func select(_ theme: Theme) {

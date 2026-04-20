@@ -10,6 +10,15 @@ struct PomodoroView: View {
     }
 
     var body: some View {
+        ZStack {
+            ThemedBackground()
+            content
+        }
+        .navigationTitle("Pomodoro")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private var content: some View {
         VStack(spacing: 40) {
             Spacer()
 
@@ -62,10 +71,8 @@ struct PomodoroView: View {
 
             Spacer()
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(.horizontal, 24)
-        .background(ThemedBackground())
-        .navigationTitle("Pomodoro")
-        .navigationBarTitleDisplayMode(.inline)
     }
 
     private var phaseLabel: String {

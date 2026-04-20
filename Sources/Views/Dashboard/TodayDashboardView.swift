@@ -53,13 +53,19 @@ struct TodayDashboardView: View {
     }
 
     private var header: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(Self.titleFormatter.string(from: .now))
-                .font(AppType.displayTitle)
-                .foregroundStyle(AppColors.primary)
-            Text(counterLine)
-                .font(AppType.caption)
-                .foregroundStyle(AppColors.secondary)
+        TimelineView(.periodic(from: .now, by: 60)) { ctx in
+            VStack(alignment: .leading, spacing: 6) {
+                Text("\(UserSettings.shared.greeting(for: ctx.date)), \(UserSettings.shared.displayName)")
+                    .font(AppType.displayTitle)
+                    .foregroundStyle(AppColors.primary)
+                Text(Self.titleFormatter.string(from: ctx.date).uppercased())
+                    .font(AppType.sectionLabel)
+                    .kerning(1.2)
+                    .foregroundStyle(AppColors.secondary)
+                Text(counterLine)
+                    .font(AppType.caption)
+                    .foregroundStyle(AppColors.secondary)
+            }
         }
     }
 
@@ -71,7 +77,15 @@ struct TodayDashboardView: View {
 
     private var todoSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            SectionLabel(text: "To do")
+            HStack {
+                SectionLabel(text: "To do")
+                Spacer()
+                if doneManualCount > 0 {
+                    Button("Clear done") { clearDone() }
+                        .font(AppType.caption)
+                        .foregroundStyle(AppColors.secondary)
+                }
+            }
             HairlineDivider()
             if allTodos.isEmpty {
                 Text("No tasks yet.")
@@ -98,6 +112,18 @@ struct TodayDashboardView: View {
         }
     }
 
+    private var doneManualCount: Int {
+        allTodos.filter { $0.isDone }.count
+    }
+
+    private func clearDone() {
+        for t in allTodos where t.isDone {
+            services.notifications.cancel(for: t)
+            modelContext.delete(t)
+        }
+        try? modelContext.save()
+    }
+
     private var sortedTodos: [Todo] {
         let open = allTodos.filter { !$0.isDone }.sorted { lhs, rhs in
             switch (lhs.dueDate, rhs.dueDate) {
@@ -114,7 +140,13 @@ struct TodayDashboardView: View {
     private var glanceGrid: some View {
         LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
             NavigationLink { ClassesView() } label: {
-                GlanceCard(label: "Next class", primary: nextClassPrimary, secondary: nextClassSecondary)
+                TimelineView(.periodic(from: .now, by: 60)) { ctx in
+                    GlanceCard(
+                        label: "Next class",
+                        primary: nextClassPrimary(now: ctx.date),
+                        secondary: nextClassSecondary(now: ctx.date)
+                    )
+                }
             }
             NavigationLink { MealView(services: services) } label: {
                 GlanceCard(label: "Lunch", primary: lunchPrimary, secondary: lunchSecondary, error: mealError)
@@ -173,13 +205,13 @@ struct TodayDashboardView: View {
         return df
     }()
 
-    private var nextClassPrimary: String {
-        guard let (next, _) = schedule.next(after: .now) else { return "None" }
+    private func nextClassPrimary(now: Date) -> String {
+        guard let (next, _) = schedule.next(after: now) else { return "None" }
         return next.name
     }
 
-    private var nextClassSecondary: String {
-        guard let (next, start) = schedule.next(after: .now) else { return "—" }
+    private func nextClassSecondary(now: Date) -> String {
+        guard let (next, start) = schedule.next(after: now) else { return "—" }
         let df = DateFormatter()
         df.dateFormat = "h:mm a"
         if Calendar.current.isDateInToday(start) {

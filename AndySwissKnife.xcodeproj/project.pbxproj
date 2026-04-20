@@ -48,6 +48,7 @@
 		D8EA24F60E247FB348E5062B /* ICSParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 070D2B25BE3B190E6C1D33BE /* ICSParserTests.swift */; };
 		DC8F742DC5FE8163BAE9AFBF /* DTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A377EBC72BD04D506FF4E8D /* DTOs.swift */; };
 		E4EC6B68423C1E51F2D1F2D8 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8509D41A53C3763789F4834 /* NotificationService.swift */; };
+		ED268B42E722D7C8AB16C79E /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF46299132CD55E2AE1B3204 /* UserSettings.swift */; };
 		F1BD2818783E7EBBEEFB2BFF /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2160A5C955F771E7E1EB7D4F /* Schedule.swift */; };
 		F269CE4B5A777BAEB6A0D96D /* DiningParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF68A95B24C59E22AFE2ED9F /* DiningParser.swift */; };
 		F2763BDE5CFAE679FA1E99B6 /* ClassPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D0EFCF6D41836BAEF58433 /* ClassPeriod.swift */; };
@@ -119,6 +120,7 @@
 		E6508432714136EC18A423DF /* AssignmentsSyncServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsSyncServiceTests.swift; sourceTree = "<group>"; };
 		EB8978F63D082125B6793831 /* ClassesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassesView.swift; sourceTree = "<group>"; };
 		EEFF8210D8128B55B70DE84F /* CachedEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedEvent.swift; sourceTree = "<group>"; };
+		EF46299132CD55E2AE1B3204 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		FC56A94C67FB83CEF05AD3DF /* ICSParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICSParser.swift; sourceTree = "<group>"; };
 		FCAF5A288944379AC9A965BC /* AssignmentsSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsSyncService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -174,6 +176,7 @@
 				2CC26334910ED03B763FD900 /* PomodoroTimer.swift */,
 				B573D2B21443B0B64EB94686 /* RRuleExpander.swift */,
 				6C72A38932D974ACFFE72627 /* TodoSweeper.swift */,
+				EF46299132CD55E2AE1B3204 /* UserSettings.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -491,6 +494,7 @@
 				4EBB22022A56B0E83E26D8FB /* TodoEditSheet.swift in Sources */,
 				7F4A5068F4652A98FB9A7DC0 /* TodoRow.swift in Sources */,
 				0D2614F7B2E6DE465C9B9BC6 /* TodoSweeper.swift in Sources */,
+				ED268B42E722D7C8AB16C79E /* UserSettings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

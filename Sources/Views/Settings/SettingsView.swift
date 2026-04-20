@@ -12,22 +12,31 @@ struct SettingsView: View {
     @State private var isRefreshing = false
 
     var body: some View {
-        List {
-            Section("Theme") {
-                ForEach(Theme.all) { theme in
-                    Button {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            themeManager.select(theme)
-                        }
-                    } label: {
-                        HStack(spacing: 12) {
-                            themeSwatch(theme)
-                            Text(theme.name)
-                                .foregroundStyle(AppColors.primary)
-                            Spacer()
-                            if theme.id == themeManager.current.id {
-                                Image(systemName: "checkmark")
-                                    .foregroundStyle(AppColors.accent)
+        @Bindable var userSettings = UserSettings.shared
+        return List {
+            Section("You") {
+                TextField("Your name", text: $userSettings.displayName)
+                    .textInputAutocapitalization(.words)
+                    .autocorrectionDisabled(true)
+            }
+
+            if Theme.all.count > 1 {
+                Section("Theme") {
+                    ForEach(Theme.all) { theme in
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                themeManager.select(theme)
+                            }
+                        } label: {
+                            HStack(spacing: 12) {
+                                themeSwatch(theme)
+                                Text(theme.name)
+                                    .foregroundStyle(AppColors.primary)
+                                Spacer()
+                                if theme.id == themeManager.current.id {
+                                    Image(systemName: "checkmark")
+                                        .foregroundStyle(AppColors.accent)
+                                }
                             }
                         }
                     }
