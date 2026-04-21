@@ -9,7 +9,7 @@ struct PersonalEventEditSheet: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var title: String = ""
-    @State private var date: Date = .now
+    @State private var date: Date = Calendar.current.date(byAdding: .hour, value: 1, to: .now) ?? .now
     @State private var isAllDay: Bool = false
     @State private var notes: String = ""
     @State private var notify: Bool = true
@@ -39,6 +39,14 @@ struct PersonalEventEditSheet: View {
 
                 Section {
                     Toggle("Notify me", isOn: $notify)
+                }
+
+                if existing != nil {
+                    Section {
+                        Button("Delete reminder", role: .destructive) {
+                            deleteExisting()
+                        }
+                    }
                 }
             }
             .navigationTitle(existing == nil ? "New reminder" : "Edit reminder")
@@ -91,6 +99,16 @@ struct PersonalEventEditSheet: View {
                 Task { await services.notifications.schedule(for: new) }
             }
         }
+        try? modelContext.save()
+        SnapshotStore.publishReminders(from: modelContext)
+        WidgetReloader.reloadReminderWidgets()
+        dismiss()
+    }
+
+    private func deleteExisting() {
+        guard let existing else { return }
+        services.notifications.cancel(for: existing)
+        modelContext.delete(existing)
         try? modelContext.save()
         SnapshotStore.publishReminders(from: modelContext)
         WidgetReloader.reloadReminderWidgets()

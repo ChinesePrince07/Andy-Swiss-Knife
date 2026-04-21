@@ -84,7 +84,7 @@ struct PersonalCalendarView: View {
     }
 
     private var visibleEvents: [PersonalEvent] {
-        events.filter { $0.date >= Calendar.current.startOfDay(for: .now) }
+        events
     }
 
     private var grouped: [(Date, [PersonalEvent])] {

@@ -60,6 +60,14 @@ struct TodoEditSheet: View {
                             .lineLimit(3...)
                     }
                 }
+
+                if let existing, existing.source == .manual {
+                    Section {
+                        Button("Delete task", role: .destructive) {
+                            deleteExisting(existing)
+                        }
+                    }
+                }
             }
             .navigationTitle(existing == nil ? "New task" : "Edit task")
             .navigationBarTitleDisplayMode(.inline)
@@ -112,6 +120,15 @@ struct TodoEditSheet: View {
                 Task { await services.notifications.schedule(for: new) }
             }
         }
+        try? modelContext.save()
+        SnapshotStore.publishTodos(from: modelContext)
+        WidgetReloader.reloadTodoWidgets()
+        dismiss()
+    }
+
+    private func deleteExisting(_ todo: Todo) {
+        services.notifications.cancel(for: todo)
+        modelContext.delete(todo)
         try? modelContext.save()
         SnapshotStore.publishTodos(from: modelContext)
         WidgetReloader.reloadTodoWidgets()
