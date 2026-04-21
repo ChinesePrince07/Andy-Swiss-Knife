@@ -6,13 +6,19 @@ import Observation
 final class UserSettings {
     static let shared = UserSettings()
     private static let nameKey = "user.displayName"
+    private static let canvasKey = "user.canvasFeedURL"
 
     var displayName: String {
         didSet { UserDefaults.standard.set(displayName, forKey: Self.nameKey) }
     }
 
+    var canvasFeedURL: String {
+        didSet { UserDefaults.standard.set(canvasFeedURL, forKey: Self.canvasKey) }
+    }
+
     private init() {
         self.displayName = UserDefaults.standard.string(forKey: Self.nameKey) ?? "Andy"
+        self.canvasFeedURL = UserDefaults.standard.string(forKey: Self.canvasKey) ?? ""
     }
 
     func greeting(for date: Date = .now) -> String {

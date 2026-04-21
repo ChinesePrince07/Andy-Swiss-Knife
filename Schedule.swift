@@ -1,6 +1,8 @@
  import Foundation
 
-let schedule: [ClassPeriod] = [
+/// Seed schedule copied into SwiftData on first launch. Users can edit /
+/// delete / replace entirely from Settings → Classes.
+let defaultSchedule: [ClassPeriod] = [
     ClassPeriod(
         name: "AP Computer Science", room: "TECHCL", teacher: "Healy",
         daysOfWeek: [1, 4],

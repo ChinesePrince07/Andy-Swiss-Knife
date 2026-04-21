@@ -11,6 +11,7 @@ struct TodayV2View: View {
     private var manualTodos: [Todo]
     @Query(filter: #Predicate<Todo> { $0.externalID != nil })
     private var canvasTodos: [Todo]
+    @Query(sort: \ScheduleClass.sortKey) private var scheduleClasses: [ScheduleClass]
 
     @State private var todaysMeal: Meal?
     @State private var filter: Filter = .today
@@ -211,7 +212,7 @@ struct TodayV2View: View {
             }
             .padding(.bottom, 8)
 
-            if let (cls, start) = schedule.next(after: now) {
+            if let (cls, start) = scheduleClasses.asClassPeriods().next(after: now) {
                     Text(cls.name)
                         .font(.system(size: 15, weight: .medium))
                         .foregroundStyle(V2.textPrimary)

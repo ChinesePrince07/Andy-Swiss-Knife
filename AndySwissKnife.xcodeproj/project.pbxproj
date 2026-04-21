@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		07F399E92345871AAC1232E8 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3D6B91A2E210F4B3FD23E0 /* Style.swift */; };
 		0D2614F7B2E6DE465C9B9BC6 /* TodoSweeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C72A38932D974ACFFE72627 /* TodoSweeper.swift */; };
+		0F08FDEC5D8915290F9A1E85 /* ScheduleEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE3F4200F1459F90DAD33F1 /* ScheduleEditorView.swift */; };
 		150E552F1886255256FE86DA /* PomodoroTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC26334910ED03B763FD900 /* PomodoroTimer.swift */; };
 		19F46B57038614191321347A /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6F0ACE8F87DDCC97438137 /* AppModelContainer.swift */; };
 		1C831A5BE4D2FD88A34FADBA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A4C5BA3B543E15F98EB3514 /* Assets.xcassets */; };
@@ -33,6 +34,8 @@
 		7F4A5068F4652A98FB9A7DC0 /* TodoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA4ED3E8FB6B70780EECF42 /* TodoRow.swift */; };
 		8757CC5D0E21AB8072DF3955 /* TodayDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE826936B7B41BFA75FBF71 /* TodayDashboardView.swift */; };
 		891BDC73F544C44B7B26053F /* PersonalEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330E9BB2B8C13CDA343D7295 /* PersonalEvent.swift */; };
+		8D6EA4298E4A3FE78960EB8C /* ClassEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB6E4C6F471CDC102EE7364C /* ClassEditSheet.swift */; };
+		90ABD8DDB355C7E4105F4B85 /* ScheduleClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F1368DFE43C2F590808B3A /* ScheduleClass.swift */; };
 		95558A4BEC52FC6E042306AA /* EventsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05214FF5A0D20A717DC0B5F3 /* EventsService.swift */; };
 		9649F903A9FA482FD030BAD6 /* ics-canvas.ics in Resources */ = {isa = PBXBuildFile; fileRef = 74DE5711E91ED38B80461908 /* ics-canvas.ics */; };
 		9B87CB22ECC0839242385559 /* ClassesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8978F63D082125B6793831 /* ClassesView.swift */; };
@@ -94,6 +97,7 @@
 		74DE5711E91ED38B80461908 /* ics-canvas.ics */ = {isa = PBXFileReference; path = "ics-canvas.ics"; sourceTree = "<group>"; };
 		7914539FD8CC3CFC11001E19 /* PersonalCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalCalendarView.swift; sourceTree = "<group>"; };
 		7B7D1DD1592E151C2F873A7C /* dining-broken.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "dining-broken.html"; sourceTree = "<group>"; };
+		7DE3F4200F1459F90DAD33F1 /* ScheduleEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleEditorView.swift; sourceTree = "<group>"; };
 		8433D981563165EA3996B85D /* TodayV2View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayV2View.swift; sourceTree = "<group>"; };
 		88E55C4BDF127A9C0CEF67ED /* PomodoroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroView.swift; sourceTree = "<group>"; };
 		896B8600107023AA631023CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -108,6 +112,7 @@
 		B6E5E6B2240DDDDD99C4D10E /* PersonalEventEditSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalEventEditSheet.swift; sourceTree = "<group>"; };
 		B81CE12C09B1455EB90BA07F /* TodoEditSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoEditSheet.swift; sourceTree = "<group>"; };
 		B9714F48D41526FB4B96674D /* CachedMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedMenu.swift; sourceTree = "<group>"; };
+		BB6E4C6F471CDC102EE7364C /* ClassEditSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassEditSheet.swift; sourceTree = "<group>"; };
 		C8509D41A53C3763789F4834 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		C851A753B87D83DE7D673B96 /* ics-folded-description.ics */ = {isa = PBXFileReference; path = "ics-folded-description.ics"; sourceTree = "<group>"; };
 		CB7D2D6E1D577D8FEF8CD8DA /* dining-normal.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "dining-normal.html"; sourceTree = "<group>"; };
@@ -117,6 +122,7 @@
 		DB90B7ED16E641F907E43170 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		DDD881A24D30AD5D90747EC7 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		E04B318D66BEDB598FF72C21 /* AndySwissKnife.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = AndySwissKnife.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E2F1368DFE43C2F590808B3A /* ScheduleClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleClass.swift; sourceTree = "<group>"; };
 		E6508432714136EC18A423DF /* AssignmentsSyncServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsSyncServiceTests.swift; sourceTree = "<group>"; };
 		EB8978F63D082125B6793831 /* ClassesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassesView.swift; sourceTree = "<group>"; };
 		EEFF8210D8128B55B70DE84F /* CachedEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedEvent.swift; sourceTree = "<group>"; };
@@ -275,6 +281,7 @@
 				45D0EFCF6D41836BAEF58433 /* ClassPeriod.swift */,
 				9A377EBC72BD04D506FF4E8D /* DTOs.swift */,
 				330E9BB2B8C13CDA343D7295 /* PersonalEvent.swift */,
+				E2F1368DFE43C2F590808B3A /* ScheduleClass.swift */,
 				2E486C027EFB8572A128000A /* Todo.swift */,
 			);
 			path = Models;
@@ -304,6 +311,8 @@
 		D31AE3AB0610EC8CD4FF0B1D /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				BB6E4C6F471CDC102EE7364C /* ClassEditSheet.swift */,
+				7DE3F4200F1459F90DAD33F1 /* ScheduleEditorView.swift */,
 				8C4F36C6B48E2FB444CF3DE0 /* SettingsView.swift */,
 			);
 			path = Settings;
@@ -463,6 +472,7 @@
 				D520747D77E76A38D1AE079B /* AssignmentsView.swift in Sources */,
 				F8F4B82C4879AB6A90B9272E /* CachedEvent.swift in Sources */,
 				20D162DDF5FAD5F0E6F02789 /* CachedMenu.swift in Sources */,
+				8D6EA4298E4A3FE78960EB8C /* ClassEditSheet.swift in Sources */,
 				F2763BDE5CFAE679FA1E99B6 /* ClassPeriod.swift in Sources */,
 				9B87CB22ECC0839242385559 /* ClassesView.swift in Sources */,
 				F68FBB533C1E845412A32FDC /* Config.swift in Sources */,
@@ -483,6 +493,8 @@
 				A78E163702C3538167B6CF2F /* PomodoroView.swift in Sources */,
 				46939DF60D01F028D2032318 /* RRuleExpander.swift in Sources */,
 				F1BD2818783E7EBBEEFB2BFF /* Schedule.swift in Sources */,
+				90ABD8DDB355C7E4105F4B85 /* ScheduleClass.swift in Sources */,
+				0F08FDEC5D8915290F9A1E85 /* ScheduleEditorView.swift in Sources */,
 				3CC6023542F8E9F571CFD93A /* Secrets.swift in Sources */,
 				680BE98A63A71521C12E6513 /* SettingsView.swift in Sources */,
 				07F399E92345871AAC1232E8 /* Style.swift in Sources */,

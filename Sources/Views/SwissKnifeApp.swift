@@ -41,6 +41,29 @@ final class Services {
         self.notifications = NotificationService()
         self.pomodoro = PomodoroTimer()
         self.sweeper = TodoSweeper(context: context)
+        Self.seedScheduleIfNeeded(context: context)
+    }
+
+    static func seedScheduleIfNeeded(context: ModelContext) {
+        let existing = (try? context.fetch(FetchDescriptor<ScheduleClass>())) ?? []
+        let didSeedKey = "schedule.didSeedDefaults"
+        let didSeed = UserDefaults.standard.bool(forKey: didSeedKey)
+        guard existing.isEmpty, !didSeed else { return }
+        for p in defaultSchedule {
+            context.insert(ScheduleClass(
+                name: p.name,
+                room: p.room,
+                teacher: p.teacher,
+                daysOfWeek: p.daysOfWeek,
+                startHour: p.startTime.hour ?? 0,
+                startMinute: p.startTime.minute ?? 0,
+                endHour: p.endTime.hour ?? 0,
+                endMinute: p.endTime.minute ?? 0,
+                kindRaw: p.kind == .lunch ? "lunch" : "academic"
+            ))
+        }
+        try? context.save()
+        UserDefaults.standard.set(true, forKey: didSeedKey)
     }
 }
 

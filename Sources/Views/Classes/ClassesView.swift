@@ -1,7 +1,12 @@
 import SwiftUI
+import SwiftData
 
 struct ClassesView: View {
-    private let todaysClasses = schedule.today()
+    @Query(sort: \ScheduleClass.sortKey) private var scheduleClasses: [ScheduleClass]
+
+    private var todaysClasses: [ClassPeriod] {
+        scheduleClasses.asClassPeriods().today()
+    }
 
     var body: some View {
         ScrollView {

@@ -11,6 +11,7 @@ struct TodayDashboardView: View {
     private var canvasTodos: [Todo]
     @Query(sort: \PersonalEvent.date, order: .forward)
     private var personalEvents: [PersonalEvent]
+    @Query(sort: \ScheduleClass.sortKey) private var scheduleClasses: [ScheduleClass]
 
     @State private var todaysMeal: Meal?
     @State private var nextEvent: Event?
@@ -217,12 +218,12 @@ struct TodayDashboardView: View {
     }()
 
     private func nextClassPrimary(now: Date) -> String {
-        guard let (next, _) = schedule.next(after: now) else { return "None" }
+        guard let (next, _) = scheduleClasses.asClassPeriods().next(after: now) else { return "None" }
         return next.name
     }
 
     private func nextClassSecondary(now: Date) -> String {
-        guard let (next, start) = schedule.next(after: now) else { return "—" }
+        guard let (next, start) = scheduleClasses.asClassPeriods().next(after: now) else { return "—" }
         let df = DateFormatter()
         df.dateFormat = "h:mm a"
         if Calendar.current.isDateInToday(start) {

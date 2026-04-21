@@ -5,16 +5,16 @@ import SwiftData
 final class AssignmentsSyncService {
     private let http: HTTPClient
     private let context: ModelContext
-    private let feedURL: URL?
+    private let overrideFeedURL: URL?
 
-    init(http: HTTPClient, context: ModelContext, feedURL: URL? = Config.canvasFeedURL) {
+    init(http: HTTPClient, context: ModelContext, feedURL: URL? = nil) {
         self.http = http
         self.context = context
-        self.feedURL = feedURL
+        self.overrideFeedURL = feedURL
     }
 
     func syncCanvas(now: Date = .now) async throws {
-        guard let url = feedURL else {
+        guard let url = overrideFeedURL ?? Config.canvasFeedURL else {
             UserDefaults.standard.set(now, forKey: "lastSync.canvas")
             return
         }

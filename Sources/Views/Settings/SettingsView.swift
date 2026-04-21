@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 import UserNotifications
 
 struct SettingsView: View {
@@ -18,6 +19,35 @@ struct SettingsView: View {
                 TextField("Your name", text: $userSettings.displayName)
                     .textInputAutocapitalization(.words)
                     .autocorrectionDisabled(true)
+            }
+
+            Section {
+                NavigationLink {
+                    ScheduleEditorView()
+                } label: {
+                    HStack {
+                        Text("My classes")
+                        Spacer()
+                        Text("edit").foregroundStyle(AppColors.secondary)
+                    }
+                }
+            } header: {
+                Text("Schedule")
+            } footer: {
+                Text("Classes power the Next Class card and the Classes screen.")
+            }
+
+            Section {
+                TextField("https://…instructure.com/feeds/calendars/user_….ics",
+                          text: $userSettings.canvasFeedURL)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled(true)
+                    .keyboardType(.URL)
+                    .font(.system(size: 12, design: .monospaced))
+            } header: {
+                Text("Canvas feed URL")
+            } footer: {
+                Text("In Canvas: Calendar → right sidebar → Calendar Feed. Paste the .ics URL here. Pull-to-refresh the Canvas tab to sync.")
             }
 
             if Theme.all.count > 1 {
