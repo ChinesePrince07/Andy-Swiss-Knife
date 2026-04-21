@@ -19,6 +19,8 @@ struct TodayDashboardView: View {
     @State private var mealError: Bool = false
     @State private var showingAddSheet = false
     @State private var showingAddReminderSheet = false
+    @State private var newTodoTitle: String = ""
+    @FocusState private var addFieldFocused: Bool
     private let deepLinks = DeepLinks.shared
 
     var body: some View {
@@ -121,18 +123,41 @@ struct TodayDashboardView: View {
                     HairlineDivider()
                 }
             }
-            Button {
-                showingAddSheet = true
-            } label: {
-                HStack(spacing: 8) {
-                    Image(systemName: "plus")
-                    Text("Add task")
+            HStack(spacing: 10) {
+                Image(systemName: "plus")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(AppColors.tertiary)
+                TextField("Add task…", text: $newTodoTitle)
+                    .font(AppType.body)
+                    .foregroundStyle(AppColors.primary)
+                    .focused($addFieldFocused)
+                    .submitLabel(.done)
+                    .onSubmit { commitNewTodo() }
+                if !newTodoTitle.isEmpty {
+                    Button {
+                        showingAddSheet = true
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                            .font(.system(size: 14))
+                            .foregroundStyle(AppColors.tertiary)
+                    }
+                    .buttonStyle(.plain)
                 }
-                .font(AppType.body)
-                .foregroundStyle(AppColors.primary)
-                .padding(.vertical, 10)
             }
+            .padding(.vertical, 10)
         }
+    }
+
+    private func commitNewTodo() {
+        let trimmed = newTodoTitle.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else { return }
+        let todo = Todo(title: trimmed)
+        modelContext.insert(todo)
+        try? modelContext.save()
+        SnapshotStore.publishTodos(from: modelContext)
+        WidgetReloader.reloadTodoWidgets()
+        newTodoTitle = ""
+        addFieldFocused = true
     }
 
     private var doneManualCount: Int {

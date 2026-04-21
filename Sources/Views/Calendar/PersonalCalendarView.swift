@@ -101,14 +101,14 @@ struct PersonalCalendarView: View {
     }
 
     private func eventRow(_ e: PersonalEvent) -> some View {
-        Button {
-            editing = e
-        } label: {
-            HStack(alignment: .firstTextBaseline, spacing: 12) {
-                Text(timeLabel(for: e))
-                    .font(AppType.caption)
-                    .foregroundStyle(AppColors.secondary)
-                    .frame(width: 78, alignment: .leading)
+        HStack(alignment: .firstTextBaseline, spacing: 12) {
+            Text(timeLabel(for: e))
+                .font(AppType.caption)
+                .foregroundStyle(AppColors.secondary)
+                .frame(width: 78, alignment: .leading)
+            Button {
+                editing = e
+            } label: {
                 VStack(alignment: .leading, spacing: 1) {
                     Text(e.title)
                         .font(AppType.bodyMedium)
@@ -120,19 +120,18 @@ struct PersonalCalendarView: View {
                             .lineLimit(1)
                     }
                 }
-                Spacer()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
             }
-            .padding(.vertical, 6)
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-            Button(role: .destructive) {
-                delete(e)
-            } label: {
-                Label("Delete", systemImage: "trash")
+            .buttonStyle(.plain)
+            Button { delete(e) } label: {
+                Image(systemName: "trash")
+                    .font(.system(size: 13))
+                    .foregroundStyle(AppColors.tertiary)
             }
+            .buttonStyle(.plain)
         }
+        .padding(.vertical, 6)
     }
 
     private func timeLabel(for e: PersonalEvent) -> String {

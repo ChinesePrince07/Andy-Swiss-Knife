@@ -61,8 +61,16 @@ enum PomodoroActivity {
     static func end() {
         #if canImport(ActivityKit)
         guard let activity else { return }
+        let finalState = PomodoroAttributes.ContentState(
+            phase: "idle",
+            endDate: .now,
+            phaseLength: 0
+        )
         Task {
-            await activity.end(nil, dismissalPolicy: .immediate)
+            await activity.end(
+                ActivityContent(state: finalState, staleDate: nil),
+                dismissalPolicy: .immediate
+            )
         }
         self.activity = nil
         #endif

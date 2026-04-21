@@ -47,6 +47,16 @@ struct TodoRow: View {
                     .kerning(0.8)
                     .foregroundStyle(status.isOverdue ? AppColors.accent : AppColors.secondary)
             }
+
+            if todo.source == .manual {
+                Button { delete() } label: {
+                    Image(systemName: "trash")
+                        .font(.system(size: 13))
+                        .foregroundStyle(AppColors.tertiary)
+                        .padding(.leading, 6)
+                }
+                .buttonStyle(.plain)
+            }
         }
         .padding(.vertical, 6)
         .contentShape(Rectangle())
