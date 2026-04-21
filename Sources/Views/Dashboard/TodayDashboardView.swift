@@ -21,6 +21,9 @@ struct TodayDashboardView: View {
     @State private var showingAddReminderSheet = false
     @State private var newTodoTitle: String = ""
     @FocusState private var addFieldFocused: Bool
+    @State private var isEditingGrid = false
+    @State private var wigglePhase = false
+    @State private var draggingCard: DashboardCard?
     private let deepLinks = DeepLinks.shared
 
     var body: some View {
@@ -204,10 +207,88 @@ struct TodayDashboardView: View {
         let layout = DashboardLayout.shared
         return LazyVGrid(columns: [GridItem(.flexible(), spacing: 6), GridItem(.flexible(), spacing: 6)], spacing: 6) {
             ForEach(layout.order, id: \.self) { card in
-                cardView(for: card)
+                wiggleWrapper(for: card) {
+                    cardView(for: card)
+                }
             }
         }
         .buttonStyle(.plain)
+        .onLongPressGesture(minimumDuration: 0.4) {
+            enterEditMode()
+        }
+        .overlay(alignment: .topTrailing) {
+            if isEditingGrid {
+                Button("Done") {
+                    exitEditMode()
+                }
+                .font(.system(size: 12, weight: .heavy, design: .monospaced))
+                .foregroundStyle(AppColors.accent)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .background(AppColors.surface)
+                .overlay(Rectangle().strokeBorder(AppColors.accent, lineWidth: 2))
+                .offset(x: -4, y: -14)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func wiggleWrapper<Content: View>(for card: DashboardCard, @ViewBuilder content: () -> Content) -> some View {
+        let wrapped = content()
+            .rotationEffect(
+                .degrees(isEditingGrid ? (wiggleOffset(for: card) ? 1.2 : -1.2) : 0)
+            )
+            .scaleEffect(draggingCard == card ? 1.05 : 1.0)
+            .opacity(draggingCard == card ? 0.6 : 1.0)
+            .allowsHitTesting(!isEditingGrid || draggingCard == nil)
+
+        if isEditingGrid {
+            wrapped
+                .draggable(card.rawValue) {
+                    content()
+                        .frame(maxWidth: 170)
+                        .onAppear { draggingCard = card }
+                        .onDisappear { draggingCard = nil }
+                }
+                .dropDestination(for: String.self) { items, _ in
+                    guard let raw = items.first,
+                          let from = DashboardCard(rawValue: raw),
+                          let fromIdx = DashboardLayout.shared.order.firstIndex(of: from),
+                          let toIdx = DashboardLayout.shared.order.firstIndex(of: card)
+                    else { return false }
+                    if fromIdx == toIdx { return false }
+                    var order = DashboardLayout.shared.order
+                    order.remove(at: fromIdx)
+                    let adjusted = toIdx > fromIdx ? toIdx - 1 : toIdx
+                    order.insert(from, at: adjusted)
+                    withAnimation(.snappy(duration: 0.25)) {
+                        DashboardLayout.shared.order = order
+                    }
+                    return true
+                }
+        } else {
+            wrapped
+        }
+    }
+
+    private func wiggleOffset(for card: DashboardCard) -> Bool {
+        let idx = DashboardLayout.shared.order.firstIndex(of: card) ?? 0
+        return idx.isMultiple(of: 2) ? wigglePhase : !wigglePhase
+    }
+
+    private func enterEditMode() {
+        guard !isEditingGrid else { return }
+        isEditingGrid = true
+        withAnimation(.easeInOut(duration: 0.12).repeatForever(autoreverses: true)) {
+            wigglePhase.toggle()
+        }
+    }
+
+    private func exitEditMode() {
+        withAnimation(.easeInOut(duration: 0.12)) {
+            wigglePhase = false
+        }
+        isEditingGrid = false
     }
 
     @ViewBuilder
