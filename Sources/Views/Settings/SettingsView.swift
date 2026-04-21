@@ -11,6 +11,7 @@ struct SettingsView: View {
     @State private var canvasSync: Date?
     @State private var authStatus: UNAuthorizationStatus = .notDetermined
     @State private var isRefreshing = false
+    @State private var showingCalendarImport = false
 
     var body: some View {
         @Bindable var userSettings = UserSettings.shared
@@ -38,6 +39,22 @@ struct SettingsView: View {
             }
 
             Section {
+                Button {
+                    showingCalendarImport = true
+                } label: {
+                    HStack {
+                        Image(systemName: "calendar.badge.plus")
+                        Text("Import from Apple Calendar")
+                        Spacer()
+                    }
+                }
+            } header: {
+                Text("Reminders")
+            } footer: {
+                Text("Pulls events from selected calendars into Reminders. Re-run anytime to refresh.")
+            }
+
+            Section {
                 TextField("https://…instructure.com/feeds/calendars/user_….ics",
                           text: $userSettings.canvasFeedURL)
                     .textInputAutocapitalization(.never)
@@ -52,24 +69,20 @@ struct SettingsView: View {
 
             if Theme.all.count > 1 {
                 Section("Theme") {
-                    ForEach(Theme.all) { theme in
-                        Button {
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                themeManager.select(theme)
-                            }
-                        } label: {
-                            HStack(spacing: 12) {
-                                themeSwatch(theme)
-                                Text(theme.name)
-                                    .foregroundStyle(AppColors.primary)
-                                Spacer()
-                                if theme.id == themeManager.current.id {
-                                    Image(systemName: "checkmark")
-                                        .foregroundStyle(AppColors.accent)
+                    HStack(spacing: 14) {
+                        ForEach(Theme.all) { theme in
+                            Button {
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    themeManager.select(theme)
                                 }
+                            } label: {
+                                themeDot(theme)
                             }
+                            .buttonStyle(.plain)
                         }
+                        Spacer()
                     }
+                    .padding(.vertical, 4)
                 }
             }
 
@@ -111,18 +124,29 @@ struct SettingsView: View {
             readState()
             await readAuth()
         }
+        .sheet(isPresented: $showingCalendarImport) {
+            CalendarImportView()
+        }
     }
 
-    private func themeSwatch(_ theme: Theme) -> some View {
-        HStack(spacing: 2) {
-            Rectangle().fill(theme.background).frame(width: 10, height: 22)
-            Rectangle().fill(theme.primary).frame(width: 10, height: 22)
-            Rectangle().fill(theme.accent).frame(width: 10, height: 22)
+    private func themeDot(_ theme: Theme) -> some View {
+        let selected = theme.id == themeManager.current.id
+        return ZStack {
+            Circle()
+                .fill(theme.background)
+            Circle()
+                .trim(from: 0.5, to: 1.0)
+                .fill(theme.accent)
+            Circle()
+                .strokeBorder(theme.primary, lineWidth: selected ? 2 : 0.5)
         }
-        .clipShape(RoundedRectangle(cornerRadius: theme.cornerRadius > 0 ? 4 : 0))
+        .frame(width: 30, height: 30)
         .overlay(
-            Rectangle().stroke(Color(white: 0.7), lineWidth: 0.5)
+            Circle()
+                .strokeBorder(AppColors.accent, lineWidth: selected ? 2 : 0)
+                .frame(width: 36, height: 36)
         )
+        .padding(3)
     }
 
     private func syncRow(label: String, date: Date?) -> some View {

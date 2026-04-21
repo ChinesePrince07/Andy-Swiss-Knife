@@ -41,6 +41,7 @@ targets:
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
         NSSupportsLiveActivities: true
+        NSCalendarsFullAccessUsageDescription: "Swiss Knife pulls events from your Apple Calendar into Reminders so you can see them alongside your other to-dos."
         CFBundleURLTypes:
           - CFBundleURLName: com.andyzhang.AndySwissKnife
             CFBundleURLSchemes:

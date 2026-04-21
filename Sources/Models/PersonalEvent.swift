@@ -10,6 +10,8 @@ final class PersonalEvent {
     var notificationID: String?
     var isAllDay: Bool
     var createdAt: Date
+    var externalID: String?    // EKEvent.eventIdentifier when imported from Apple Calendar
+    var sourceCalendar: String?
 
     init(
         id: UUID = UUID(),
@@ -18,7 +20,9 @@ final class PersonalEvent {
         notes: String? = nil,
         notificationID: String? = nil,
         isAllDay: Bool = false,
-        createdAt: Date = .now
+        createdAt: Date = .now,
+        externalID: String? = nil,
+        sourceCalendar: String? = nil
     ) {
         self.id = id
         self.title = title
@@ -27,5 +31,7 @@ final class PersonalEvent {
         self.notificationID = notificationID
         self.isAllDay = isAllDay
         self.createdAt = createdAt
+        self.externalID = externalID
+        self.sourceCalendar = sourceCalendar
     }
 }
