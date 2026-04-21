@@ -10,9 +10,15 @@ struct MealView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                Text("Today's menu")
-                    .font(AppType.displayTitle)
-                    .padding(.top, 8)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("\(Self.weekdayName(.now))'s menu")
+                        .font(AppType.displayTitle)
+                    Text(Self.dateLabel(.now).uppercased())
+                        .font(AppType.sectionLabel)
+                        .kerning(1.2)
+                        .foregroundStyle(AppColors.secondary)
+                }
+                .padding(.top, 8)
 
                 if !didLoad {
                     ProgressView().padding()
@@ -87,5 +93,19 @@ struct MealView: View {
             self.error = meal == nil
         }
         didLoad = true
+    }
+
+    private static func weekdayName(_ date: Date) -> String {
+        let df = DateFormatter()
+        df.locale = Locale(identifier: "en_US")
+        df.dateFormat = "EEEE"
+        return df.string(from: date)
+    }
+
+    private static func dateLabel(_ date: Date) -> String {
+        let df = DateFormatter()
+        df.locale = Locale(identifier: "en_US")
+        df.dateFormat = "MMM d, yyyy"
+        return df.string(from: date)
     }
 }
