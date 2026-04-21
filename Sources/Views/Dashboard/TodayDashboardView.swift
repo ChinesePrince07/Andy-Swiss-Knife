@@ -176,15 +176,26 @@ struct TodayDashboardView: View {
     }
 
     private var canvasPrimary: String {
-        let open = visibleCanvasTodos.filter { !$0.isDone }.count
-        if open == 0 { return "All clear" }
-        return "\(open) open"
+        let counts = canvasDueCounts()
+        if counts.today == 0 && counts.tomorrow == 0 { return "Nothing soon" }
+        return "\(counts.today) today · \(counts.tomorrow) tmrw"
     }
 
     private var canvasSecondary: String {
+        let open = visibleCanvasTodos.filter { !$0.isDone }.count
+        return open == 0 ? "All clear" : "\(open) open total"
+    }
+
+    private func canvasDueCounts() -> (today: Int, tomorrow: Int) {
+        let cal = Calendar.current
+        let startToday = cal.startOfDay(for: .now)
+        guard let startTmrw = cal.date(byAdding: .day, value: 1, to: startToday),
+              let startDay2 = cal.date(byAdding: .day, value: 2, to: startToday)
+        else { return (0, 0) }
         let open = visibleCanvasTodos.filter { !$0.isDone }
-        guard let next = open.compactMap(\.dueDate).sorted().first else { return "—" }
-        return "Next \(Self.shortDue.string(from: next))"
+        let t = open.filter { ($0.dueDate.map { $0 >= startToday && $0 < startTmrw }) ?? false }.count
+        let m = open.filter { ($0.dueDate.map { $0 >= startTmrw && $0 < startDay2 }) ?? false }.count
+        return (t, m)
     }
 
     private var remindersPrimary: String {

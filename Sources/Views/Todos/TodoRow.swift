@@ -19,7 +19,7 @@ struct TodoRow: View {
             }
             .buttonStyle(.plain)
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 2) {
                 Text(todo.title)
                     .font(AppType.body)
                     .foregroundStyle(todo.isDone ? AppColors.tertiary : AppColors.primary)
@@ -48,7 +48,7 @@ struct TodoRow: View {
                     .foregroundStyle(status.isOverdue ? AppColors.accent : AppColors.secondary)
             }
         }
-        .padding(.vertical, 10)
+        .padding(.vertical, 6)
         .contentShape(Rectangle())
         .onTapGesture {
             if todo.source == .manual {

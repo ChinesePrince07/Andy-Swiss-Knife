@@ -18,11 +18,12 @@ struct ClassesView: View {
                 } else {
                     ForEach(todaysClasses) { cls in
                         HairlineDivider()
-                        HStack(alignment: .firstTextBaseline, spacing: 16) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(timeRange(for: cls))
-                                    .font(AppType.caption)
-                                    .foregroundStyle(AppColors.secondary)
+                        HStack(alignment: .firstTextBaseline, spacing: 12) {
+                            Text(timeRange(for: cls))
+                                .font(AppType.caption)
+                                .foregroundStyle(AppColors.secondary)
+                                .frame(width: 82, alignment: .leading)
+                            VStack(alignment: .leading, spacing: 1) {
                                 Text(cls.name)
                                     .font(AppType.bodyMedium)
                                     .foregroundStyle(cls.kind == .lunch ? AppColors.secondary : AppColors.primary)
@@ -34,7 +35,7 @@ struct ClassesView: View {
                             }
                             Spacer()
                         }
-                        .padding(.vertical, 12)
+                        .padding(.vertical, 6)
                     }
                     HairlineDivider()
                 }

@@ -61,12 +61,12 @@ struct EventsView: View {
     }
 
     private func eventRow(_ e: Event) -> some View {
-        HStack(alignment: .firstTextBaseline, spacing: 14) {
+        HStack(alignment: .firstTextBaseline, spacing: 12) {
             Text(timeLabel(for: e))
                 .font(AppType.caption)
                 .foregroundStyle(AppColors.secondary)
-                .frame(width: 90, alignment: .leading)
-            VStack(alignment: .leading, spacing: 3) {
+                .frame(width: 78, alignment: .leading)
+            VStack(alignment: .leading, spacing: 1) {
                 Text(e.title)
                     .font(AppType.bodyMedium)
                     .foregroundStyle(AppColors.primary)
@@ -74,11 +74,12 @@ struct EventsView: View {
                     Text(location)
                         .font(AppType.caption)
                         .foregroundStyle(AppColors.secondary)
+                        .lineLimit(1)
                 }
             }
             Spacer()
         }
-        .padding(.vertical, 10)
+        .padding(.vertical, 6)
     }
 
     private var grouped: [(Date, [Event])] {
