@@ -39,6 +39,22 @@ struct SettingsView: View {
             }
 
             Section {
+                NavigationLink {
+                    DashboardLayoutEditor()
+                } label: {
+                    HStack {
+                        Text("Customize dashboard")
+                        Spacer()
+                        Text("arrange").foregroundStyle(AppColors.secondary)
+                    }
+                }
+            } header: {
+                Text("Layout")
+            } footer: {
+                Text("Drag cards on the dashboard grid into the order you want.")
+            }
+
+            Section {
                 Button {
                     showingCalendarImport = true
                 } label: {

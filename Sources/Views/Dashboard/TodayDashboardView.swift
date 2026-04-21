@@ -201,7 +201,19 @@ struct TodayDashboardView: View {
     }
 
     private var glanceGrid: some View {
-        LazyVGrid(columns: [GridItem(.flexible(), spacing: 6), GridItem(.flexible(), spacing: 6)], spacing: 6) {
+        let layout = DashboardLayout.shared
+        return LazyVGrid(columns: [GridItem(.flexible(), spacing: 6), GridItem(.flexible(), spacing: 6)], spacing: 6) {
+            ForEach(layout.order, id: \.self) { card in
+                cardView(for: card)
+            }
+        }
+        .buttonStyle(.plain)
+    }
+
+    @ViewBuilder
+    private func cardView(for card: DashboardCard) -> some View {
+        switch card {
+        case .nextClass:
             NavigationLink { ClassesView() } label: {
                 TimelineView(.periodic(from: .now, by: 60)) { ctx in
                     GlanceCard(
@@ -211,23 +223,27 @@ struct TodayDashboardView: View {
                     )
                 }
             }
+        case .reminders:
             NavigationLink { PersonalCalendarView(services: services) } label: {
                 GlanceCard(label: "Reminders", primary: remindersPrimary, secondary: remindersSecondary)
             }
+        case .canvas:
             NavigationLink { AssignmentsView(services: services) } label: {
                 GlanceCard(label: "Canvas", primary: canvasPrimary, secondary: canvasSecondary)
             }
+        case .meal:
             NavigationLink { MealView(services: services) } label: {
                 GlanceCard(label: mealCardLabel, primary: mealPrimary, secondary: mealSecondary, error: mealError)
             }
+        case .pomodoro:
             NavigationLink { PomodoroView(services: services) } label: {
                 GlanceCard(label: "Pomodoro", primary: "Start", secondary: "25 min focus")
             }
+        case .events:
             NavigationLink { EventsView(services: services) } label: {
                 GlanceCard(label: "Events", primary: nextEventPrimary, secondary: nextEventSecondary)
             }
         }
-        .buttonStyle(.plain)
     }
 
     private var visibleCanvasTodos: [Todo] {

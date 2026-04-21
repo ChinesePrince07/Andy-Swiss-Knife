@@ -42,6 +42,7 @@
 		4F89E3E3AEBA9A529F45503A /* SuffieldTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C62439ECC17B4BD42818BE4 /* SuffieldTemplate.swift */; };
 		512FB25DEB74CBBCFC79C31B /* ReminderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE649F9598138060C7A34068 /* ReminderRow.swift */; };
 		541997E4DB1BDC2195C62FD9 /* DiningParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700361F6356B9A0A54B91DBD /* DiningParserTests.swift */; };
+		5C77A262615C2264337A8668 /* DashboardLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6DED12FF93B8A00E879914 /* DashboardLayout.swift */; };
 		5DB7B7495560BF255A0D44FF /* CalendarImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8914BC4C0FABA3E1577AEDB0 /* CalendarImporter.swift */; };
 		6138315DA6DE72E429B50E33 /* PersonalEventEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E5E6B2240DDDDD99C4D10E /* PersonalEventEditSheet.swift */; };
 		627AB891FC0FAF5E485605F5 /* SwissKnifeWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A88ED0CE044EE770247D3373 /* SwissKnifeWidgets.swift */; };
@@ -50,6 +51,7 @@
 		680BE98A63A71521C12E6513 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4F36C6B48E2FB444CF3DE0 /* SettingsView.swift */; };
 		68FF4D7755ABB313A8692469 /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6F0ACE8F87DDCC97438137 /* AppModelContainer.swift */; };
 		6AFDDD1CDC8C66BD33FA5DBA /* ics-weekly.ics in Resources */ = {isa = PBXBuildFile; fileRef = B0598C29456DBF862E0E8699 /* ics-weekly.ics */; };
+		723E4E283E614F0AFFE5DC89 /* DashboardLayoutEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFA3F8E82E3CDE5CCD03611 /* DashboardLayoutEditor.swift */; };
 		77ED75EF855F2ADADF890697 /* PomodoroLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90D09D8AFCE112A0B797759 /* PomodoroLiveActivity.swift */; };
 		78BFC806AB4136D3D9794E58 /* WidgetReloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8DA70372D27938DC8C9501 /* WidgetReloader.swift */; };
 		7F4A5068F4652A98FB9A7DC0 /* TodoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA4ED3E8FB6B70780EECF42 /* TodoRow.swift */; };
@@ -152,6 +154,7 @@
 		6A4C5BA3B543E15F98EB3514 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6BDE555AA06812977F66D5CF /* ReminderWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderWidget.swift; sourceTree = "<group>"; };
 		6C72A38932D974ACFFE72627 /* TodoSweeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoSweeper.swift; sourceTree = "<group>"; };
+		6F6DED12FF93B8A00E879914 /* DashboardLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardLayout.swift; sourceTree = "<group>"; };
 		700361F6356B9A0A54B91DBD /* DiningParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningParserTests.swift; sourceTree = "<group>"; };
 		74DE5711E91ED38B80461908 /* ics-canvas.ics */ = {isa = PBXFileReference; path = "ics-canvas.ics"; sourceTree = "<group>"; };
 		7914539FD8CC3CFC11001E19 /* PersonalCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalCalendarView.swift; sourceTree = "<group>"; };
@@ -197,6 +200,7 @@
 		E2F1368DFE43C2F590808B3A /* ScheduleClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleClass.swift; sourceTree = "<group>"; };
 		E6508432714136EC18A423DF /* AssignmentsSyncServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsSyncServiceTests.swift; sourceTree = "<group>"; };
 		EB8978F63D082125B6793831 /* ClassesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassesView.swift; sourceTree = "<group>"; };
+		EDFA3F8E82E3CDE5CCD03611 /* DashboardLayoutEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardLayoutEditor.swift; sourceTree = "<group>"; };
 		EEFF8210D8128B55B70DE84F /* CachedEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedEvent.swift; sourceTree = "<group>"; };
 		EF46299132CD55E2AE1B3204 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		FC56A94C67FB83CEF05AD3DF /* ICSParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICSParser.swift; sourceTree = "<group>"; };
@@ -245,6 +249,7 @@
 				FCAF5A288944379AC9A965BC /* AssignmentsSyncService.swift */,
 				8914BC4C0FABA3E1577AEDB0 /* CalendarImporter.swift */,
 				1C9228AB7BB53CF525E1AA35 /* Config.swift */,
+				6F6DED12FF93B8A00E879914 /* DashboardLayout.swift */,
 				B35C596E06DEBEE3C8755EE6 /* DeepLinks.swift */,
 				AF68A95B24C59E22AFE2ED9F /* DiningParser.swift */,
 				1573D420C3E8959C3983BAF0 /* DiningService.swift */,
@@ -410,6 +415,7 @@
 			isa = PBXGroup;
 			children = (
 				62067695A52BA871E230D768 /* CalendarImportView.swift */,
+				EDFA3F8E82E3CDE5CCD03611 /* DashboardLayoutEditor.swift */,
 				7DE3F4200F1459F90DAD33F1 /* ScheduleEditorView.swift */,
 				8C4F36C6B48E2FB444CF3DE0 /* SettingsView.swift */,
 			);
@@ -602,6 +608,8 @@
 				9B87CB22ECC0839242385559 /* ClassesView.swift in Sources */,
 				F68FBB533C1E845412A32FDC /* Config.swift in Sources */,
 				DC8F742DC5FE8163BAE9AFBF /* DTOs.swift in Sources */,
+				5C77A262615C2264337A8668 /* DashboardLayout.swift in Sources */,
+				723E4E283E614F0AFFE5DC89 /* DashboardLayoutEditor.swift in Sources */,
 				BB4D670A88C4A4C458DC53B1 /* DeepLinks.swift in Sources */,
 				F269CE4B5A777BAEB6A0D96D /* DiningParser.swift in Sources */,
 				B020D56A7AB742D316572B94 /* DiningService.swift in Sources */,
