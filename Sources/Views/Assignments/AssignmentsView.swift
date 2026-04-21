@@ -84,27 +84,29 @@ struct AssignmentsView: View {
     }
 
     private var assignmentsList: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            SectionLabel(text: "To do")
-            HairlineDivider()
-            ForEach(sorted) { todo in
-                TodoRow(todo: todo, services: services)
-                HairlineDivider()
+        VStack(alignment: .leading, spacing: 18) {
+            ForEach(groupedBuckets, id: \.0) { bucket, todos in
+                DueGroupSection(
+                    title: bucket.title,
+                    subtitle: bucket.subtitle,
+                    isUrgent: bucket.isUrgent,
+                    items: todos,
+                    services: services
+                )
             }
         }
     }
 
-    private var sorted: [Todo] {
-        let open = visibleTodos.filter { !$0.isDone }.sorted { lhs, rhs in
-            switch (lhs.dueDate, rhs.dueDate) {
-            case let (.some(l), .some(r)): return l < r
-            case (.some, .none): return true
-            case (.none, .some): return false
-            case (.none, .none): return lhs.createdAt > rhs.createdAt
-            }
+    private var groupedBuckets: [(DueBucket, [Todo])] {
+        let open = visibleTodos.filter { !$0.isDone }
+        let grouped = DueBucket.group(todos: open)
+        // Keep done list at bottom only if there are any.
+        var result = grouped
+        let done = visibleTodos.filter { $0.isDone }
+        if !done.isEmpty {
+            result.append((DueBucket.done, done.sorted { $0.createdAt > $1.createdAt }))
         }
-        let done = visibleTodos.filter { $0.isDone }.sorted { $0.createdAt > $1.createdAt }
-        return open + done
+        return result
     }
 
     private func sync() async {

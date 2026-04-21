@@ -101,7 +101,7 @@ struct TodayDashboardView: View {
     }
 
     private var todoSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 14) {
             HStack {
                 SectionLabel(text: "To do")
                 Spacer()
@@ -111,16 +111,21 @@ struct TodayDashboardView: View {
                         .foregroundStyle(AppColors.secondary)
                 }
             }
-            HairlineDivider()
             if allTodos.isEmpty {
+                HairlineDivider()
                 Text("No tasks yet.")
                     .font(AppType.body)
                     .foregroundStyle(AppColors.secondary)
                     .padding(.vertical, 12)
             } else {
-                ForEach(sortedTodos) { todo in
-                    TodoRow(todo: todo, services: services)
-                    HairlineDivider()
+                ForEach(todoBuckets, id: \.0) { bucket, todos in
+                    DueGroupSection(
+                        title: bucket.title,
+                        subtitle: bucket.subtitle,
+                        isUrgent: bucket.isUrgent,
+                        items: todos,
+                        services: services
+                    )
                 }
             }
             HStack(spacing: 10) {
@@ -183,6 +188,16 @@ struct TodayDashboardView: View {
         }
         let done = allTodos.filter { $0.isDone }.sorted { $0.createdAt > $1.createdAt }
         return open + done
+    }
+
+    private var todoBuckets: [(DueBucket, [Todo])] {
+        let open = allTodos.filter { !$0.isDone }
+        var groups = DueBucket.group(todos: open)
+        let done = allTodos.filter { $0.isDone }
+        if !done.isEmpty {
+            groups.append((DueBucket.done, done.sorted { $0.createdAt > $1.createdAt }))
+        }
+        return groups
     }
 
     private var glanceGrid: some View {
