@@ -70,25 +70,32 @@ final class Services {
 struct RootView: View {
     let container: ModelContainer
     @State private var services: Services?
+    @State private var selectedTab = 0
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         Group {
             if let services {
-                TabView {
+                TabView(selection: $selectedTab) {
                     NavigationStack {
                         TodayDashboardView(services: services)
                     }
                     .tabItem { Label("Classic", systemImage: "square.grid.2x2") }
+                    .tag(0)
 
                     NavigationStack {
                         TodayV2View(services: services)
                     }
                     .tabItem { Label("Today v2", systemImage: "sparkles") }
+                    .tag(1)
                 }
                 .onAppear { services.sweeper.sweep() }
                 .onChange(of: scenePhase) { _, phase in
                     if phase == .active { services.sweeper.sweep() }
+                }
+                .onOpenURL { url in
+                    DeepLinks.shared.handle(url)
+                    selectedTab = 0
                 }
             } else {
                 Color.clear

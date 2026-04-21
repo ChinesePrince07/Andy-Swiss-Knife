@@ -79,9 +79,14 @@ struct TodoWidgetView: View {
                     .kerning(1.5)
                     .foregroundStyle(.secondary)
                 Spacer()
-                Text("\(entry.todos.count) open")
+                Text("\(entry.todos.count)")
                     .font(.system(size: 10, weight: .regular, design: .monospaced))
                     .foregroundStyle(.secondary)
+                Link(destination: URL(string: "swissknife://add-todo")!) {
+                    Image(systemName: "plus.square")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundStyle(.primary)
+                }
             }
             if entry.todos.isEmpty {
                 Spacer()

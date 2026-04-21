@@ -64,6 +64,7 @@
 		B020D56A7AB742D316572B94 /* DiningService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1573D420C3E8959C3983BAF0 /* DiningService.swift */; };
 		B66E93F96E3478544BF0F3CC /* CachedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFF8210D8128B55B70DE84F /* CachedEvent.swift */; };
 		B8B87393EC08C093E4AAAF6A /* MenuWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6497E54EF3BA0DE1D2514EE /* MenuWidget.swift */; };
+		BB4D670A88C4A4C458DC53B1 /* DeepLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35C596E06DEBEE3C8755EE6 /* DeepLinks.swift */; };
 		BEA805C3CCC8CB2B182AE83D /* MealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A106A618866B97560536365 /* MealView.swift */; };
 		C4C2C05CE3E736696204AAF6 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB90B7ED16E641F907E43170 /* Theme.swift */; };
 		C7C8FE0BE830A1201AEF0AEC /* EventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 136DCB9AE73DA4324A3F14DF /* EventsView.swift */; };
@@ -163,6 +164,7 @@
 		A88ED0CE044EE770247D3373 /* SwissKnifeWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwissKnifeWidgets.swift; sourceTree = "<group>"; };
 		AF68A95B24C59E22AFE2ED9F /* DiningParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningParser.swift; sourceTree = "<group>"; };
 		B0598C29456DBF862E0E8699 /* ics-weekly.ics */ = {isa = PBXFileReference; path = "ics-weekly.ics"; sourceTree = "<group>"; };
+		B35C596E06DEBEE3C8755EE6 /* DeepLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinks.swift; sourceTree = "<group>"; };
 		B573D2B21443B0B64EB94686 /* RRuleExpander.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RRuleExpander.swift; sourceTree = "<group>"; };
 		B6E5E6B2240DDDDD99C4D10E /* PersonalEventEditSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalEventEditSheet.swift; sourceTree = "<group>"; };
 		B81CE12C09B1455EB90BA07F /* TodoEditSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoEditSheet.swift; sourceTree = "<group>"; };
@@ -231,6 +233,7 @@
 			children = (
 				FCAF5A288944379AC9A965BC /* AssignmentsSyncService.swift */,
 				1C9228AB7BB53CF525E1AA35 /* Config.swift */,
+				B35C596E06DEBEE3C8755EE6 /* DeepLinks.swift */,
 				AF68A95B24C59E22AFE2ED9F /* DiningParser.swift */,
 				1573D420C3E8959C3983BAF0 /* DiningService.swift */,
 				05214FF5A0D20A717DC0B5F3 /* EventsService.swift */,
@@ -582,6 +585,7 @@
 				9B87CB22ECC0839242385559 /* ClassesView.swift in Sources */,
 				F68FBB533C1E845412A32FDC /* Config.swift in Sources */,
 				DC8F742DC5FE8163BAE9AFBF /* DTOs.swift in Sources */,
+				BB4D670A88C4A4C458DC53B1 /* DeepLinks.swift in Sources */,
 				F269CE4B5A777BAEB6A0D96D /* DiningParser.swift in Sources */,
 				B020D56A7AB742D316572B94 /* DiningService.swift in Sources */,
 				95558A4BEC52FC6E042306AA /* EventsService.swift in Sources */,

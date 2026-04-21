@@ -18,6 +18,8 @@ struct TodayDashboardView: View {
     @State private var isRefreshing = false
     @State private var mealError: Bool = false
     @State private var showingAddSheet = false
+    @State private var showingAddReminderSheet = false
+    private let deepLinks = DeepLinks.shared
 
     var body: some View {
         ScrollView {
@@ -50,6 +52,26 @@ struct TodayDashboardView: View {
         }
         .sheet(isPresented: $showingAddSheet) {
             TodoEditSheet(services: services, existing: nil)
+        }
+        .sheet(isPresented: $showingAddReminderSheet) {
+            PersonalEventEditSheet(services: services, existing: nil)
+        }
+        .onChange(of: deepLinks.pendingAction) { _, action in
+            guard let action else { return }
+            switch action {
+            case .addTodo:     showingAddSheet = true
+            case .addReminder: showingAddReminderSheet = true
+            }
+            deepLinks.clear()
+        }
+        .onAppear {
+            if let action = deepLinks.pendingAction {
+                switch action {
+                case .addTodo:     showingAddSheet = true
+                case .addReminder: showingAddReminderSheet = true
+                }
+                deepLinks.clear()
+            }
         }
     }
 

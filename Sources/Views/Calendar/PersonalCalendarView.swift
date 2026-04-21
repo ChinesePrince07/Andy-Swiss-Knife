@@ -10,6 +10,7 @@ struct PersonalCalendarView: View {
 
     @State private var showingAdd = false
     @State private var editing: PersonalEvent?
+    private let deepLinks = DeepLinks.shared
 
     var body: some View {
         ZStack {
@@ -56,6 +57,18 @@ struct PersonalCalendarView: View {
         }
         .sheet(item: $editing) { event in
             PersonalEventEditSheet(services: services, existing: event)
+        }
+        .onChange(of: deepLinks.pendingAction) { _, action in
+            if action == .addReminder {
+                showingAdd = true
+                deepLinks.clear()
+            }
+        }
+        .onAppear {
+            if deepLinks.pendingAction == .addReminder {
+                showingAdd = true
+                deepLinks.clear()
+            }
         }
     }
 
@@ -133,6 +146,7 @@ struct PersonalCalendarView: View {
         services.notifications.cancel(for: e)
         modelContext.delete(e)
         try? modelContext.save()
+        WidgetReloader.reloadReminderWidgets()
     }
 
     static let dayFormatter: DateFormatter = {

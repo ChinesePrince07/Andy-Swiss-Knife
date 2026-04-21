@@ -113,6 +113,7 @@ struct TodoEditSheet: View {
             }
         }
         try? modelContext.save()
+        WidgetReloader.reloadTodoWidgets()
         dismiss()
     }
 }

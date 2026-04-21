@@ -74,6 +74,11 @@ struct ReminderWidgetView: View {
                 Text("\(entry.reminders.count)")
                     .font(.system(size: 10, weight: .regular, design: .monospaced))
                     .foregroundStyle(.secondary)
+                Link(destination: URL(string: "swissknife://add-reminder")!) {
+                    Image(systemName: "plus.square")
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundStyle(.primary)
+                }
             }
             if entry.reminders.isEmpty {
                 Spacer()

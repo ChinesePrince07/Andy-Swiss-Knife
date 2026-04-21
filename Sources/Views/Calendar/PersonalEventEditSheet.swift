@@ -92,6 +92,7 @@ struct PersonalEventEditSheet: View {
             }
         }
         try? modelContext.save()
+        WidgetReloader.reloadReminderWidgets()
         dismiss()
     }
 }

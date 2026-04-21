@@ -102,11 +102,13 @@ struct TodoRow: View {
             Task { await services.notifications.schedule(for: todo) }
         }
         try? modelContext.save()
+        WidgetReloader.reloadTodoWidgets()
     }
 
     private func delete() {
         services.notifications.cancel(for: todo)
         modelContext.delete(todo)
         try? modelContext.save()
+        WidgetReloader.reloadTodoWidgets()
     }
 }

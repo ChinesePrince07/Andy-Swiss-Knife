@@ -41,6 +41,10 @@ targets:
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
         NSSupportsLiveActivities: true
+        CFBundleURLTypes:
+          - CFBundleURLName: com.andyzhang.AndySwissKnife
+            CFBundleURLSchemes:
+              - swissknife
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.andyzhang.AndySwissKnife
