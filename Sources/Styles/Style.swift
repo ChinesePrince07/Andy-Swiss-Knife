@@ -43,7 +43,7 @@ struct ThemedCard: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .padding(14)
+            .padding(10)
             .background(theme.surface)
             .overlay(
                 Rectangle()

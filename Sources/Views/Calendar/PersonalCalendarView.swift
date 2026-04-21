@@ -10,6 +10,8 @@ struct PersonalCalendarView: View {
 
     @State private var showingAdd = false
     @State private var editing: PersonalEvent?
+    @State private var newTitle: String = ""
+    @FocusState private var addFocused: Bool
     private let deepLinks = DeepLinks.shared
 
     var body: some View {
@@ -32,17 +34,26 @@ struct PersonalCalendarView: View {
                         }
                     }
 
-                    Button {
-                        showingAdd = true
-                    } label: {
-                        HStack(spacing: 8) {
-                            Image(systemName: "plus")
-                            Text("Add event")
+                    HStack(spacing: 10) {
+                        Image(systemName: "plus")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundStyle(AppColors.tertiary)
+                        TextField("Add reminder…", text: $newTitle)
+                            .font(AppType.body)
+                            .foregroundStyle(AppColors.primary)
+                            .focused($addFocused)
+                            .submitLabel(.done)
+                            .onSubmit { commitNewReminder() }
+                        if !newTitle.isEmpty {
+                            Button { showingAdd = true } label: {
+                                Image(systemName: "ellipsis.circle")
+                                    .font(.system(size: 14))
+                                    .foregroundStyle(AppColors.tertiary)
+                            }
+                            .buttonStyle(.plain)
                         }
-                        .font(AppType.body)
-                        .foregroundStyle(AppColors.primary)
-                        .padding(.vertical, 10)
                     }
+                    .padding(.vertical, 10)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 20)
@@ -119,6 +130,19 @@ struct PersonalCalendarView: View {
         let df = DateFormatter()
         df.dateFormat = "h:mm a"
         return df.string(from: e.date)
+    }
+
+    private func commitNewReminder() {
+        let trimmed = newTitle.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else { return }
+        let defaultDate = Calendar.current.date(byAdding: .hour, value: 1, to: .now) ?? .now
+        let event = PersonalEvent(title: trimmed, date: defaultDate)
+        modelContext.insert(event)
+        try? modelContext.save()
+        SnapshotStore.publishReminders(from: modelContext)
+        WidgetReloader.reloadReminderWidgets()
+        newTitle = ""
+        addFocused = true
     }
 
     private func delete(_ e: PersonalEvent) {

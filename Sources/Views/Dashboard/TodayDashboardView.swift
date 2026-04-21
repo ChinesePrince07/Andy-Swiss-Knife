@@ -25,12 +25,12 @@ struct TodayDashboardView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 18) {
                 header
                 todoSection
                 glanceGrid
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 16)
             .padding(.top, 8)
             .padding(.bottom, 40)
         }
@@ -201,7 +201,7 @@ struct TodayDashboardView: View {
     }
 
     private var glanceGrid: some View {
-        LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
+        LazyVGrid(columns: [GridItem(.flexible(), spacing: 6), GridItem(.flexible(), spacing: 6)], spacing: 6) {
             NavigationLink { ClassesView() } label: {
                 TimelineView(.periodic(from: .now, by: 60)) { ctx in
                     GlanceCard(
@@ -392,18 +392,21 @@ struct GlanceCard: View {
 
     var body: some View {
         _ = themeManager.current  // ensure observation
-        return VStack(alignment: .leading, spacing: 6) {
-            SectionLabel(text: label)
+        return VStack(alignment: .leading, spacing: 2) {
+            Text(label.uppercased())
+                .font(.system(size: 9, weight: .heavy, design: .monospaced))
+                .kerning(1.1)
+                .foregroundStyle(AppColors.tertiary)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Text(primary)
-                .font(AppType.bodyMedium)
+                .font(.system(size: 14, weight: .medium, design: .monospaced))
                 .foregroundStyle(error ? AppColors.accent : AppColors.primary)
                 .lineLimit(2)
                 .truncationMode(.tail)
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Text(secondary)
-                .font(AppType.caption)
+                .font(.system(size: 10, design: .monospaced))
                 .foregroundStyle(AppColors.secondary)
                 .lineLimit(1)
                 .truncationMode(.tail)
@@ -411,6 +414,10 @@ struct GlanceCard: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .themedCard()
+        .padding(9)
+        .overlay(
+            Rectangle()
+                .strokeBorder(AppColors.primary, lineWidth: 1.5)
+        )
     }
 }

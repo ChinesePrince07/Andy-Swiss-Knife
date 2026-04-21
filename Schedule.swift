@@ -1,4 +1,4 @@
- import Foundation
+ 	import Foundation
 
 /// Seed schedule copied into SwiftData on first launch. Users can edit /
 /// delete / replace entirely from Settings → Classes.
