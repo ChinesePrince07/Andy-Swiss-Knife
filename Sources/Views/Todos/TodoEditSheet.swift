@@ -113,6 +113,7 @@ struct TodoEditSheet: View {
             }
         }
         try? modelContext.save()
+        SnapshotStore.publishTodos(from: modelContext)
         WidgetReloader.reloadTodoWidgets()
         dismiss()
     }

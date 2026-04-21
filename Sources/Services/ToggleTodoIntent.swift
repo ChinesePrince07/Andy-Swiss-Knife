@@ -22,6 +22,7 @@ struct ToggleTodoIntent: AppIntent {
             todo.completedAt = todo.isDone ? .now : nil
             try? context.save()
         }
+        SnapshotStore.publishTodos(from: context)
         WidgetReloader.reloadTodoWidgets()
         return .result()
     }

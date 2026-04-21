@@ -42,6 +42,9 @@ final class Services {
         self.pomodoro = PomodoroTimer()
         self.sweeper = TodoSweeper(context: context)
         Self.seedScheduleIfNeeded(context: context)
+        SnapshotStore.publishTodos(from: context)
+        SnapshotStore.publishReminders(from: context)
+        WidgetReloader.reloadAll()
     }
 
     static func seedScheduleIfNeeded(context: ModelContext) {

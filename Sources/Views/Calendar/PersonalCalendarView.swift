@@ -146,6 +146,7 @@ struct PersonalCalendarView: View {
         services.notifications.cancel(for: e)
         modelContext.delete(e)
         try? modelContext.save()
+        SnapshotStore.publishReminders(from: modelContext)
         WidgetReloader.reloadReminderWidgets()
     }
 

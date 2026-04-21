@@ -36,12 +36,14 @@
 		467F0A86716E7B1239A041E1 /* ToggleTodoIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86240F849252DAD7F4F1343C /* ToggleTodoIntent.swift */; };
 		46939DF60D01F028D2032318 /* RRuleExpander.swift in Sources */ = {isa = PBXBuildFile; fileRef = B573D2B21443B0B64EB94686 /* RRuleExpander.swift */; };
 		49DB9E3A914167B8D7F4F7F8 /* MockHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77A3CD2FD912DFBD93D361A /* MockHTTPClient.swift */; };
+		4AC76C88EE0A14920F6049E8 /* SnapshotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B50B8323C1872173961C2F /* SnapshotStore.swift */; };
 		4BEF9D5D210710C6CD1CC7D0 /* ScheduleClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F1368DFE43C2F590808B3A /* ScheduleClass.swift */; };
 		4EBB22022A56B0E83E26D8FB /* TodoEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B81CE12C09B1455EB90BA07F /* TodoEditSheet.swift */; };
 		541997E4DB1BDC2195C62FD9 /* DiningParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700361F6356B9A0A54B91DBD /* DiningParserTests.swift */; };
 		6138315DA6DE72E429B50E33 /* PersonalEventEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E5E6B2240DDDDD99C4D10E /* PersonalEventEditSheet.swift */; };
 		627AB891FC0FAF5E485605F5 /* SwissKnifeWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A88ED0CE044EE770247D3373 /* SwissKnifeWidgets.swift */; };
 		62FB711B5148CE44AF4ACE8A /* ICSParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC56A94C67FB83CEF05AD3DF /* ICSParser.swift */; };
+		67543B8A78BCE8E5130B0483 /* SnapshotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B50B8323C1872173961C2F /* SnapshotStore.swift */; };
 		680BE98A63A71521C12E6513 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4F36C6B48E2FB444CF3DE0 /* SettingsView.swift */; };
 		68FF4D7755ABB313A8692469 /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6F0ACE8F87DDCC97438137 /* AppModelContainer.swift */; };
 		6AFDDD1CDC8C66BD33FA5DBA /* ics-weekly.ics in Resources */ = {isa = PBXBuildFile; fileRef = B0598C29456DBF862E0E8699 /* ics-weekly.ics */; };
@@ -152,6 +154,7 @@
 		7B7D1DD1592E151C2F873A7C /* dining-broken.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "dining-broken.html"; sourceTree = "<group>"; };
 		7DE3F4200F1459F90DAD33F1 /* ScheduleEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleEditorView.swift; sourceTree = "<group>"; };
 		8433D981563165EA3996B85D /* TodayV2View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayV2View.swift; sourceTree = "<group>"; };
+		85B50B8323C1872173961C2F /* SnapshotStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotStore.swift; sourceTree = "<group>"; };
 		86240F849252DAD7F4F1343C /* ToggleTodoIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleTodoIntent.swift; sourceTree = "<group>"; };
 		88E55C4BDF127A9C0CEF67ED /* PomodoroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroView.swift; sourceTree = "<group>"; };
 		896B8600107023AA631023CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -245,6 +248,7 @@
 				2CC26334910ED03B763FD900 /* PomodoroTimer.swift */,
 				B573D2B21443B0B64EB94686 /* RRuleExpander.swift */,
 				019E33B5FB0E2689102AA4AB /* SharedStorage.swift */,
+				85B50B8323C1872173961C2F /* SnapshotStore.swift */,
 				6C72A38932D974ACFFE72627 /* TodoSweeper.swift */,
 				86240F849252DAD7F4F1343C /* ToggleTodoIntent.swift */,
 				EF46299132CD55E2AE1B3204 /* UserSettings.swift */,
@@ -608,6 +612,7 @@
 				3CC6023542F8E9F571CFD93A /* Secrets.swift in Sources */,
 				680BE98A63A71521C12E6513 /* SettingsView.swift in Sources */,
 				0282CD4C71E8D25589883461 /* SharedStorage.swift in Sources */,
+				67543B8A78BCE8E5130B0483 /* SnapshotStore.swift in Sources */,
 				07F399E92345871AAC1232E8 /* Style.swift in Sources */,
 				24A34537B6B25F0D48995DA8 /* SwissKnifeApp.swift in Sources */,
 				C4C2C05CE3E736696204AAF6 /* Theme.swift in Sources */,
@@ -641,6 +646,7 @@
 				CE9C4CF01D0E93CD861864FB /* Schedule.swift in Sources */,
 				4BEF9D5D210710C6CD1CC7D0 /* ScheduleClass.swift in Sources */,
 				8314EC06D6B0A00339B5F46A /* SharedStorage.swift in Sources */,
+				4AC76C88EE0A14920F6049E8 /* SnapshotStore.swift in Sources */,
 				627AB891FC0FAF5E485605F5 /* SwissKnifeWidgets.swift in Sources */,
 				0F85E6C82DD5059C5099F8F0 /* Todo.swift in Sources */,
 				8D26070EFC0A1292E802CAD6 /* TodoWidget.swift in Sources */,

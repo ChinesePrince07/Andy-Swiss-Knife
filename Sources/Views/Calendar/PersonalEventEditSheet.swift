@@ -92,6 +92,7 @@ struct PersonalEventEditSheet: View {
             }
         }
         try? modelContext.save()
+        SnapshotStore.publishReminders(from: modelContext)
         WidgetReloader.reloadReminderWidgets()
         dismiss()
     }

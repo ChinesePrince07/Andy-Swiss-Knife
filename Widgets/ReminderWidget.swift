@@ -1,25 +1,16 @@
 import WidgetKit
 import SwiftUI
-import SwiftData
-
-struct ReminderSnapshot: Identifiable {
-    let id: UUID
-    let title: String
-    let date: Date
-    let isAllDay: Bool
-    let notes: String?
-}
 
 struct ReminderEntry: TimelineEntry {
     let date: Date
-    let reminders: [ReminderSnapshot]
+    let reminders: [ReminderSnapshotDTO]
 }
 
 struct ReminderProvider: TimelineProvider {
     func placeholder(in context: Context) -> ReminderEntry {
         ReminderEntry(date: .now, reminders: [
-            ReminderSnapshot(id: UUID(), title: "Pick up suit", date: .now.addingTimeInterval(3600), isAllDay: false, notes: nil),
-            ReminderSnapshot(id: UUID(), title: "Dentist", date: .now.addingTimeInterval(86400), isAllDay: false, notes: nil)
+            ReminderSnapshotDTO(id: UUID(), title: "Pick up suit", date: .now.addingTimeInterval(3600), isAllDay: false, notes: nil),
+            ReminderSnapshotDTO(id: UUID(), title: "Dentist", date: .now.addingTimeInterval(86400), isAllDay: false, notes: nil)
         ])
     }
 
@@ -34,19 +25,9 @@ struct ReminderProvider: TimelineProvider {
     }
 
     private func fetch() -> ReminderEntry {
-        guard let container = try? AppModelContainer.make() else {
-            return ReminderEntry(date: .now, reminders: [])
-        }
-        let context = ModelContext(container)
-        let descriptor = FetchDescriptor<PersonalEvent>(
-            sortBy: [SortDescriptor(\.date)]
-        )
-        let events = (try? context.fetch(descriptor)) ?? []
-        let upcoming = events.filter { $0.date >= .now }.prefix(5)
-        let snapshots = upcoming.map {
-            ReminderSnapshot(id: $0.id, title: $0.title, date: $0.date, isAllDay: $0.isAllDay, notes: $0.notes)
-        }
-        return ReminderEntry(date: .now, reminders: Array(snapshots))
+        let all = SnapshotStore.readReminders()
+        let upcoming = all.filter { $0.date >= .now }.sorted { $0.date < $1.date }
+        return ReminderEntry(date: .now, reminders: Array(upcoming.prefix(6)))
     }
 }
 
@@ -64,50 +45,18 @@ struct ReminderWidgetView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                Text("REMINDERS")
-                    .font(.system(size: 10, weight: .heavy, design: .monospaced))
-                    .kerning(1.5)
-                    .foregroundStyle(.secondary)
-                Spacer()
-                Text("\(entry.reminders.count)")
-                    .font(.system(size: 10, weight: .regular, design: .monospaced))
-                    .foregroundStyle(.secondary)
-                Link(destination: URL(string: "swissknife://add-reminder")!) {
-                    Image(systemName: "plus.square")
-                        .font(.system(size: 13, weight: .bold))
-                        .foregroundStyle(.primary)
-                }
-            }
+        VStack(alignment: .leading, spacing: 8) {
+            header
             if entry.reminders.isEmpty {
                 Spacer()
                 Text("Nothing upcoming")
-                    .font(.system(size: 14, weight: .medium, design: .monospaced))
+                    .font(.system(size: 13, weight: .medium, design: .monospaced))
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity)
                 Spacer()
             } else {
                 ForEach(entry.reminders.prefix(maxRows)) { r in
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(r.title)
-                            .font(.system(size: 13, weight: .medium, design: .monospaced))
-                            .lineLimit(1)
-                        HStack(spacing: 4) {
-                            Text(dateLabel(r))
-                                .font(.system(size: 10, weight: .regular, design: .monospaced))
-                                .foregroundStyle(.secondary)
-                            if let notes = r.notes, !notes.isEmpty {
-                                Text("·")
-                                    .font(.system(size: 10))
-                                    .foregroundStyle(.secondary)
-                                Text(notes)
-                                    .font(.system(size: 10, weight: .regular, design: .monospaced))
-                                    .foregroundStyle(.secondary)
-                                    .lineLimit(1)
-                            }
-                        }
-                    }
+                    row(r)
                 }
                 Spacer(minLength: 0)
             }
@@ -116,7 +65,48 @@ struct ReminderWidgetView: View {
         .containerBackground(for: .widget) { Color(.systemBackground) }
     }
 
-    private func dateLabel(_ r: ReminderSnapshot) -> String {
+    private var header: some View {
+        HStack(spacing: 0) {
+            Text("REMINDERS")
+                .font(.system(size: 10, weight: .heavy, design: .monospaced))
+                .kerning(1.5)
+                .foregroundStyle(.secondary)
+            Spacer()
+            Text("\(entry.reminders.count)")
+                .font(.system(size: 10, weight: .regular, design: .monospaced))
+                .foregroundStyle(.secondary)
+                .padding(.trailing, 10)
+            Link(destination: URL(string: "swissknife://add-reminder")!) {
+                Image(systemName: "plus.square")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundStyle(.primary)
+            }
+        }
+    }
+
+    private func row(_ r: ReminderSnapshotDTO) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(r.title)
+                .font(.system(size: 13, weight: .medium, design: .monospaced))
+                .lineLimit(1)
+            HStack(spacing: 4) {
+                Text(dateLabel(r))
+                    .font(.system(size: 10, weight: .regular, design: .monospaced))
+                    .foregroundStyle(.secondary)
+                if let notes = r.notes, !notes.isEmpty {
+                    Text("·")
+                        .font(.system(size: 10))
+                        .foregroundStyle(.secondary)
+                    Text(notes)
+                        .font(.system(size: 10, weight: .regular, design: .monospaced))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+            }
+        }
+    }
+
+    private func dateLabel(_ r: ReminderSnapshotDTO) -> String {
         let cal = Calendar.current
         let df = DateFormatter()
         if r.isAllDay {

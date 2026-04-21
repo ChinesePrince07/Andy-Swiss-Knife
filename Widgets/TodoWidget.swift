@@ -1,26 +1,18 @@
 import WidgetKit
 import SwiftUI
-import SwiftData
 import AppIntents
-
-struct TodoSnapshot: Identifiable {
-    let id: UUID
-    let title: String
-    let isDone: Bool
-    let dueDate: Date?
-}
 
 struct TodoEntry: TimelineEntry {
     let date: Date
-    let todos: [TodoSnapshot]
+    let todos: [TodoSnapshotDTO]
 }
 
 struct TodoProvider: TimelineProvider {
     func placeholder(in context: Context) -> TodoEntry {
         TodoEntry(date: .now, todos: [
-            TodoSnapshot(id: UUID(), title: "English essay", isDone: false, dueDate: .now),
-            TodoSnapshot(id: UUID(), title: "Calc pset", isDone: false, dueDate: nil),
-            TodoSnapshot(id: UUID(), title: "Email Mr. Davis", isDone: true, dueDate: nil)
+            TodoSnapshotDTO(id: UUID(), title: "English essay", isDone: false, dueDate: .now, createdAt: .now),
+            TodoSnapshotDTO(id: UUID(), title: "Calc pset", isDone: false, dueDate: nil, createdAt: .now),
+            TodoSnapshotDTO(id: UUID(), title: "Email Mr. Davis", isDone: true, dueDate: nil, createdAt: .now)
         ])
     }
 
@@ -35,15 +27,8 @@ struct TodoProvider: TimelineProvider {
     }
 
     private func fetch() -> TodoEntry {
-        guard let container = try? AppModelContainer.make() else {
-            return TodoEntry(date: .now, todos: [])
-        }
-        let context = ModelContext(container)
-        let descriptor = FetchDescriptor<Todo>(
-            predicate: #Predicate { $0.externalID == nil }
-        )
-        let todos = (try? context.fetch(descriptor)) ?? []
-        let open = todos.filter { !$0.isDone }.sorted { a, b in
+        let all = SnapshotStore.readTodos()
+        let open = all.filter { !$0.isDone }.sorted { a, b in
             switch (a.dueDate, b.dueDate) {
             case let (.some(x), .some(y)): return x < y
             case (.some, .none): return true
@@ -51,10 +36,7 @@ struct TodoProvider: TimelineProvider {
             default: return a.createdAt > b.createdAt
             }
         }
-        let snapshots = open.prefix(6).map {
-            TodoSnapshot(id: $0.id, title: $0.title, isDone: $0.isDone, dueDate: $0.dueDate)
-        }
-        return TodoEntry(date: .now, todos: Array(snapshots))
+        return TodoEntry(date: .now, todos: Array(open.prefix(8)))
     }
 }
 
@@ -72,22 +54,8 @@ struct TodoWidgetView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                Text("TODO")
-                    .font(.system(size: 10, weight: .heavy, design: .monospaced))
-                    .kerning(1.5)
-                    .foregroundStyle(.secondary)
-                Spacer()
-                Text("\(entry.todos.count)")
-                    .font(.system(size: 10, weight: .regular, design: .monospaced))
-                    .foregroundStyle(.secondary)
-                Link(destination: URL(string: "swissknife://add-todo")!) {
-                    Image(systemName: "plus.square")
-                        .font(.system(size: 13, weight: .bold))
-                        .foregroundStyle(.primary)
-                }
-            }
+        VStack(alignment: .leading, spacing: 8) {
+            header
             if entry.todos.isEmpty {
                 Spacer()
                 Text("All clear")
@@ -97,31 +65,54 @@ struct TodoWidgetView: View {
                 Spacer()
             } else {
                 ForEach(entry.todos.prefix(maxRows)) { t in
-                    HStack(spacing: 8) {
-                        Button(intent: ToggleTodoIntent(todoID: t.id.uuidString)) {
-                            Image(systemName: t.isDone ? "checkmark.square.fill" : "square")
-                                .font(.system(size: 14))
-                                .foregroundStyle(.primary)
-                        }
-                        .buttonStyle(.plain)
-                        Text(t.title)
-                            .font(.system(size: 12, weight: .medium, design: .monospaced))
-                            .lineLimit(1)
-                            .strikethrough(t.isDone)
-                            .foregroundStyle(t.isDone ? .secondary : .primary)
-                        Spacer(minLength: 4)
-                        if let due = t.dueDate, Calendar.current.isDateInToday(due) {
-                            Text("TODAY")
-                                .font(.system(size: 8, weight: .heavy, design: .monospaced))
-                                .foregroundStyle(.red)
-                        }
-                    }
+                    row(t)
                 }
                 Spacer(minLength: 0)
             }
         }
         .padding(12)
         .containerBackground(for: .widget) { Color(.systemBackground) }
+    }
+
+    private var header: some View {
+        HStack(spacing: 0) {
+            Text("TODO")
+                .font(.system(size: 10, weight: .heavy, design: .monospaced))
+                .kerning(1.5)
+                .foregroundStyle(.secondary)
+            Spacer()
+            Text("\(entry.todos.count)")
+                .font(.system(size: 10, weight: .regular, design: .monospaced))
+                .foregroundStyle(.secondary)
+                .padding(.trailing, 10)
+            Link(destination: URL(string: "swissknife://add-todo")!) {
+                Image(systemName: "plus.square")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundStyle(.primary)
+            }
+        }
+    }
+
+    private func row(_ t: TodoSnapshotDTO) -> some View {
+        HStack(spacing: 8) {
+            Button(intent: ToggleTodoIntent(todoID: t.id.uuidString)) {
+                Image(systemName: t.isDone ? "checkmark.square.fill" : "square")
+                    .font(.system(size: 14))
+                    .foregroundStyle(.primary)
+            }
+            .buttonStyle(.plain)
+            Text(t.title)
+                .font(.system(size: 12, weight: .medium, design: .monospaced))
+                .lineLimit(1)
+                .strikethrough(t.isDone)
+                .foregroundStyle(t.isDone ? .secondary : .primary)
+            Spacer(minLength: 4)
+            if let due = t.dueDate, Calendar.current.isDateInToday(due) {
+                Text("TODAY")
+                    .font(.system(size: 8, weight: .heavy, design: .monospaced))
+                    .foregroundStyle(.red)
+            }
+        }
     }
 }
 

@@ -69,6 +69,7 @@ targets:
       - path: Sources/Models/DTOs.swift
       - path: Sources/Services/PomodoroAttributes.swift
       - path: Sources/Services/SharedStorage.swift
+      - path: Sources/Services/SnapshotStore.swift
       - path: Sources/Services/ToggleTodoIntent.swift
       - path: Sources/Services/WidgetReloader.swift
     info:
