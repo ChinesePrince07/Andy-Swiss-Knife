@@ -15,27 +15,34 @@
 		1C831A5BE4D2FD88A34FADBA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A4C5BA3B543E15F98EB3514 /* Assets.xcassets */; };
 		1F6A060549E64A8426D5C4F2 /* dining-normal.html in Resources */ = {isa = PBXBuildFile; fileRef = CB7D2D6E1D577D8FEF8CD8DA /* dining-normal.html */; };
 		20D162DDF5FAD5F0E6F02789 /* CachedMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9714F48D41526FB4B96674D /* CachedMenu.swift */; };
+		213F32BD06D750FB53583963 /* PomodoroAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5AAB826B54B6F030A71EA9 /* PomodoroAttributes.swift */; };
 		23B5CB82B87DD93CE4BA4FE6 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E486C027EFB8572A128000A /* Todo.swift */; };
 		24A34537B6B25F0D48995DA8 /* SwissKnifeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EDF3E97540E4D17E8C7D79 /* SwissKnifeApp.swift */; };
+		27957918FE212DF5CD5D1026 /* PomodoroAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5AAB826B54B6F030A71EA9 /* PomodoroAttributes.swift */; };
 		328FA42CAE93A0C4E3E3D304 /* AssignmentsSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCAF5A288944379AC9A965BC /* AssignmentsSyncService.swift */; };
 		37B9B26C19AC5CEFE90ECC04 /* ics-folded-description.ics in Resources */ = {isa = PBXBuildFile; fileRef = C851A753B87D83DE7D673B96 /* ics-folded-description.ics */; };
 		380FFF025F1FABF0E3D1E62F /* dining-broken.html in Resources */ = {isa = PBXBuildFile; fileRef = 7B7D1DD1592E151C2F873A7C /* dining-broken.html */; };
 		3CC6023542F8E9F571CFD93A /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD881A24D30AD5D90747EC7 /* Secrets.swift */; };
 		3E45D666B6A04BCC6D1C1D6A /* AssignmentsSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6508432714136EC18A423DF /* AssignmentsSyncServiceTests.swift */; };
 		41A80C606A7A7E61DE9CEADA /* ics-simple.ics in Resources */ = {isa = PBXBuildFile; fileRef = 3E718826D524695FC534A2C7 /* ics-simple.ics */; };
+		424130C0DAC27BE5DCCF9864 /* SwissKnifeWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4409C76389596E8A8F6491E4 /* SwissKnifeWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		46939DF60D01F028D2032318 /* RRuleExpander.swift in Sources */ = {isa = PBXBuildFile; fileRef = B573D2B21443B0B64EB94686 /* RRuleExpander.swift */; };
 		49DB9E3A914167B8D7F4F7F8 /* MockHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77A3CD2FD912DFBD93D361A /* MockHTTPClient.swift */; };
 		4EBB22022A56B0E83E26D8FB /* TodoEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B81CE12C09B1455EB90BA07F /* TodoEditSheet.swift */; };
 		541997E4DB1BDC2195C62FD9 /* DiningParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700361F6356B9A0A54B91DBD /* DiningParserTests.swift */; };
 		6138315DA6DE72E429B50E33 /* PersonalEventEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E5E6B2240DDDDD99C4D10E /* PersonalEventEditSheet.swift */; };
+		627AB891FC0FAF5E485605F5 /* SwissKnifeWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A88ED0CE044EE770247D3373 /* SwissKnifeWidgets.swift */; };
 		62FB711B5148CE44AF4ACE8A /* ICSParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC56A94C67FB83CEF05AD3DF /* ICSParser.swift */; };
 		680BE98A63A71521C12E6513 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4F36C6B48E2FB444CF3DE0 /* SettingsView.swift */; };
 		6AFDDD1CDC8C66BD33FA5DBA /* ics-weekly.ics in Resources */ = {isa = PBXBuildFile; fileRef = B0598C29456DBF862E0E8699 /* ics-weekly.ics */; };
+		77ED75EF855F2ADADF890697 /* PomodoroLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90D09D8AFCE112A0B797759 /* PomodoroLiveActivity.swift */; };
 		7F4A5068F4652A98FB9A7DC0 /* TodoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA4ED3E8FB6B70780EECF42 /* TodoRow.swift */; };
 		8757CC5D0E21AB8072DF3955 /* TodayDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE826936B7B41BFA75FBF71 /* TodayDashboardView.swift */; };
 		891BDC73F544C44B7B26053F /* PersonalEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330E9BB2B8C13CDA343D7295 /* PersonalEvent.swift */; };
 		8D6EA4298E4A3FE78960EB8C /* ClassEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB6E4C6F471CDC102EE7364C /* ClassEditSheet.swift */; };
+		8F8D1098F5C41B61B73EFCA5 /* ClassPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D0EFCF6D41836BAEF58433 /* ClassPeriod.swift */; };
 		90ABD8DDB355C7E4105F4B85 /* ScheduleClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F1368DFE43C2F590808B3A /* ScheduleClass.swift */; };
+		91B76862A6A6A0BF8F758FE5 /* NextClassWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026375F55FE9E7842C868240 /* NextClassWidget.swift */; };
 		95558A4BEC52FC6E042306AA /* EventsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05214FF5A0D20A717DC0B5F3 /* EventsService.swift */; };
 		9649F903A9FA482FD030BAD6 /* ics-canvas.ics in Resources */ = {isa = PBXBuildFile; fileRef = 74DE5711E91ED38B80461908 /* ics-canvas.ics */; };
 		9B87CB22ECC0839242385559 /* ClassesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8978F63D082125B6793831 /* ClassesView.swift */; };
@@ -46,6 +53,7 @@
 		C7C8FE0BE830A1201AEF0AEC /* EventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 136DCB9AE73DA4324A3F14DF /* EventsView.swift */; };
 		CB7663856201DAC527E545C9 /* PersonalCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7914539FD8CC3CFC11001E19 /* PersonalCalendarView.swift */; };
 		CCF7AFE7DBB40BE619BD40C0 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE29B303DD49919976371BC /* HTTPClient.swift */; };
+		CE9C4CF01D0E93CD861864FB /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2160A5C955F771E7E1EB7D4F /* Schedule.swift */; };
 		D520747D77E76A38D1AE079B /* AssignmentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5506D877B14199368003177 /* AssignmentsView.swift */; };
 		D8EA24F60E247FB348E5062B /* ICSParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 070D2B25BE3B190E6C1D33BE /* ICSParserTests.swift */; };
 		DC8F742DC5FE8163BAE9AFBF /* DTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A377EBC72BD04D506FF4E8D /* DTOs.swift */; };
@@ -54,6 +62,7 @@
 		F1BD2818783E7EBBEEFB2BFF /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2160A5C955F771E7E1EB7D4F /* Schedule.swift */; };
 		F269CE4B5A777BAEB6A0D96D /* DiningParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF68A95B24C59E22AFE2ED9F /* DiningParser.swift */; };
 		F2763BDE5CFAE679FA1E99B6 /* ClassPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D0EFCF6D41836BAEF58433 /* ClassPeriod.swift */; };
+		F33C098955AFD7AE31F6501C /* PomodoroActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01D7AB15BA97471D126F2D7F /* PomodoroActivity.swift */; };
 		F68FBB533C1E845412A32FDC /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C9228AB7BB53CF525E1AA35 /* Config.swift */; };
 		F69FDE14BCF1649B947EFC9A /* ics-canvas-updated.ics in Resources */ = {isa = PBXBuildFile; fileRef = 44599103D2235A4560C56824 /* ics-canvas-updated.ics */; };
 		F8F4B82C4879AB6A90B9272E /* CachedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFF8210D8128B55B70DE84F /* CachedEvent.swift */; };
@@ -62,6 +71,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		6653537B9B0494885B9E869A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F254BE7906BCCAF43DF475DB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 36FEC12B7951261FCEA74BE4;
+			remoteInfo = SwissKnifeWidgets;
+		};
 		F868A28CDEE33F3B95D2811F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F254BE7906BCCAF43DF475DB /* Project object */;
@@ -71,7 +87,23 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		82AD235D5B6DBFD2DBB7395F /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				424130C0DAC27BE5DCCF9864 /* SwissKnifeWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		01D7AB15BA97471D126F2D7F /* PomodoroActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroActivity.swift; sourceTree = "<group>"; };
+		026375F55FE9E7842C868240 /* NextClassWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextClassWidget.swift; sourceTree = "<group>"; };
 		05214FF5A0D20A717DC0B5F3 /* EventsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsService.swift; sourceTree = "<group>"; };
 		070D2B25BE3B190E6C1D33BE /* ICSParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICSParserTests.swift; sourceTree = "<group>"; };
 		0A106A618866B97560536365 /* MealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealView.swift; sourceTree = "<group>"; };
@@ -85,6 +117,7 @@
 		330E9BB2B8C13CDA343D7295 /* PersonalEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalEvent.swift; sourceTree = "<group>"; };
 		3D6F0ACE8F87DDCC97438137 /* AppModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelContainer.swift; sourceTree = "<group>"; };
 		3E718826D524695FC534A2C7 /* ics-simple.ics */ = {isa = PBXFileReference; path = "ics-simple.ics"; sourceTree = "<group>"; };
+		4409C76389596E8A8F6491E4 /* SwissKnifeWidgets.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = SwissKnifeWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		44599103D2235A4560C56824 /* ics-canvas-updated.ics */ = {isa = PBXFileReference; path = "ics-canvas-updated.ics"; sourceTree = "<group>"; };
 		45D0EFCF6D41836BAEF58433 /* ClassPeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassPeriod.swift; sourceTree = "<group>"; };
 		51EDF3E97540E4D17E8C7D79 /* SwissKnifeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwissKnifeApp.swift; sourceTree = "<group>"; };
@@ -99,16 +132,19 @@
 		8433D981563165EA3996B85D /* TodayV2View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayV2View.swift; sourceTree = "<group>"; };
 		88E55C4BDF127A9C0CEF67ED /* PomodoroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroView.swift; sourceTree = "<group>"; };
 		896B8600107023AA631023CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8A5AAB826B54B6F030A71EA9 /* PomodoroAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroAttributes.swift; sourceTree = "<group>"; };
 		8C4F36C6B48E2FB444CF3DE0 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		8CA4ED3E8FB6B70780EECF42 /* TodoRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoRow.swift; sourceTree = "<group>"; };
 		972D7E648764DEFAD68BBF71 /* AndySwissKnifeTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = AndySwissKnifeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A377EBC72BD04D506FF4E8D /* DTOs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTOs.swift; sourceTree = "<group>"; };
 		9DE29B303DD49919976371BC /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
+		A88ED0CE044EE770247D3373 /* SwissKnifeWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwissKnifeWidgets.swift; sourceTree = "<group>"; };
 		AF68A95B24C59E22AFE2ED9F /* DiningParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningParser.swift; sourceTree = "<group>"; };
 		B0598C29456DBF862E0E8699 /* ics-weekly.ics */ = {isa = PBXFileReference; path = "ics-weekly.ics"; sourceTree = "<group>"; };
 		B573D2B21443B0B64EB94686 /* RRuleExpander.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RRuleExpander.swift; sourceTree = "<group>"; };
 		B6E5E6B2240DDDDD99C4D10E /* PersonalEventEditSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalEventEditSheet.swift; sourceTree = "<group>"; };
 		B81CE12C09B1455EB90BA07F /* TodoEditSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoEditSheet.swift; sourceTree = "<group>"; };
+		B90D09D8AFCE112A0B797759 /* PomodoroLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroLiveActivity.swift; sourceTree = "<group>"; };
 		B9714F48D41526FB4B96674D /* CachedMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedMenu.swift; sourceTree = "<group>"; };
 		BB6E4C6F471CDC102EE7364C /* ClassEditSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassEditSheet.swift; sourceTree = "<group>"; };
 		C8509D41A53C3763789F4834 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
@@ -117,6 +153,7 @@
 		CDD58B20274EFCFC29596675 /* PomodoroTimerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerTests.swift; sourceTree = "<group>"; };
 		D5506D877B14199368003177 /* AssignmentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsView.swift; sourceTree = "<group>"; };
 		D77A3CD2FD912DFBD93D361A /* MockHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHTTPClient.swift; sourceTree = "<group>"; };
+		D80AE48487F434A341189BB5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		DB90B7ED16E641F907E43170 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		DDD881A24D30AD5D90747EC7 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		E04B318D66BEDB598FF72C21 /* AndySwissKnife.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = AndySwissKnife.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -176,6 +213,8 @@
 				9DE29B303DD49919976371BC /* HTTPClient.swift */,
 				FC56A94C67FB83CEF05AD3DF /* ICSParser.swift */,
 				C8509D41A53C3763789F4834 /* NotificationService.swift */,
+				01D7AB15BA97471D126F2D7F /* PomodoroActivity.swift */,
+				8A5AAB826B54B6F030A71EA9 /* PomodoroAttributes.swift */,
 				2CC26334910ED03B763FD900 /* PomodoroTimer.swift */,
 				B573D2B21443B0B64EB94686 /* RRuleExpander.swift */,
 				6C72A38932D974ACFFE72627 /* TodoSweeper.swift */,
@@ -225,6 +264,17 @@
 			path = Classes;
 			sourceTree = "<group>";
 		};
+		706479A2EC4A6FED34F6FB3C /* Widgets */ = {
+			isa = PBXGroup;
+			children = (
+				D80AE48487F434A341189BB5 /* Info.plist */,
+				026375F55FE9E7842C868240 /* NextClassWidget.swift */,
+				B90D09D8AFCE112A0B797759 /* PomodoroLiveActivity.swift */,
+				A88ED0CE044EE770247D3373 /* SwissKnifeWidgets.swift */,
+			);
+			path = Widgets;
+			sourceTree = "<group>";
+		};
 		7D9293169823088B0E282278 /* Assignments */ = {
 			isa = PBXGroup;
 			children = (
@@ -251,6 +301,7 @@
 			children = (
 				E04B318D66BEDB598FF72C21 /* AndySwissKnife.app */,
 				972D7E648764DEFAD68BBF71 /* AndySwissKnifeTests.xctest */,
+				4409C76389596E8A8F6491E4 /* SwissKnifeWidgets.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -322,6 +373,7 @@
 				46E386360FF834691D3DC46F /* Config */,
 				82F3F419614EE0435CAFC436 /* Sources */,
 				BA11035E181C79B8A119C2F3 /* Tests */,
+				706479A2EC4A6FED34F6FB3C /* Widgets */,
 				8B68B1DE4A0F02FA43A08E1B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -346,16 +398,35 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		36FEC12B7951261FCEA74BE4 /* SwissKnifeWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1F916716A9FE0D8F6D618DE1 /* Build configuration list for PBXNativeTarget "SwissKnifeWidgets" */;
+			buildPhases = (
+				C5CFD9EF945A69E85401687E /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SwissKnifeWidgets;
+			packageProductDependencies = (
+			);
+			productName = SwissKnifeWidgets;
+			productReference = 4409C76389596E8A8F6491E4 /* SwissKnifeWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		77935422F82DF462C8CBFED0 /* AndySwissKnife */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9744E49393CE72E6DCC496FB /* Build configuration list for PBXNativeTarget "AndySwissKnife" */;
 			buildPhases = (
 				7A31470CD24EC1E7D2D42D74 /* Sources */,
 				765B5FF991F592EE55F837A2 /* Resources */,
+				82AD235D5B6DBFD2DBB7395F /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				6706F3FD4CB501E4102876B8 /* PBXTargetDependency */,
 			);
 			name = AndySwissKnife;
 			packageProductDependencies = (
@@ -392,6 +463,10 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					36FEC12B7951261FCEA74BE4 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
 					77935422F82DF462C8CBFED0 = {
 						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
@@ -418,6 +493,7 @@
 			targets = (
 				77935422F82DF462C8CBFED0 /* AndySwissKnife */,
 				B4A7FABACAF2B8EAEE55E8CD /* AndySwissKnifeTests */,
+				36FEC12B7951261FCEA74BE4 /* SwissKnifeWidgets */,
 			);
 		};
 /* End PBXProject section */
@@ -485,6 +561,8 @@
 				CB7663856201DAC527E545C9 /* PersonalCalendarView.swift in Sources */,
 				891BDC73F544C44B7B26053F /* PersonalEvent.swift in Sources */,
 				6138315DA6DE72E429B50E33 /* PersonalEventEditSheet.swift in Sources */,
+				F33C098955AFD7AE31F6501C /* PomodoroActivity.swift in Sources */,
+				213F32BD06D750FB53583963 /* PomodoroAttributes.swift in Sources */,
 				150E552F1886255256FE86DA /* PomodoroTimer.swift in Sources */,
 				A78E163702C3538167B6CF2F /* PomodoroView.swift in Sources */,
 				46939DF60D01F028D2032318 /* RRuleExpander.swift in Sources */,
@@ -506,9 +584,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C5CFD9EF945A69E85401687E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8F8D1098F5C41B61B73EFCA5 /* ClassPeriod.swift in Sources */,
+				91B76862A6A6A0BF8F758FE5 /* NextClassWidget.swift in Sources */,
+				27957918FE212DF5CD5D1026 /* PomodoroAttributes.swift in Sources */,
+				77ED75EF855F2ADADF890697 /* PomodoroLiveActivity.swift in Sources */,
+				CE9C4CF01D0E93CD861864FB /* Schedule.swift in Sources */,
+				627AB891FC0FAF5E485605F5 /* SwissKnifeWidgets.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		6706F3FD4CB501E4102876B8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 36FEC12B7951261FCEA74BE4 /* SwissKnifeWidgets */;
+			targetProxy = 6653537B9B0494885B9E869A /* PBXContainerItemProxy */;
+		};
 		F4BCDBECB2BD8C22D56E9FB2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 77935422F82DF462C8CBFED0 /* AndySwissKnife */;
@@ -531,6 +627,25 @@
 				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.andyzhang.AndySwissKnife;
 				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		39332F73F0C9C3988F0A63D5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = Widgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Swiss Knife Widgets";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.andyzhang.AndySwissKnife.widgets;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -566,6 +681,25 @@
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AndySwissKnife.app/AndySwissKnife";
+			};
+			name = Debug;
+		};
+		B9BF90E5CBAF802697679A78 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CURRENT_PROJECT_VERSION = 1;
+				INFOPLIST_FILE = Widgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Swiss Knife Widgets";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.andyzhang.AndySwissKnife.widgets;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -715,6 +849,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		1F916716A9FE0D8F6D618DE1 /* Build configuration list for PBXNativeTarget "SwissKnifeWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B9BF90E5CBAF802697679A78 /* Debug */,
+				39332F73F0C9C3988F0A63D5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		34136EBF810313FBC2622FA0 /* Build configuration list for PBXNativeTarget "AndySwissKnifeTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

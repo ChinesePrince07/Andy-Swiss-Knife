@@ -60,6 +60,7 @@ final class PomodoroTimer {
         switch phase {
         case .idle:
             enter(phase: .focus, length: Self.focusLengthSeconds)
+            PomodoroActivity.start(phase: "focus", durationSeconds: Self.focusLengthSeconds)
         case .paused:
             if let rem = pausedRemaining {
                 anchor = clock.now.addingTimeInterval(TimeInterval(-(phaseLength - rem)))
@@ -67,6 +68,8 @@ final class PomodoroTimer {
                 pausedRemaining = nil
                 persist()
                 startTick()
+                let p = phase == .focus ? "focus" : "break"
+                PomodoroActivity.update(phase: p, durationSeconds: rem)
             }
         default:
             break
@@ -76,10 +79,12 @@ final class PomodoroTimer {
     func pause() {
         switch phase {
         case .focus, .shortBreak:
-            pausedRemaining = remainingSeconds
+            let rem = remainingSeconds
+            pausedRemaining = rem
             phase = .paused
             stopTick()
             persist()
+            PomodoroActivity.pause(remainingSeconds: rem)
         default:
             break
         }
@@ -92,6 +97,7 @@ final class PomodoroTimer {
         pausedRemaining = nil
         stopTick()
         persist()
+        PomodoroActivity.end()
     }
 
     func advance() {
@@ -100,6 +106,7 @@ final class PomodoroTimer {
         switch phase {
         case .focus:
             enter(phase: .shortBreak, length: Self.breakLengthSeconds)
+            PomodoroActivity.update(phase: "break", durationSeconds: Self.breakLengthSeconds)
         case .shortBreak:
             reset()
         default: break

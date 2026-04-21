@@ -19,7 +19,7 @@ struct SwissKnifeApp: App {
                 .modelContainer(container)
                 .environment(ThemeManager.shared)
                 .tint(AppColors.primary)
-                .preferredColorScheme(.light)
+                .preferredColorScheme(ThemeManager.shared.current.prefersDarkMode ? .dark : .light)
         }
     }
 }

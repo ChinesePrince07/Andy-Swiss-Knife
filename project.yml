@@ -28,6 +28,8 @@ targets:
       - path: Schedule.swift
       - path: Config/Secrets.swift
         optional: true
+    dependencies:
+      - target: SwissKnifeWidgets
     info:
       path: Sources/Info.plist
       properties:
@@ -38,12 +40,36 @@ targets:
         UIStatusBarStyle: UIStatusBarStyleDefault
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
+        NSSupportsLiveActivities: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.andyzhang.AndySwissKnife
         MARKETING_VERSION: "0.1.0"
         CURRENT_PROJECT_VERSION: "1"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+
+  SwissKnifeWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: Widgets
+      - path: Schedule.swift
+      - path: Sources/Models/ClassPeriod.swift
+      - path: Sources/Services/PomodoroAttributes.swift
+    info:
+      path: Widgets/Info.plist
+      properties:
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+        NSSupportsLiveActivities: true
+        CFBundleDisplayName: Swiss Knife Widgets
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.andyzhang.AndySwissKnife.widgets
+        SKIP_INSTALL: NO
+        INFOPLIST_KEY_CFBundleDisplayName: Swiss Knife Widgets
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
 
   AndySwissKnifeTests:
     type: bundle.unit-test

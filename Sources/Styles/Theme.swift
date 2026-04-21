@@ -29,6 +29,9 @@ struct Theme: Identifiable, Hashable {
     let borderWidth: CGFloat
     let cardKind: CardKind
 
+    /// Force dark mode UI chrome for themes with dark backgrounds.
+    var prefersDarkMode: Bool { id == "midnight" }
+
     static let bauhaus = Theme(
         id: "bauhaus",
         name: "Bauhaus",
@@ -139,7 +142,29 @@ struct Theme: Identifiable, Hashable {
         cardKind: .glass
     )
 
-    static let all: [Theme] = [.brutalist]
+    static let midnight = Theme(
+        id: "midnight",
+        name: "Midnight",
+        background: Color(red: 0.06, green: 0.07, blue: 0.09),
+        surface: Color(red: 0.10, green: 0.12, blue: 0.16),
+        primary: Color(red: 0.95, green: 0.96, blue: 0.98),
+        secondary: Color(red: 0.65, green: 0.68, blue: 0.75),
+        tertiary: Color(red: 0.45, green: 0.48, blue: 0.55),
+        hairline: Color(red: 0.20, green: 0.22, blue: 0.27),
+        accent: Color(red: 0.55, green: 0.78, blue: 1.0),
+        displayFont: .system(size: 28, weight: .semibold, design: .default),
+        sectionLabelFont: .system(size: 11, weight: .semibold, design: .default),
+        bodyFont: .system(size: 16, weight: .regular, design: .default),
+        bodyMediumFont: .system(size: 16, weight: .medium, design: .default),
+        captionFont: .system(size: 12, weight: .regular, design: .default),
+        tinyFont: .system(size: 10, weight: .semibold, design: .default),
+        monoFont: .system(size: 48, weight: .light, design: .monospaced),
+        cornerRadius: 12,
+        borderWidth: 0.5,
+        cardKind: .soft
+    )
+
+    static let all: [Theme] = [.brutalist, .warmOrange, .pastel, .midnight]
 }
 
 @Observable
