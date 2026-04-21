@@ -39,6 +39,8 @@
 		4AC76C88EE0A14920F6049E8 /* SnapshotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B50B8323C1872173961C2F /* SnapshotStore.swift */; };
 		4BEF9D5D210710C6CD1CC7D0 /* ScheduleClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F1368DFE43C2F590808B3A /* ScheduleClass.swift */; };
 		4EBB22022A56B0E83E26D8FB /* TodoEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B81CE12C09B1455EB90BA07F /* TodoEditSheet.swift */; };
+		4F89E3E3AEBA9A529F45503A /* SuffieldTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C62439ECC17B4BD42818BE4 /* SuffieldTemplate.swift */; };
+		512FB25DEB74CBBCFC79C31B /* ReminderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE649F9598138060C7A34068 /* ReminderRow.swift */; };
 		541997E4DB1BDC2195C62FD9 /* DiningParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700361F6356B9A0A54B91DBD /* DiningParserTests.swift */; };
 		6138315DA6DE72E429B50E33 /* PersonalEventEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E5E6B2240DDDDD99C4D10E /* PersonalEventEditSheet.swift */; };
 		627AB891FC0FAF5E485605F5 /* SwissKnifeWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A88ED0CE044EE770247D3373 /* SwissKnifeWidgets.swift */; };
@@ -55,7 +57,6 @@
 		884AB9FF0EDC10A117163F84 /* ToggleTodoIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86240F849252DAD7F4F1343C /* ToggleTodoIntent.swift */; };
 		891BDC73F544C44B7B26053F /* PersonalEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330E9BB2B8C13CDA343D7295 /* PersonalEvent.swift */; };
 		8D26070EFC0A1292E802CAD6 /* TodoWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C617949782E7CBDE6C3302 /* TodoWidget.swift */; };
-		8D6EA4298E4A3FE78960EB8C /* ClassEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB6E4C6F471CDC102EE7364C /* ClassEditSheet.swift */; };
 		8F8D1098F5C41B61B73EFCA5 /* ClassPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D0EFCF6D41836BAEF58433 /* ClassPeriod.swift */; };
 		90ABD8DDB355C7E4105F4B85 /* ScheduleClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F1368DFE43C2F590808B3A /* ScheduleClass.swift */; };
 		91B76862A6A6A0BF8F758FE5 /* NextClassWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 026375F55FE9E7842C868240 /* NextClassWidget.swift */; };
@@ -137,9 +138,9 @@
 		2E486C027EFB8572A128000A /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
 		330E9BB2B8C13CDA343D7295 /* PersonalEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalEvent.swift; sourceTree = "<group>"; };
 		3D6F0ACE8F87DDCC97438137 /* AppModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelContainer.swift; sourceTree = "<group>"; };
-		3E718826D524695FC534A2C7 /* ics-simple.ics */ = {isa = PBXFileReference; lastKnownFileType = text; path = "ics-simple.ics"; sourceTree = "<group>"; };
-		4409C76389596E8A8F6491E4 /* SwissKnifeWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SwissKnifeWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		44599103D2235A4560C56824 /* ics-canvas-updated.ics */ = {isa = PBXFileReference; lastKnownFileType = text; path = "ics-canvas-updated.ics"; sourceTree = "<group>"; };
+		3E718826D524695FC534A2C7 /* ics-simple.ics */ = {isa = PBXFileReference; path = "ics-simple.ics"; sourceTree = "<group>"; };
+		4409C76389596E8A8F6491E4 /* SwissKnifeWidgets.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = SwissKnifeWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		44599103D2235A4560C56824 /* ics-canvas-updated.ics */ = {isa = PBXFileReference; path = "ics-canvas-updated.ics"; sourceTree = "<group>"; };
 		45D0EFCF6D41836BAEF58433 /* ClassPeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassPeriod.swift; sourceTree = "<group>"; };
 		51EDF3E97540E4D17E8C7D79 /* SwissKnifeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwissKnifeApp.swift; sourceTree = "<group>"; };
 		5E695050520C0B1AE0174397 /* AndySwissKnife.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AndySwissKnife.entitlements; sourceTree = "<group>"; };
@@ -148,10 +149,11 @@
 		6BDE555AA06812977F66D5CF /* ReminderWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderWidget.swift; sourceTree = "<group>"; };
 		6C72A38932D974ACFFE72627 /* TodoSweeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoSweeper.swift; sourceTree = "<group>"; };
 		700361F6356B9A0A54B91DBD /* DiningParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningParserTests.swift; sourceTree = "<group>"; };
-		74DE5711E91ED38B80461908 /* ics-canvas.ics */ = {isa = PBXFileReference; lastKnownFileType = text; path = "ics-canvas.ics"; sourceTree = "<group>"; };
+		74DE5711E91ED38B80461908 /* ics-canvas.ics */ = {isa = PBXFileReference; path = "ics-canvas.ics"; sourceTree = "<group>"; };
 		7914539FD8CC3CFC11001E19 /* PersonalCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalCalendarView.swift; sourceTree = "<group>"; };
 		7ACF293B7A1272759389FBE9 /* SwissKnifeWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwissKnifeWidgets.entitlements; sourceTree = "<group>"; };
 		7B7D1DD1592E151C2F873A7C /* dining-broken.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "dining-broken.html"; sourceTree = "<group>"; };
+		7C62439ECC17B4BD42818BE4 /* SuffieldTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuffieldTemplate.swift; sourceTree = "<group>"; };
 		7DE3F4200F1459F90DAD33F1 /* ScheduleEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleEditorView.swift; sourceTree = "<group>"; };
 		8433D981563165EA3996B85D /* TodayV2View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayV2View.swift; sourceTree = "<group>"; };
 		85B50B8323C1872173961C2F /* SnapshotStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotStore.swift; sourceTree = "<group>"; };
@@ -165,17 +167,17 @@
 		9A377EBC72BD04D506FF4E8D /* DTOs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTOs.swift; sourceTree = "<group>"; };
 		9DE29B303DD49919976371BC /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 		A88ED0CE044EE770247D3373 /* SwissKnifeWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwissKnifeWidgets.swift; sourceTree = "<group>"; };
+		AE649F9598138060C7A34068 /* ReminderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderRow.swift; sourceTree = "<group>"; };
 		AF68A95B24C59E22AFE2ED9F /* DiningParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningParser.swift; sourceTree = "<group>"; };
-		B0598C29456DBF862E0E8699 /* ics-weekly.ics */ = {isa = PBXFileReference; lastKnownFileType = text; path = "ics-weekly.ics"; sourceTree = "<group>"; };
+		B0598C29456DBF862E0E8699 /* ics-weekly.ics */ = {isa = PBXFileReference; path = "ics-weekly.ics"; sourceTree = "<group>"; };
 		B35C596E06DEBEE3C8755EE6 /* DeepLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinks.swift; sourceTree = "<group>"; };
 		B573D2B21443B0B64EB94686 /* RRuleExpander.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RRuleExpander.swift; sourceTree = "<group>"; };
 		B6E5E6B2240DDDDD99C4D10E /* PersonalEventEditSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalEventEditSheet.swift; sourceTree = "<group>"; };
 		B81CE12C09B1455EB90BA07F /* TodoEditSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoEditSheet.swift; sourceTree = "<group>"; };
 		B90D09D8AFCE112A0B797759 /* PomodoroLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroLiveActivity.swift; sourceTree = "<group>"; };
 		B9714F48D41526FB4B96674D /* CachedMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedMenu.swift; sourceTree = "<group>"; };
-		BB6E4C6F471CDC102EE7364C /* ClassEditSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassEditSheet.swift; sourceTree = "<group>"; };
 		C8509D41A53C3763789F4834 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
-		C851A753B87D83DE7D673B96 /* ics-folded-description.ics */ = {isa = PBXFileReference; lastKnownFileType = text; path = "ics-folded-description.ics"; sourceTree = "<group>"; };
+		C851A753B87D83DE7D673B96 /* ics-folded-description.ics */ = {isa = PBXFileReference; path = "ics-folded-description.ics"; sourceTree = "<group>"; };
 		CB7D2D6E1D577D8FEF8CD8DA /* dining-normal.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "dining-normal.html"; sourceTree = "<group>"; };
 		CDD58B20274EFCFC29596675 /* PomodoroTimerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerTests.swift; sourceTree = "<group>"; };
 		D5506D877B14199368003177 /* AssignmentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsView.swift; sourceTree = "<group>"; };
@@ -184,7 +186,7 @@
 		D80AE48487F434A341189BB5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		DB90B7ED16E641F907E43170 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		DDD881A24D30AD5D90747EC7 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
-		E04B318D66BEDB598FF72C21 /* AndySwissKnife.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AndySwissKnife.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E04B318D66BEDB598FF72C21 /* AndySwissKnife.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = AndySwissKnife.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0C617949782E7CBDE6C3302 /* TodoWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoWidget.swift; sourceTree = "<group>"; };
 		E2F1368DFE43C2F590808B3A /* ScheduleClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleClass.swift; sourceTree = "<group>"; };
 		E6508432714136EC18A423DF /* AssignmentsSyncServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsSyncServiceTests.swift; sourceTree = "<group>"; };
@@ -369,6 +371,7 @@
 				9A377EBC72BD04D506FF4E8D /* DTOs.swift */,
 				330E9BB2B8C13CDA343D7295 /* PersonalEvent.swift */,
 				E2F1368DFE43C2F590808B3A /* ScheduleClass.swift */,
+				7C62439ECC17B4BD42818BE4 /* SuffieldTemplate.swift */,
 				2E486C027EFB8572A128000A /* Todo.swift */,
 			);
 			path = Models;
@@ -398,7 +401,6 @@
 		D31AE3AB0610EC8CD4FF0B1D /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				BB6E4C6F471CDC102EE7364C /* ClassEditSheet.swift */,
 				7DE3F4200F1459F90DAD33F1 /* ScheduleEditorView.swift */,
 				8C4F36C6B48E2FB444CF3DE0 /* SettingsView.swift */,
 			);
@@ -422,6 +424,7 @@
 			children = (
 				7914539FD8CC3CFC11001E19 /* PersonalCalendarView.swift */,
 				B6E5E6B2240DDDDD99C4D10E /* PersonalEventEditSheet.swift */,
+				AE649F9598138060C7A34068 /* ReminderRow.swift */,
 			);
 			path = Calendar;
 			sourceTree = "<group>";
@@ -503,9 +506,11 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					36FEC12B7951261FCEA74BE4 = {
+						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 					77935422F82DF462C8CBFED0 = {
+						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 					B4A7FABACAF2B8EAEE55E8CD = {
@@ -582,7 +587,6 @@
 				D520747D77E76A38D1AE079B /* AssignmentsView.swift in Sources */,
 				F8F4B82C4879AB6A90B9272E /* CachedEvent.swift in Sources */,
 				20D162DDF5FAD5F0E6F02789 /* CachedMenu.swift in Sources */,
-				8D6EA4298E4A3FE78960EB8C /* ClassEditSheet.swift in Sources */,
 				F2763BDE5CFAE679FA1E99B6 /* ClassPeriod.swift in Sources */,
 				9B87CB22ECC0839242385559 /* ClassesView.swift in Sources */,
 				F68FBB533C1E845412A32FDC /* Config.swift in Sources */,
@@ -604,6 +608,7 @@
 				150E552F1886255256FE86DA /* PomodoroTimer.swift in Sources */,
 				A78E163702C3538167B6CF2F /* PomodoroView.swift in Sources */,
 				46939DF60D01F028D2032318 /* RRuleExpander.swift in Sources */,
+				512FB25DEB74CBBCFC79C31B /* ReminderRow.swift in Sources */,
 				F1BD2818783E7EBBEEFB2BFF /* Schedule.swift in Sources */,
 				90ABD8DDB355C7E4105F4B85 /* ScheduleClass.swift in Sources */,
 				0F08FDEC5D8915290F9A1E85 /* ScheduleEditorView.swift in Sources */,
@@ -612,6 +617,7 @@
 				0282CD4C71E8D25589883461 /* SharedStorage.swift in Sources */,
 				67543B8A78BCE8E5130B0483 /* SnapshotStore.swift in Sources */,
 				07F399E92345871AAC1232E8 /* Style.swift in Sources */,
+				4F89E3E3AEBA9A529F45503A /* SuffieldTemplate.swift in Sources */,
 				24A34537B6B25F0D48995DA8 /* SwissKnifeApp.swift in Sources */,
 				C4C2C05CE3E736696204AAF6 /* Theme.swift in Sources */,
 				8757CC5D0E21AB8072DF3955 /* TodayDashboardView.swift in Sources */,
@@ -676,7 +682,6 @@
 				CODE_SIGN_ENTITLEMENTS = Sources/AndySwissKnife.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6X5A9JD86A;
 				INFOPLIST_FILE = Sources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -694,7 +699,6 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Widgets/SwissKnifeWidgets.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6X5A9JD86A;
 				INFOPLIST_FILE = Widgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Swiss Knife Widgets";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -717,7 +721,6 @@
 				CODE_SIGN_ENTITLEMENTS = Sources/AndySwissKnife.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6X5A9JD86A;
 				INFOPLIST_FILE = Sources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -751,7 +754,6 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Widgets/SwissKnifeWidgets.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 6X5A9JD86A;
 				INFOPLIST_FILE = Widgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Swiss Knife Widgets";
 				LD_RUNPATH_SEARCH_PATHS = (

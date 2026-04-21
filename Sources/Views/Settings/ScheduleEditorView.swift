@@ -3,130 +3,235 @@ import SwiftData
 
 struct ScheduleEditorView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \ScheduleClass.sortKey) private var classes: [ScheduleClass]
-    @State private var editing: ScheduleClass?
-    @State private var showingAdd = false
-    @State private var confirmReset = false
-
-    private static let weekdayLabel = ["M", "T", "W", "T", "F", "S", "S"]
+    @Query(sort: \ScheduleClass.sortKey) private var allClasses: [ScheduleClass]
+    @State private var confirmReseed = false
 
     var body: some View {
-        List {
-            Section {
-                if classes.isEmpty {
-                    Text("No classes yet.")
-                        .foregroundStyle(AppColors.secondary)
-                } else {
-                    ForEach(classes) { cls in
-                        Button { editing = cls } label: {
-                            classRow(cls)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Suffield schedule")
+                    .font(AppType.displayTitle)
+                    .padding(.top, 8)
+
+                Text("Time slots are fixed to Suffield's A–G rotation. Fill in each period with your course, room, and teacher.")
+                    .font(AppType.caption)
+                    .foregroundStyle(AppColors.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                ForEach(SuffieldTemplate.periods) { period in
+                    PeriodCard(
+                        period: period,
+                        existing: classes(for: period.letter),
+                        onCommit: { name, room, teacher in
+                            upsert(period: period, name: name, room: room, teacher: teacher)
                         }
-                        .buttonStyle(.plain)
-                    }
-                    .onDelete(perform: deleteIndices)
+                    )
                 }
 
                 Button {
-                    showingAdd = true
+                    confirmReseed = true
                 } label: {
-                    Label("Add class", systemImage: "plus")
+                    Text("Reset template")
+                        .font(AppType.caption)
+                        .foregroundStyle(AppColors.accent)
                 }
+                .padding(.top, 10)
             }
-
-            Section {
-                Button("Reset to Suffield defaults") {
-                    confirmReset = true
-                }
-                Button("Delete all classes", role: .destructive) {
-                    for c in classes {
-                        modelContext.delete(c)
-                    }
-                    try? modelContext.save()
-                }
-            } footer: {
-                Text("Defaults include Andy's fall 2025 period layout. Edit or replace with your own.")
-            }
+            .padding(.horizontal, 20)
+            .padding(.bottom, 40)
         }
+        .background(ThemedBackground())
         .navigationTitle("My classes")
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $showingAdd) {
-            ClassEditSheet(existing: nil)
-        }
-        .sheet(item: $editing) { cls in
-            ClassEditSheet(existing: cls)
-        }
-        .alert("Reset to defaults?", isPresented: $confirmReset) {
+        .onAppear { ensureTemplateSeeded() }
+        .alert("Reset to empty template?", isPresented: $confirmReseed) {
             Button("Cancel", role: .cancel) {}
-            Button("Reset", role: .destructive) { resetDefaults() }
+            Button("Reset", role: .destructive) { reseedTemplate(clearing: true) }
         } message: {
-            Text("This deletes your current classes and loads the built-in Suffield schedule.")
+            Text("This clears every course name and restores the blank A–G period grid.")
         }
     }
 
-    private func classRow(_ cls: ScheduleClass) -> some View {
-        VStack(alignment: .leading, spacing: 3) {
-            HStack {
-                Text(cls.name)
-                    .font(AppType.bodyMedium)
-                    .foregroundStyle(cls.kindRaw == "lunch" ? AppColors.secondary : AppColors.primary)
+    private func classes(for periodKey: String) -> [ScheduleClass] {
+        allClasses.filter { $0.periodKey == periodKey }
+    }
+
+    private func ensureTemplateSeeded() {
+        let keys = Set(allClasses.compactMap { $0.periodKey })
+        let allPeriodKeys = Set(SuffieldTemplate.periods.map(\.letter))
+        if keys.isSuperset(of: allPeriodKeys) { return }
+        reseedTemplate(clearing: false)
+    }
+
+    private func reseedTemplate(clearing: Bool) {
+        if clearing {
+            for c in allClasses { modelContext.delete(c) }
+        } else {
+            for key in SuffieldTemplate.periods.map(\.letter) {
+                for c in allClasses where c.periodKey == key {
+                    modelContext.delete(c)
+                }
+            }
+        }
+        for period in SuffieldTemplate.periods {
+            let seedName = clearing ? "" : nameForSeed(period: period)
+            for slot in period.slots {
+                let entry = ScheduleClass(
+                    name: seedName,
+                    room: nil,
+                    teacher: nil,
+                    daysOfWeek: [slot.day],
+                    startHour: slot.startHour,
+                    startMinute: slot.startMinute,
+                    endHour: slot.endHour,
+                    endMinute: slot.endMinute,
+                    kindRaw: period.kind == .lunch ? "lunch" : "academic",
+                    periodKey: period.letter
+                )
+                modelContext.insert(entry)
+            }
+        }
+        try? modelContext.save()
+    }
+
+    /// For non-reset seed, reuse any existing name/room/teacher from defaultSchedule
+    /// so the user's initial build isn't blank.
+    private func nameForSeed(period: SuffieldPeriod) -> String {
+        if period.kind == .lunch { return "Lunch" }
+        let defaults = defaultSchedule.first { cls in
+            cls.daysOfWeek.contains { d in
+                period.slots.contains(where: { $0.day == d && $0.startHour == cls.startTime.hour && $0.startMinute == cls.startTime.minute })
+            }
+        }
+        return defaults?.name ?? ""
+    }
+
+    private func upsert(period: SuffieldPeriod, name: String, room: String?, teacher: String?) {
+        let trimmedName = name.trimmingCharacters(in: .whitespaces)
+        let trimmedRoom = room?.trimmingCharacters(in: .whitespaces)
+        let trimmedTeacher = teacher?.trimmingCharacters(in: .whitespaces)
+
+        let existing = classes(for: period.letter)
+        let existingBySlot: [String: ScheduleClass] = Dictionary(
+            uniqueKeysWithValues: existing.map { cls in
+                let key = "\(cls.daysOfWeek.first ?? 0)-\(cls.startHour):\(cls.startMinute)"
+                return (key, cls)
+            }
+        )
+
+        for slot in period.slots {
+            let key = "\(slot.day)-\(slot.startHour):\(slot.startMinute)"
+            if let row = existingBySlot[key] {
+                row.name = trimmedName
+                row.room = (trimmedRoom?.isEmpty ?? true) ? nil : trimmedRoom
+                row.teacher = (trimmedTeacher?.isEmpty ?? true) ? nil : trimmedTeacher
+            } else {
+                let entry = ScheduleClass(
+                    name: trimmedName,
+                    room: (trimmedRoom?.isEmpty ?? true) ? nil : trimmedRoom,
+                    teacher: (trimmedTeacher?.isEmpty ?? true) ? nil : trimmedTeacher,
+                    daysOfWeek: [slot.day],
+                    startHour: slot.startHour,
+                    startMinute: slot.startMinute,
+                    endHour: slot.endHour,
+                    endMinute: slot.endMinute,
+                    kindRaw: period.kind == .lunch ? "lunch" : "academic",
+                    periodKey: period.letter
+                )
+                modelContext.insert(entry)
+            }
+        }
+        try? modelContext.save()
+    }
+}
+
+private struct PeriodCard: View {
+    let period: SuffieldPeriod
+    let existing: [ScheduleClass]
+    let onCommit: (String, String?, String?) -> Void
+
+    @State private var name: String = ""
+    @State private var room: String = ""
+    @State private var teacher: String = ""
+    @FocusState private var focusField: Field?
+
+    enum Field: Hashable { case name, room, teacher }
+
+    private static let dayAbbrev = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .firstTextBaseline) {
+                Text(period.letter == "Lunch" ? "LUNCH" : "\(period.letter) PERIOD")
+                    .font(.system(size: 12, weight: .heavy, design: .monospaced))
+                    .kerning(1.4)
+                    .foregroundStyle(AppColors.primary)
                 Spacer()
-                Text(timeRange(cls))
+                Text(slotsSummary)
+                    .font(.system(size: 10, design: .monospaced))
+                    .foregroundStyle(AppColors.secondary)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+            }
+
+            if period.kind == .academic {
+                editableField(placeholder: "Course name", text: $name, focus: .name, weight: .medium)
+                    .onSubmit { commit() }
+
+                HStack(spacing: 10) {
+                    editableField(placeholder: "Room", text: $room, focus: .room, weight: .regular)
+                        .onSubmit { commit() }
+                    editableField(placeholder: "Teacher", text: $teacher, focus: .teacher, weight: .regular)
+                        .onSubmit { commit() }
+                }
+            } else {
+                Text("Lunch block (fixed)")
                     .font(AppType.caption)
                     .foregroundStyle(AppColors.secondary)
-                    .monospacedDigit()
-            }
-            HStack(spacing: 4) {
-                ForEach(0..<7, id: \.self) { idx in
-                    let iso = idx + 1
-                    let active = cls.daysOfWeek.contains(iso)
-                    Text(Self.weekdayLabel[idx])
-                        .font(.system(size: 9, weight: active ? .semibold : .regular))
-                        .foregroundStyle(active ? AppColors.primary : AppColors.tertiary)
-                        .frame(width: 16, height: 16)
-                        .background(
-                            active ? AppColors.hairline : Color.clear,
-                            in: RoundedRectangle(cornerRadius: 4)
-                        )
-                }
-                Spacer()
-                if let room = cls.room {
-                    Text(room)
-                        .font(AppType.caption)
-                        .foregroundStyle(AppColors.secondary)
-                }
             }
         }
-        .padding(.vertical, 2)
+        .padding(12)
+        .overlay(
+            Rectangle()
+                .strokeBorder(AppColors.primary, lineWidth: 2)
+        )
+        .onAppear { hydrate() }
+        .onChange(of: focusField) { _, newValue in
+            if newValue == nil { commit() }
+        }
     }
 
-    private func timeRange(_ cls: ScheduleClass) -> String {
-        String(format: "%02d:%02d–%02d:%02d", cls.startHour, cls.startMinute, cls.endHour, cls.endMinute)
+    private func editableField(placeholder: String, text: Binding<String>, focus: Field, weight: Font.Weight) -> some View {
+        TextField(placeholder, text: text)
+            .font(.system(size: 14, weight: weight, design: .monospaced))
+            .foregroundStyle(AppColors.primary)
+            .focused($focusField, equals: focus)
+            .submitLabel(.done)
     }
 
-    private func deleteIndices(_ offsets: IndexSet) {
-        for i in offsets {
-            modelContext.delete(classes[i])
-        }
-        try? modelContext.save()
+    private var slotsSummary: String {
+        period.slots
+            .map { "\(Self.dayAbbrev[$0.day - 1]) \(Self.hhmm($0.startHour, $0.startMinute))" }
+            .joined(separator: " · ")
     }
 
-    private func resetDefaults() {
-        for c in classes {
-            modelContext.delete(c)
+    private static func hhmm(_ h: Int, _ m: Int) -> String {
+        String(format: "%02d:%02d", h, m)
+    }
+
+    private func hydrate() {
+        if let first = existing.first {
+            name = first.name
+            room = first.room ?? ""
+            teacher = first.teacher ?? ""
         }
-        for p in defaultSchedule {
-            modelContext.insert(ScheduleClass(
-                name: p.name,
-                room: p.room,
-                teacher: p.teacher,
-                daysOfWeek: p.daysOfWeek,
-                startHour: p.startTime.hour ?? 0,
-                startMinute: p.startTime.minute ?? 0,
-                endHour: p.endTime.hour ?? 0,
-                endMinute: p.endTime.minute ?? 0,
-                kindRaw: p.kind == .lunch ? "lunch" : "academic"
-            ))
-        }
-        try? modelContext.save()
+    }
+
+    private func commit() {
+        onCommit(
+            name,
+            room.isEmpty ? nil : room,
+            teacher.isEmpty ? nil : teacher
+        )
     }
 }

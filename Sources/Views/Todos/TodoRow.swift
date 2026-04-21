@@ -7,6 +7,8 @@ struct TodoRow: View {
 
     @Environment(\.modelContext) private var modelContext
     @State private var showingEdit = false
+    @State private var titleDraft: String = ""
+    @FocusState private var titleFocused: Bool
 
     var body: some View {
         HStack(spacing: 12) {
@@ -20,13 +22,27 @@ struct TodoRow: View {
             .buttonStyle(.plain)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(todo.title)
-                    .font(AppType.body)
-                    .foregroundStyle(todo.isDone ? AppColors.tertiary : AppColors.primary)
-                    .strikethrough(todo.isDone)
-                    .multilineTextAlignment(.leading)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                if todo.source == .manual && !todo.isDone {
+                    TextField("", text: $titleDraft, axis: .vertical)
+                        .font(AppType.body)
+                        .foregroundStyle(AppColors.primary)
+                        .multilineTextAlignment(.leading)
+                        .focused($titleFocused)
+                        .submitLabel(.done)
+                        .onSubmit { commitTitle() }
+                        .onChange(of: titleFocused) { _, focused in
+                            if !focused { commitTitle() }
+                        }
+                } else {
+                    Text(todo.title)
+                        .font(AppType.body)
+                        .foregroundStyle(todo.isDone ? AppColors.tertiary : AppColors.primary)
+                        .strikethrough(todo.isDone)
+                        .multilineTextAlignment(.leading)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .onTapGesture { showingEdit = true }
+                }
                 if let notes = todo.notes?.trimmingCharacters(in: .whitespacesAndNewlines),
                    !notes.isEmpty {
                     Text(notes)
@@ -36,16 +52,31 @@ struct TodoRow: View {
                         .truncationMode(.tail)
                         .multilineTextAlignment(.leading)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .onTapGesture { showingEdit = true }
                 }
             }
 
             Spacer(minLength: 8)
 
             if let status = dueLabel {
-                Text(status.text)
-                    .font(AppType.tiny)
-                    .kerning(0.8)
-                    .foregroundStyle(status.isOverdue ? AppColors.accent : AppColors.secondary)
+                Button {
+                    showingEdit = true
+                } label: {
+                    Text(status.text)
+                        .font(AppType.tiny)
+                        .kerning(0.8)
+                        .foregroundStyle(status.isOverdue ? AppColors.accent : AppColors.secondary)
+                }
+                .buttonStyle(.plain)
+            } else if todo.source == .manual {
+                Button {
+                    showingEdit = true
+                } label: {
+                    Image(systemName: "calendar.badge.plus")
+                        .font(.system(size: 13))
+                        .foregroundStyle(AppColors.tertiary)
+                }
+                .buttonStyle(.plain)
             }
 
             if todo.source == .manual {
@@ -59,22 +90,11 @@ struct TodoRow: View {
             }
         }
         .padding(.vertical, 6)
-        .contentShape(Rectangle())
-        .onTapGesture {
-            if todo.source == .manual {
-                showingEdit = true
-            } else {
-                showingEdit = true
-            }
+        .onAppear {
+            titleDraft = todo.title
         }
-        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-            if todo.source == .manual {
-                Button(role: .destructive) {
-                    delete()
-                } label: {
-                    Label("Delete", systemImage: "trash")
-                }
-            }
+        .onChange(of: todo.title) { _, newVal in
+            if !titleFocused { titleDraft = newVal }
         }
         .sheet(isPresented: $showingEdit) {
             TodoEditSheet(services: services, existing: todo)
@@ -101,6 +121,18 @@ struct TodoRow: View {
         let df = DateFormatter()
         df.dateFormat = "MMM d"
         return DueLabel(text: df.string(from: due).uppercased(), isOverdue: false)
+    }
+
+    private func commitTitle() {
+        let trimmed = titleDraft.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty, trimmed != todo.title else {
+            titleDraft = todo.title
+            return
+        }
+        todo.title = trimmed
+        try? modelContext.save()
+        SnapshotStore.publishTodos(from: modelContext)
+        WidgetReloader.reloadTodoWidgets()
     }
 
     private func toggle() {

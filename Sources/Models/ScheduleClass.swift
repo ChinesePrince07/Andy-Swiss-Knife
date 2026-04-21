@@ -14,6 +14,7 @@ final class ScheduleClass {
     var endMinute: Int
     var kindRaw: String          // "academic" | "lunch"
     var sortKey: Int             // sort helper — earliest day × 10000 + h*100 + m
+    var periodKey: String?       // "A".."G" | "Lunch" | nil for custom entries
 
     init(
         id: UUID = UUID(),
@@ -25,7 +26,8 @@ final class ScheduleClass {
         startMinute: Int,
         endHour: Int,
         endMinute: Int,
-        kindRaw: String = "academic"
+        kindRaw: String = "academic",
+        periodKey: String? = nil
     ) {
         self.id = id
         self.name = name
@@ -39,6 +41,7 @@ final class ScheduleClass {
         self.kindRaw = kindRaw
         let firstDay = daysOfWeek.min() ?? 8
         self.sortKey = firstDay * 10000 + startHour * 100 + startMinute
+        self.periodKey = periodKey
     }
 
     var kind: ClassKind {

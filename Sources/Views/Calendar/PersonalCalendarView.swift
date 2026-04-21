@@ -101,37 +101,17 @@ struct PersonalCalendarView: View {
     }
 
     private func eventRow(_ e: PersonalEvent) -> some View {
-        HStack(alignment: .firstTextBaseline, spacing: 12) {
-            Text(timeLabel(for: e))
-                .font(AppType.caption)
-                .foregroundStyle(AppColors.secondary)
-                .frame(width: 78, alignment: .leading)
-            Button {
-                editing = e
-            } label: {
-                VStack(alignment: .leading, spacing: 1) {
-                    Text(e.title)
-                        .font(AppType.bodyMedium)
-                        .foregroundStyle(AppColors.primary)
-                    if let notes = e.notes, !notes.isEmpty {
-                        Text(notes)
-                            .font(AppType.caption)
-                            .foregroundStyle(AppColors.secondary)
-                            .lineLimit(1)
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-            Button { delete(e) } label: {
-                Image(systemName: "trash")
-                    .font(.system(size: 13))
-                    .foregroundStyle(AppColors.tertiary)
-            }
-            .buttonStyle(.plain)
-        }
-        .padding(.vertical, 6)
+        ReminderRow(event: e, onOpen: { editing = e }, onDelete: { delete(e) },
+                    onCommitTitle: { commitTitle(e, $0) })
+    }
+
+    private func commitTitle(_ e: PersonalEvent, _ newTitle: String) {
+        let trimmed = newTitle.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty, trimmed != e.title else { return }
+        e.title = trimmed
+        try? modelContext.save()
+        SnapshotStore.publishReminders(from: modelContext)
+        WidgetReloader.reloadReminderWidgets()
     }
 
     private func timeLabel(for e: PersonalEvent) -> String {
