@@ -6,44 +6,28 @@ struct CalendarImportView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var calendars: [ImportableCalendar] = []
-    @State private var selected: Set<String> = []
+    @State private var enabled: Set<String> = []
     @State private var state: ViewState = .idle
-    @State private var lastCount: Int = 0
+    @State private var isSyncing = false
 
     enum ViewState: Equatable {
-        case idle
-        case requesting
-        case granted
-        case denied
-        case importing
-        case done
+        case idle, requesting, granted, denied
     }
 
     var body: some View {
         NavigationStack {
             Group {
                 switch state {
-                case .idle, .requesting:
-                    requestingView
-                case .denied:
-                    deniedView
-                case .granted, .importing, .done:
-                    calendarList
+                case .idle, .requesting: requestingView
+                case .denied: deniedView
+                case .granted: calendarList
                 }
             }
-            .navigationTitle("Import from Calendar")
+            .navigationTitle("Apple Calendars")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Close") { dismiss() }
-                }
-                if state == .granted || state == .done, !selected.isEmpty {
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button(state == .importing ? "Importing…" : "Import") {
-                            runImport()
-                        }
-                        .disabled(state == .importing)
-                    }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }
                 }
             }
         }
@@ -65,8 +49,7 @@ struct CalendarImportView: View {
             Image(systemName: "calendar.badge.exclamationmark")
                 .font(.system(size: 40))
                 .foregroundStyle(AppColors.accent)
-            Text("Calendar access denied")
-                .font(AppType.bodyMedium)
+            Text("Calendar access denied").font(AppType.bodyMedium)
             Text("Open Settings → Privacy → Calendars to grant access.")
                 .font(AppType.caption)
                 .foregroundStyle(AppColors.secondary)
@@ -78,47 +61,59 @@ struct CalendarImportView: View {
 
     private var calendarList: some View {
         List {
-            if state == .done, lastCount > 0 {
-                Section {
-                    HStack {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundStyle(.green)
-                        Text("Imported \(lastCount) new events")
-                            .foregroundStyle(AppColors.primary)
-                    }
-                }
-            }
-
             Section {
                 ForEach(calendars) { cal in
-                    Button { toggle(cal.id) } label: {
+                    Toggle(isOn: Binding(
+                        get: { enabled.contains(cal.id) },
+                        set: { newValue in toggle(cal, on: newValue) }
+                    )) {
                         HStack(spacing: 10) {
                             Circle()
                                 .fill(Color(hex: cal.colorHex))
                                 .frame(width: 12, height: 12)
                             VStack(alignment: .leading, spacing: 1) {
-                                Text(cal.title)
-                                    .foregroundStyle(AppColors.primary)
+                                Text(cal.title).foregroundStyle(AppColors.primary)
                                 Text(cal.sourceTitle)
                                     .font(AppType.caption)
                                     .foregroundStyle(AppColors.secondary)
                             }
-                            Spacer()
-                            Image(systemName: selected.contains(cal.id) ? "checkmark.circle.fill" : "circle")
-                                .foregroundStyle(selected.contains(cal.id) ? AppColors.accent : AppColors.tertiary)
                         }
                     }
                 }
             } header: {
-                Text("Select calendars")
+                Text("Show in Events")
             } footer: {
-                Text("Imports events from the next 90 days. Re-run anytime to refresh.")
+                Text("Toggle a calendar on to pull its events into the Events tab (365 days). Toggle off to remove them.")
+            }
+        }
+        .overlay(alignment: .bottom) {
+            if isSyncing {
+                HStack(spacing: 8) {
+                    ProgressView()
+                    Text("Syncing…").font(AppType.caption)
+                }
+                .padding(10)
+                .background(.regularMaterial, in: Capsule())
+                .padding(.bottom, 20)
             }
         }
     }
 
-    private func toggle(_ id: String) {
-        if selected.contains(id) { selected.remove(id) } else { selected.insert(id) }
+    private func toggle(_ cal: ImportableCalendar, on: Bool) {
+        if on { enabled.insert(cal.id) } else { enabled.remove(cal.id) }
+        CalendarToggleStore.set(cal.id, enabled: on)
+        Task { await runSync(for: cal, enabled: on) }
+    }
+
+    private func runSync(for cal: ImportableCalendar, enabled: Bool) async {
+        isSyncing = true
+        let importer = CalendarImporter(context: modelContext)
+        if enabled {
+            _ = importer.syncCalendars(ids: [cal.id])
+        } else {
+            importer.removeEvents(forCalendarID: cal.id)
+        }
+        isSyncing = false
     }
 
     private func requestAndLoad() async {
@@ -128,6 +123,7 @@ struct CalendarImportView: View {
             let granted = try await importer.requestAccess()
             if granted {
                 calendars = importer.availableCalendars().sorted { $0.title < $1.title }
+                enabled = CalendarToggleStore.enabledIDs
                 state = .granted
             } else {
                 state = .denied
@@ -135,14 +131,6 @@ struct CalendarImportView: View {
         } catch {
             state = .denied
         }
-    }
-
-    private func runImport() {
-        state = .importing
-        let importer = CalendarImporter(context: modelContext)
-        let count = importer.importEvents(fromCalendarIDs: Array(selected))
-        lastCount = count
-        state = .done
     }
 }
 

@@ -44,14 +44,14 @@ struct SettingsView: View {
                 } label: {
                     HStack {
                         Image(systemName: "calendar.badge.plus")
-                        Text("Import from Apple Calendar")
+                        Text("Apple Calendars")
                         Spacer()
                     }
                 }
             } header: {
-                Text("Reminders")
+                Text("Events")
             } footer: {
-                Text("Pulls events from selected calendars into Reminders. Re-run anytime to refresh.")
+                Text("Toggle which Apple Calendars show up in the Events tab. Events sync automatically.")
             }
 
             Section {

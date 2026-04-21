@@ -44,6 +44,9 @@ final class Services {
         Self.seedScheduleIfNeeded(context: context)
         SnapshotStore.publishTodos(from: context)
         SnapshotStore.publishReminders(from: context)
+        // Sync any enabled Apple Calendars so Events tab has fresh data.
+        let importer = CalendarImporter(context: context)
+        importer.syncEnabled()
         WidgetReloader.reloadAll()
     }
 

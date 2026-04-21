@@ -3,6 +3,7 @@ import SwiftData
 
 struct EventsView: View {
     let services: Services
+    @Environment(\.modelContext) private var modelContext
 
     @State private var events: [Event] = []
     @State private var didLoad = false
@@ -97,12 +98,30 @@ struct EventsView: View {
 
     private func load(force: Bool) async {
         do {
-            events = try await services.events.upcomingEvents(forceRefresh: force)
+            events = try await services.events.upcomingEvents(days: 365, forceRefresh: force)
             loadError = false
         } catch {
             loadError = true
         }
+        // Sync any enabled Apple Calendars too.
+        let importer = CalendarImporter(context: modelContext)
+        importer.syncEnabled()
+        reloadFromSwiftData()
         didLoad = true
+    }
+
+    private func reloadFromSwiftData() {
+        // Re-read CachedEvent directly so Apple Calendar events show up
+        // alongside school events even when school .ics is stale.
+        let cal = Calendar.current
+        let start = cal.startOfDay(for: .now)
+        let end = cal.date(byAdding: .day, value: 365, to: start) ?? start
+        let predicate = #Predicate<CachedEvent> { $0.end >= start && $0.start <= end }
+        let descriptor = FetchDescriptor(predicate: predicate, sortBy: [SortDescriptor(\CachedEvent.start)])
+        let cached = (try? modelContext.fetch(descriptor)) ?? []
+        events = cached.map {
+            Event(id: $0.id, title: $0.title, start: $0.start, end: $0.end, location: $0.location)
+        }
     }
 
     static let dayFormatter: DateFormatter = {

@@ -14,29 +14,56 @@ enum CalendarImportError: Error {
     case notDetermined
 }
 
+/// Persists the set of Apple Calendar IDs the user has toggled on.
+/// Each toggle-on triggers a sync; toggle-off removes that calendar's events.
+@MainActor
+enum CalendarToggleStore {
+    private static let key = "calendar.enabledIDs.v1"
+
+    static var enabledIDs: Set<String> {
+        get {
+            let arr = UserDefaults.standard.stringArray(forKey: key) ?? []
+            return Set(arr)
+        }
+        set {
+            UserDefaults.standard.set(Array(newValue), forKey: key)
+        }
+    }
+
+    static func isEnabled(_ id: String) -> Bool { enabledIDs.contains(id) }
+
+    static func set(_ id: String, enabled: Bool) {
+        var current = enabledIDs
+        if enabled { current.insert(id) } else { current.remove(id) }
+        enabledIDs = current
+    }
+}
+
 @MainActor
 final class CalendarImporter {
     private let store: EKEventStore
     private let context: ModelContext
+    private static let sourcePrefix = "apple-cal-"
 
     init(context: ModelContext) {
         self.store = EKEventStore()
         self.context = context
     }
 
-    /// Request full access to calendars. Returns true if granted.
+    static func sourceKey(for calendarID: String) -> String {
+        "\(sourcePrefix)\(calendarID)"
+    }
+
     func requestAccess() async throws -> Bool {
         let status = EKEventStore.authorizationStatus(for: .event)
         switch status {
         case .fullAccess: return true
         case .denied, .restricted: throw CalendarImportError.accessDenied
         default:
-            let granted = try await store.requestFullAccessToEvents()
-            return granted
+            return try await store.requestFullAccessToEvents()
         }
     }
 
-    /// List every calendar available on the device.
     func availableCalendars() -> [ImportableCalendar] {
         store.calendars(for: .event).map {
             ImportableCalendar(
@@ -48,10 +75,17 @@ final class CalendarImporter {
         }
     }
 
-    /// Import events from given calendar IDs within the next `daysAhead` days.
-    /// Upserts by EKEvent.eventIdentifier so repeat imports don't duplicate.
+    /// Sync every currently-enabled calendar. Call on app launch and
+    /// after toggle changes.
     @discardableResult
-    func importEvents(fromCalendarIDs ids: [String], daysAhead: Int = 90, daysBehind: Int = 1) -> Int {
+    func syncEnabled(daysAhead: Int = 365, daysBehind: Int = 1) -> Int {
+        syncCalendars(ids: Array(CalendarToggleStore.enabledIDs),
+                      daysAhead: daysAhead, daysBehind: daysBehind)
+    }
+
+    @discardableResult
+    func syncCalendars(ids: [String], daysAhead: Int = 365, daysBehind: Int = 1) -> Int {
+        guard !ids.isEmpty else { return 0 }
         let calendars = store.calendars(for: .event).filter { ids.contains($0.calendarIdentifier) }
         guard !calendars.isEmpty else { return 0 }
 
@@ -62,47 +96,45 @@ final class CalendarImporter {
         let predicate = store.predicateForEvents(withStart: start, end: end, calendars: calendars)
         let events = store.events(matching: predicate)
 
-        let existing = (try? context.fetch(
-            FetchDescriptor<PersonalEvent>(predicate: #Predicate { $0.externalID != nil })
-        )) ?? []
-        var byExternalID = Dictionary(uniqueKeysWithValues: existing.compactMap { e -> (String, PersonalEvent)? in
-            guard let ext = e.externalID else { return nil }
-            return (ext, e)
-        })
-
-        var imported = 0
+        // Per-calendar upsert.
+        var totalNew = 0
         for ek in events {
-            let extID = ek.eventIdentifier ?? UUID().uuidString
-            let title = ek.title ?? "(no title)"
-            let notes = ek.notes?.trimmingCharacters(in: .whitespacesAndNewlines)
-            let date = ek.startDate ?? .now
-            let allDay = ek.isAllDay
-            let source = ek.calendar?.title
+            guard let calID = ek.calendar?.calendarIdentifier else { continue }
+            let source = Self.sourceKey(for: calID)
+            let extID = ek.eventIdentifier.map { "\(source)-\($0)" } ?? "\(source)-\(UUID().uuidString)"
 
-            if let existing = byExternalID[extID] {
-                existing.title = title
-                existing.date = date
-                existing.notes = notes?.isEmpty == false ? notes : nil
-                existing.isAllDay = allDay
-                existing.sourceCalendar = source
+            let predicate = #Predicate<CachedEvent> { $0.id == extID }
+            let existing = try? context.fetch(FetchDescriptor<CachedEvent>(predicate: predicate)).first
+            if let existing {
+                existing.title = ek.title ?? "(no title)"
+                existing.start = ek.startDate ?? .now
+                existing.end = ek.endDate ?? ek.startDate ?? .now
+                existing.location = ek.location
+                existing.calendarTitle = ek.calendar?.title
             } else {
-                let row = PersonalEvent(
-                    title: title,
-                    date: date,
-                    notes: notes?.isEmpty == false ? notes : nil,
-                    isAllDay: allDay,
-                    externalID: extID,
-                    sourceCalendar: source
-                )
-                context.insert(row)
-                byExternalID[extID] = row
-                imported += 1
+                context.insert(CachedEvent(
+                    id: extID,
+                    title: ek.title ?? "(no title)",
+                    start: ek.startDate ?? .now,
+                    end: ek.endDate ?? ek.startDate ?? .now,
+                    location: ek.location,
+                    source: source,
+                    calendarTitle: ek.calendar?.title
+                ))
+                totalNew += 1
             }
         }
         try? context.save()
-        SnapshotStore.publishReminders(from: context)
-        WidgetReloader.reloadReminderWidgets()
-        return imported
+        return totalNew
+    }
+
+    /// Remove every CachedEvent sourced from the given calendar ID.
+    func removeEvents(forCalendarID calendarID: String) {
+        let source = Self.sourceKey(for: calendarID)
+        let predicate = #Predicate<CachedEvent> { $0.source == source }
+        let rows = (try? context.fetch(FetchDescriptor<CachedEvent>(predicate: predicate))) ?? []
+        for r in rows { context.delete(r) }
+        try? context.save()
     }
 
     private func colorInt(_ cg: CGColor?) -> Int {

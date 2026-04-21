@@ -38,7 +38,10 @@ final class EventsService {
             expanded.append(contentsOf: RRuleExpander.expand(event: e, from: windowStart, to: windowEnd, calendar: calendar))
         }
 
-        let existing = try context.fetch(FetchDescriptor<CachedEvent>())
+        let descriptor = FetchDescriptor<CachedEvent>(
+            predicate: #Predicate { $0.source == "school" || $0.source == nil }
+        )
+        let existing = (try? context.fetch(descriptor)) ?? []
         let existingByID = Dictionary(uniqueKeysWithValues: existing.map { ($0.id, $0) })
 
         var keepIDs = Set<String>()
@@ -49,13 +52,15 @@ final class EventsService {
                 cached.start = e.start
                 cached.end = e.end
                 cached.location = e.location
+                cached.source = "school"
             } else {
                 context.insert(CachedEvent(
                     id: e.uid,
                     title: e.summary,
                     start: e.start,
                     end: e.end,
-                    location: e.location
+                    location: e.location,
+                    source: "school"
                 ))
             }
         }

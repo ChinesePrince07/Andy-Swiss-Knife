@@ -203,7 +203,7 @@ struct TodayDashboardView: View {
                 GlanceCard(label: "Canvas", primary: canvasPrimary, secondary: canvasSecondary)
             }
             NavigationLink { MealView(services: services) } label: {
-                GlanceCard(label: "Lunch", primary: lunchPrimary, secondary: lunchSecondary, error: mealError)
+                GlanceCard(label: mealCardLabel, primary: mealPrimary, secondary: mealSecondary, error: mealError)
             }
             NavigationLink { PomodoroView(services: services) } label: {
                 GlanceCard(label: "Pomodoro", primary: "Start", secondary: "25 min focus")
@@ -282,20 +282,35 @@ struct TodayDashboardView: View {
         }
     }
 
-    private var lunchPrimary: String {
+    private var activeMealSlot: MealSlot {
+        let hour = Calendar.current.component(.hour, from: .now)
+        // Lunch windows roughly end 1pm, dinner opens 5:30pm. Show dinner
+        // once lunch is past so the card rolls over automatically.
+        return hour >= 13 ? .dinner : .lunch
+    }
+
+    private var mealCardLabel: String {
+        activeMealSlot == .dinner ? "Dinner" : "Lunch"
+    }
+
+    private var mealPrimary: String {
         if mealError { return "Unavailable" }
-        guard let meal = todaysMeal, !meal.lunch.isEmpty else { return "Loading…" }
-        return meal.lunch
+        guard let meal = todaysMeal else { return "Loading…" }
+        let text = activeMealSlot == .dinner ? meal.dinner : meal.lunch
+        guard !text.isEmpty else { return "—" }
+        return text
             .replacingOccurrences(of: "\n", with: ", ")
             .replacingOccurrences(of: ", ,", with: ",")
     }
 
-    private var lunchSecondary: String {
+    private var mealSecondary: String {
         if mealError { return "Tap for Safari" }
-        guard let meal = todaysMeal, !meal.lunch.isEmpty else { return "—" }
+        guard let meal = todaysMeal else { return "—" }
         let age = Int(Date.now.timeIntervalSince(meal.fetchedAt) / 3600)
         return age >= 4 ? "as of \(age)h ago" : "Tap for full menu"
     }
+
+    private enum MealSlot { case lunch, dinner }
 
     private var nextEventPrimary: String {
         guard let next = nextEvent else { return "None" }
