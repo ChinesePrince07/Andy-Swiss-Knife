@@ -149,14 +149,14 @@ struct TodayDashboardView: View {
                     )
                 }
             }
-            NavigationLink { MealView(services: services) } label: {
-                GlanceCard(label: "Lunch", primary: lunchPrimary, secondary: lunchSecondary, error: mealError)
+            NavigationLink { PersonalCalendarView(services: services) } label: {
+                GlanceCard(label: "Reminders", primary: remindersPrimary, secondary: remindersSecondary)
             }
             NavigationLink { AssignmentsView(services: services) } label: {
                 GlanceCard(label: "Canvas", primary: canvasPrimary, secondary: canvasSecondary)
             }
-            NavigationLink { PersonalCalendarView(services: services) } label: {
-                GlanceCard(label: "Reminders", primary: remindersPrimary, secondary: remindersSecondary)
+            NavigationLink { MealView(services: services) } label: {
+                GlanceCard(label: "Lunch", primary: lunchPrimary, secondary: lunchSecondary, error: mealError)
             }
             NavigationLink { PomodoroView(services: services) } label: {
                 GlanceCard(label: "Pomodoro", primary: "Start", secondary: "25 min focus")

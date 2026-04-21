@@ -20,10 +20,6 @@ final class DiningService {
     }
 
     func todaysMeal(now: Date = .now) async throws -> Meal {
-        // Prefer hardcoded menu if covers today — site is frequently behind.
-        if let hard = HardcodedMenu.meal(for: now, calendar: calendar) {
-            return hard
-        }
         let key = Self.dateKey(for: now, calendar: calendar)
 
         if let cached = try fetchCached(dateKey: key),
