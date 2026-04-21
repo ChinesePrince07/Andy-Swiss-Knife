@@ -19,7 +19,9 @@ xcodebuild \
   -scheme "$SCHEME" \
   -configuration "$CONFIG" \
   -destination "$DESTINATION" \
-  CODE_SIGNING_ALLOWED=NO \
+  CODE_SIGN_IDENTITY="-" \
+  CODE_SIGNING_REQUIRED=NO \
+  CODE_SIGNING_ALLOWED=YES \
   -quiet \
   build
 
@@ -36,6 +38,19 @@ if [ ! -d "$APP" ]; then
   echo "Cannot find built app at $APP"
   exit 1
 fi
+
+# Force-embed entitlements for simulator. xcodebuild with ad-hoc
+# identity sometimes strips them, which breaks App Groups so widgets
+# cannot read shared UserDefaults.
+echo "Re-signing with entitlements..."
+if [ -d "$APP/PlugIns/SwissKnifeWidgets.appex" ]; then
+  codesign --force --sign - \
+    --entitlements Widgets/SwissKnifeWidgets.entitlements \
+    "$APP/PlugIns/SwissKnifeWidgets.appex" 2>/dev/null || true
+fi
+codesign --force --sign - \
+  --entitlements Sources/AndySwissKnife.entitlements \
+  "$APP" 2>/dev/null || true
 
 echo "Booting ${DEVICE}..."
 xcrun simctl boot "$DEVICE" 2>/dev/null || true
