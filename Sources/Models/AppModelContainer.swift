@@ -10,10 +10,15 @@ enum AppModelContainer {
             PersonalEvent.self,
             ScheduleClass.self
         ])
-        let config = ModelConfiguration(
-            schema: schema,
-            isStoredInMemoryOnly: inMemory
-        )
+
+        let config: ModelConfiguration
+        if inMemory {
+            config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+        } else if let url = SharedStorage.modelStoreURL {
+            config = ModelConfiguration(schema: schema, url: url)
+        } else {
+            config = ModelConfiguration(schema: schema)
+        }
         return try ModelContainer(for: schema, configurations: [config])
     }
 }

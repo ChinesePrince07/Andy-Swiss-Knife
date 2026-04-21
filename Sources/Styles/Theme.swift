@@ -1,11 +1,7 @@
 import SwiftUI
 
 enum CardKind: Hashable {
-    case bauhaus      // thin stroke, sharp corners, no fill
-    case soft         // filled card, rounded, soft shadow
-    case pastelOutline // filled pastel, dashed border
-    case brutalist    // thick stroke, offset hard shadow
-    case glass        // translucent material
+    case brutalist
 }
 
 struct Theme: Identifiable, Hashable {
@@ -29,142 +25,92 @@ struct Theme: Identifiable, Hashable {
     let borderWidth: CGFloat
     let cardKind: CardKind
 
-    /// Force dark mode UI chrome for themes with dark backgrounds.
-    var prefersDarkMode: Bool { id == "midnight" }
+    var prefersDarkMode: Bool { id == "brutalist-inverse" }
 
-    static let bauhaus = Theme(
-        id: "bauhaus",
-        name: "Bauhaus",
-        background: Color(white: 1.0),
-        surface: Color(white: 1.0),
-        primary: .black,
-        secondary: Color(white: 0.35),
-        tertiary: Color(white: 0.60),
-        hairline: Color(white: 0.88),
-        accent: Color(red: 0.78, green: 0.15, blue: 0.15),
-        displayFont: .system(size: 28, weight: .bold, design: .default),
-        sectionLabelFont: .system(size: 11, weight: .semibold, design: .default),
-        bodyFont: .system(size: 16, weight: .regular, design: .default),
-        bodyMediumFont: .system(size: 16, weight: .medium, design: .default),
-        captionFont: .system(size: 12, weight: .regular, design: .default),
-        tinyFont: .system(size: 10, weight: .semibold, design: .default),
-        monoFont: .system(size: 48, weight: .light, design: .monospaced),
-        cornerRadius: 0,
-        borderWidth: 0.5,
-        cardKind: .bauhaus
-    )
+    private static func brutalistFonts() -> (
+        display: Font, sectionLabel: Font, body: Font, bodyMed: Font,
+        caption: Font, tiny: Font, mono: Font
+    ) {
+        (
+            .system(size: 34, weight: .black, design: .monospaced),
+            .system(size: 11, weight: .heavy, design: .monospaced),
+            .system(size: 16, weight: .regular, design: .monospaced),
+            .system(size: 16, weight: .bold, design: .monospaced),
+            .system(size: 12, weight: .regular, design: .monospaced),
+            .system(size: 10, weight: .heavy, design: .monospaced),
+            .system(size: 48, weight: .bold, design: .monospaced)
+        )
+    }
 
-    static let warmOrange = Theme(
-        id: "warm",
-        name: "Warm Orange",
-        background: Color(red: 0.99, green: 0.96, blue: 0.91),
-        surface: Color(red: 1.0, green: 0.99, blue: 0.96),
-        primary: Color(red: 0.28, green: 0.18, blue: 0.12),
-        secondary: Color(red: 0.55, green: 0.40, blue: 0.28),
-        tertiary: Color(red: 0.72, green: 0.58, blue: 0.45),
-        hairline: Color(red: 0.92, green: 0.82, blue: 0.70),
-        accent: Color(red: 0.85, green: 0.45, blue: 0.15),
-        displayFont: .system(size: 30, weight: .bold, design: .rounded),
-        sectionLabelFont: .system(size: 11, weight: .bold, design: .rounded),
-        bodyFont: .system(size: 16, weight: .regular, design: .rounded),
-        bodyMediumFont: .system(size: 16, weight: .semibold, design: .rounded),
-        captionFont: .system(size: 12, weight: .regular, design: .rounded),
-        tinyFont: .system(size: 10, weight: .bold, design: .rounded),
-        monoFont: .system(size: 48, weight: .light, design: .rounded),
-        cornerRadius: 14,
-        borderWidth: 0,
-        cardKind: .soft
-    )
+    private static func brutalist(
+        id: String, name: String,
+        background: Color, surface: Color,
+        primary: Color, secondary: Color, tertiary: Color,
+        hairline: Color, accent: Color
+    ) -> Theme {
+        let f = brutalistFonts()
+        return Theme(
+            id: id, name: name,
+            background: background, surface: surface,
+            primary: primary, secondary: secondary, tertiary: tertiary,
+            hairline: hairline, accent: accent,
+            displayFont: f.display, sectionLabelFont: f.sectionLabel,
+            bodyFont: f.body, bodyMediumFont: f.bodyMed,
+            captionFont: f.caption, tinyFont: f.tiny, monoFont: f.mono,
+            cornerRadius: 0, borderWidth: 2.5, cardKind: .brutalist
+        )
+    }
 
-    static let pastel = Theme(
-        id: "pastel",
-        name: "Pastel",
-        background: Color(red: 0.98, green: 0.97, blue: 0.99),
-        surface: Color(red: 1.0, green: 1.0, blue: 1.0),
-        primary: Color(red: 0.25, green: 0.22, blue: 0.35),
-        secondary: Color(red: 0.50, green: 0.45, blue: 0.60),
-        tertiary: Color(red: 0.70, green: 0.65, blue: 0.80),
-        hairline: Color(red: 0.85, green: 0.80, blue: 0.92),
-        accent: Color(red: 0.95, green: 0.55, blue: 0.70),
-        displayFont: .system(size: 28, weight: .semibold, design: .rounded),
-        sectionLabelFont: .system(size: 10, weight: .medium, design: .rounded),
-        bodyFont: .system(size: 16, weight: .regular, design: .rounded),
-        bodyMediumFont: .system(size: 16, weight: .medium, design: .rounded),
-        captionFont: .system(size: 12, weight: .regular, design: .rounded),
-        tinyFont: .system(size: 10, weight: .medium, design: .rounded),
-        monoFont: .system(size: 48, weight: .regular, design: .rounded),
-        cornerRadius: 18,
-        borderWidth: 1.5,
-        cardKind: .pastelOutline
-    )
-
-    static let brutalist = Theme(
-        id: "brutalist",
-        name: "Brutalist",
+    static let brutalist = brutalist(
+        id: "brutalist", name: "Cream",
         background: Color(red: 0.98, green: 0.96, blue: 0.92),
-        surface: Color(red: 1.0, green: 1.0, blue: 1.0),
-        primary: .black,
-        secondary: Color(white: 0.15),
-        tertiary: Color(white: 0.30),
-        hairline: .black,
-        accent: Color(red: 1.0, green: 0.30, blue: 0.10),
-        displayFont: .system(size: 34, weight: .black, design: .monospaced),
-        sectionLabelFont: .system(size: 11, weight: .heavy, design: .monospaced),
-        bodyFont: .system(size: 16, weight: .regular, design: .monospaced),
-        bodyMediumFont: .system(size: 16, weight: .bold, design: .monospaced),
-        captionFont: .system(size: 12, weight: .regular, design: .monospaced),
-        tinyFont: .system(size: 10, weight: .heavy, design: .monospaced),
-        monoFont: .system(size: 48, weight: .bold, design: .monospaced),
-        cornerRadius: 0,
-        borderWidth: 2.5,
-        cardKind: .brutalist
+        surface: .white,
+        primary: .black, secondary: Color(white: 0.15), tertiary: Color(white: 0.30),
+        hairline: .black, accent: Color(red: 1.0, green: 0.30, blue: 0.10)
     )
 
-    static let glass = Theme(
-        id: "glass",
-        name: "Glass",
-        background: Color(red: 0.92, green: 0.94, blue: 0.99),
-        surface: Color.white.opacity(0.55),
-        primary: Color(red: 0.15, green: 0.20, blue: 0.35),
-        secondary: Color(red: 0.40, green: 0.45, blue: 0.60),
-        tertiary: Color(red: 0.60, green: 0.65, blue: 0.78),
-        hairline: Color.white.opacity(0.6),
-        accent: Color(red: 0.35, green: 0.55, blue: 0.95),
-        displayFont: .system(size: 30, weight: .semibold, design: .default),
-        sectionLabelFont: .system(size: 11, weight: .medium, design: .default),
-        bodyFont: .system(size: 16, weight: .regular, design: .default),
-        bodyMediumFont: .system(size: 16, weight: .medium, design: .default),
-        captionFont: .system(size: 12, weight: .regular, design: .default),
-        tinyFont: .system(size: 10, weight: .medium, design: .default),
-        monoFont: .system(size: 48, weight: .light, design: .default),
-        cornerRadius: 20,
-        borderWidth: 0.5,
-        cardKind: .glass
+    static let brutalistStark = brutalist(
+        id: "brutalist-stark", name: "Stark White",
+        background: .white, surface: .white,
+        primary: .black, secondary: Color(white: 0.15), tertiary: Color(white: 0.35),
+        hairline: .black, accent: Color(red: 0.90, green: 0.10, blue: 0.10)
     )
 
-    static let midnight = Theme(
-        id: "midnight",
-        name: "Midnight",
-        background: Color(red: 0.06, green: 0.07, blue: 0.09),
-        surface: Color(red: 0.10, green: 0.12, blue: 0.16),
-        primary: Color(red: 0.95, green: 0.96, blue: 0.98),
-        secondary: Color(red: 0.65, green: 0.68, blue: 0.75),
-        tertiary: Color(red: 0.45, green: 0.48, blue: 0.55),
-        hairline: Color(red: 0.20, green: 0.22, blue: 0.27),
-        accent: Color(red: 0.55, green: 0.78, blue: 1.0),
-        displayFont: .system(size: 28, weight: .semibold, design: .default),
-        sectionLabelFont: .system(size: 11, weight: .semibold, design: .default),
-        bodyFont: .system(size: 16, weight: .regular, design: .default),
-        bodyMediumFont: .system(size: 16, weight: .medium, design: .default),
-        captionFont: .system(size: 12, weight: .regular, design: .default),
-        tinyFont: .system(size: 10, weight: .semibold, design: .default),
-        monoFont: .system(size: 48, weight: .light, design: .monospaced),
-        cornerRadius: 12,
-        borderWidth: 0.5,
-        cardKind: .soft
+    static let brutalistInverse = brutalist(
+        id: "brutalist-inverse", name: "Ink",
+        background: Color(white: 0.04), surface: Color(white: 0.08),
+        primary: .white, secondary: Color(white: 0.80), tertiary: Color(white: 0.55),
+        hairline: .white, accent: Color(red: 1.0, green: 0.85, blue: 0.20)
     )
 
-    static let all: [Theme] = [.brutalist, .warmOrange, .pastel, .midnight]
+    static let brutalistOrange = brutalist(
+        id: "brutalist-orange", name: "Tangerine",
+        background: Color(red: 0.99, green: 0.95, blue: 0.88),
+        surface: .white,
+        primary: .black, secondary: Color(white: 0.15), tertiary: Color(white: 0.30),
+        hairline: .black, accent: Color(red: 0.95, green: 0.45, blue: 0.05)
+    )
+
+    static let brutalistPink = brutalist(
+        id: "brutalist-pink", name: "Blush",
+        background: Color(red: 0.99, green: 0.94, blue: 0.94),
+        surface: .white,
+        primary: .black, secondary: Color(white: 0.15), tertiary: Color(white: 0.30),
+        hairline: .black, accent: Color(red: 0.88, green: 0.20, blue: 0.45)
+    )
+
+    static let brutalistLime = brutalist(
+        id: "brutalist-lime", name: "Lime",
+        background: Color(red: 0.97, green: 0.98, blue: 0.90),
+        surface: .white,
+        primary: .black, secondary: Color(white: 0.15), tertiary: Color(white: 0.30),
+        hairline: .black, accent: Color(red: 0.40, green: 0.65, blue: 0.10)
+    )
+
+    static let all: [Theme] = [
+        .brutalist, .brutalistStark, .brutalistInverse,
+        .brutalistOrange, .brutalistPink, .brutalistLime
+    ]
 }
 
 @Observable

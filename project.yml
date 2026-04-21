@@ -47,6 +47,7 @@ targets:
         MARKETING_VERSION: "0.1.0"
         CURRENT_PROJECT_VERSION: "1"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        CODE_SIGN_ENTITLEMENTS: Sources/AndySwissKnife.entitlements
 
   SwissKnifeWidgets:
     type: app-extension
@@ -55,7 +56,17 @@ targets:
       - path: Widgets
       - path: Schedule.swift
       - path: Sources/Models/ClassPeriod.swift
+      - path: Sources/Models/Todo.swift
+      - path: Sources/Models/PersonalEvent.swift
+      - path: Sources/Models/CachedMenu.swift
+      - path: Sources/Models/CachedEvent.swift
+      - path: Sources/Models/ScheduleClass.swift
+      - path: Sources/Models/AppModelContainer.swift
+      - path: Sources/Models/DTOs.swift
       - path: Sources/Services/PomodoroAttributes.swift
+      - path: Sources/Services/SharedStorage.swift
+      - path: Sources/Services/ToggleTodoIntent.swift
+      - path: Sources/Services/WidgetReloader.swift
     info:
       path: Widgets/Info.plist
       properties:
@@ -70,6 +81,7 @@ targets:
         INFOPLIST_KEY_CFBundleDisplayName: Swiss Knife Widgets
         MARKETING_VERSION: "0.1.0"
         CURRENT_PROJECT_VERSION: "1"
+        CODE_SIGN_ENTITLEMENTS: Widgets/SwissKnifeWidgets.entitlements
 
   AndySwissKnifeTests:
     type: bundle.unit-test

@@ -24,12 +24,7 @@ enum AppType {
 
 struct HairlineDivider: View {
     var body: some View {
-        let theme = ThemeManager.shared.current
-        if theme.cardKind == .brutalist {
-            Rectangle().fill(theme.hairline).frame(height: 1)
-        } else {
-            Rectangle().fill(theme.hairline).frame(height: theme.borderWidth > 0 ? 0.5 : 0.5)
-        }
+        Rectangle().fill(ThemeManager.shared.current.hairline).frame(height: 1)
     }
 }
 
@@ -47,48 +42,13 @@ struct ThemedCard: ViewModifier {
     let theme: Theme
 
     func body(content: Content) -> some View {
-        switch theme.cardKind {
-        case .bauhaus:
-            content
-                .padding(14)
-                .overlay(
-                    Rectangle().stroke(theme.hairline, lineWidth: theme.borderWidth)
-                )
-        case .soft:
-            content
-                .padding(14)
-                .background(theme.surface)
-                .clipShape(RoundedRectangle(cornerRadius: theme.cornerRadius))
-                .shadow(color: theme.accent.opacity(0.12), radius: 8, x: 0, y: 3)
-        case .pastelOutline:
-            content
-                .padding(14)
-                .background(theme.surface)
-                .clipShape(RoundedRectangle(cornerRadius: theme.cornerRadius))
-                .overlay(
-                    RoundedRectangle(cornerRadius: theme.cornerRadius)
-                        .strokeBorder(
-                            theme.hairline,
-                            style: StrokeStyle(lineWidth: theme.borderWidth, dash: [4, 3])
-                        )
-                )
-        case .brutalist:
-            content
-                .padding(14)
-                .background(theme.surface)
-                .overlay(
-                    Rectangle()
-                        .strokeBorder(theme.primary, lineWidth: theme.borderWidth)
-                )
-        case .glass:
-            content
-                .padding(14)
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: theme.cornerRadius))
-                .overlay(
-                    RoundedRectangle(cornerRadius: theme.cornerRadius)
-                        .stroke(theme.hairline, lineWidth: theme.borderWidth)
-                )
-        }
+        content
+            .padding(14)
+            .background(theme.surface)
+            .overlay(
+                Rectangle()
+                    .strokeBorder(theme.primary, lineWidth: theme.borderWidth)
+            )
     }
 }
 
@@ -100,21 +60,6 @@ extension View {
 
 struct ThemedBackground: View {
     var body: some View {
-        let theme = ThemeManager.shared.current
-        switch theme.cardKind {
-        case .glass:
-            LinearGradient(
-                colors: [
-                    Color(red: 0.88, green: 0.92, blue: 1.0),
-                    Color(red: 0.95, green: 0.88, blue: 1.0),
-                    Color(red: 0.88, green: 0.98, blue: 0.97)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
-        default:
-            theme.background.ignoresSafeArea()
-        }
+        ThemeManager.shared.current.background.ignoresSafeArea()
     }
 }

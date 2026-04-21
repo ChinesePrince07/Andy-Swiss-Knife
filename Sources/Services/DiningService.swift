@@ -51,7 +51,29 @@ final class DiningService {
         }
         try? context.save()
         UserDefaults.standard.set(now, forKey: "lastSync.menu")
+        Self.publishToSharedStorage(menu.toMeal())
         return menu.toMeal()
+    }
+
+    static func publishToSharedStorage(_ meal: Meal) {
+        struct Snapshot: Codable {
+            let dateKey: String
+            let breakfast: String
+            let lunch: String
+            let dinner: String
+            let fetchedAt: Date
+        }
+        let snap = Snapshot(
+            dateKey: meal.dateKey,
+            breakfast: meal.breakfast,
+            lunch: meal.lunch,
+            dinner: meal.dinner,
+            fetchedAt: meal.fetchedAt
+        )
+        guard let data = try? JSONEncoder().encode(snap) else { return }
+        SharedStorage.defaults.set(data, forKey: SharedStorage.Keys.menu)
+        SharedStorage.defaults.set(Date.now, forKey: SharedStorage.Keys.lastMenuUpdate)
+        WidgetReloader.reloadMenuWidgets()
     }
 
     func cachedTodaysMeal(now: Date = .now) -> Meal? {

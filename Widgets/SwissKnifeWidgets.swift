@@ -5,6 +5,9 @@ import SwiftUI
 struct SwissKnifeWidgets: WidgetBundle {
     var body: some Widget {
         NextClassWidget()
+        TodoWidget()
+        ReminderWidget()
+        MenuWidget()
         #if canImport(ActivityKit)
         PomodoroLiveActivity()
         #endif

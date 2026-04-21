@@ -7,9 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		016F716E22191914C6DB98DC /* CachedMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9714F48D41526FB4B96674D /* CachedMenu.swift */; };
+		0282CD4C71E8D25589883461 /* SharedStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019E33B5FB0E2689102AA4AB /* SharedStorage.swift */; };
 		07F399E92345871AAC1232E8 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3D6B91A2E210F4B3FD23E0 /* Style.swift */; };
+		09A3DE475699BF9A005ABB06 /* PersonalEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330E9BB2B8C13CDA343D7295 /* PersonalEvent.swift */; };
+		0C342BC05850A679EAAE1C9D /* ReminderWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BDE555AA06812977F66D5CF /* ReminderWidget.swift */; };
 		0D2614F7B2E6DE465C9B9BC6 /* TodoSweeper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C72A38932D974ACFFE72627 /* TodoSweeper.swift */; };
 		0F08FDEC5D8915290F9A1E85 /* ScheduleEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE3F4200F1459F90DAD33F1 /* ScheduleEditorView.swift */; };
+		0F85E6C82DD5059C5099F8F0 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E486C027EFB8572A128000A /* Todo.swift */; };
 		150E552F1886255256FE86DA /* PomodoroTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC26334910ED03B763FD900 /* PomodoroTimer.swift */; };
 		19F46B57038614191321347A /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6F0ACE8F87DDCC97438137 /* AppModelContainer.swift */; };
 		1C831A5BE4D2FD88A34FADBA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A4C5BA3B543E15F98EB3514 /* Assets.xcassets */; };
@@ -19,6 +24,7 @@
 		23B5CB82B87DD93CE4BA4FE6 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E486C027EFB8572A128000A /* Todo.swift */; };
 		24A34537B6B25F0D48995DA8 /* SwissKnifeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EDF3E97540E4D17E8C7D79 /* SwissKnifeApp.swift */; };
 		27957918FE212DF5CD5D1026 /* PomodoroAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A5AAB826B54B6F030A71EA9 /* PomodoroAttributes.swift */; };
+		2EBD198EACB8200A457317EA /* WidgetReloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8DA70372D27938DC8C9501 /* WidgetReloader.swift */; };
 		328FA42CAE93A0C4E3E3D304 /* AssignmentsSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCAF5A288944379AC9A965BC /* AssignmentsSyncService.swift */; };
 		37B9B26C19AC5CEFE90ECC04 /* ics-folded-description.ics in Resources */ = {isa = PBXBuildFile; fileRef = C851A753B87D83DE7D673B96 /* ics-folded-description.ics */; };
 		380FFF025F1FABF0E3D1E62F /* dining-broken.html in Resources */ = {isa = PBXBuildFile; fileRef = 7B7D1DD1592E151C2F873A7C /* dining-broken.html */; };
@@ -26,19 +32,27 @@
 		3E45D666B6A04BCC6D1C1D6A /* AssignmentsSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6508432714136EC18A423DF /* AssignmentsSyncServiceTests.swift */; };
 		41A80C606A7A7E61DE9CEADA /* ics-simple.ics in Resources */ = {isa = PBXBuildFile; fileRef = 3E718826D524695FC534A2C7 /* ics-simple.ics */; };
 		424130C0DAC27BE5DCCF9864 /* SwissKnifeWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4409C76389596E8A8F6491E4 /* SwissKnifeWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4645E517243F49AC98D535DE /* DTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A377EBC72BD04D506FF4E8D /* DTOs.swift */; };
+		467F0A86716E7B1239A041E1 /* ToggleTodoIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86240F849252DAD7F4F1343C /* ToggleTodoIntent.swift */; };
 		46939DF60D01F028D2032318 /* RRuleExpander.swift in Sources */ = {isa = PBXBuildFile; fileRef = B573D2B21443B0B64EB94686 /* RRuleExpander.swift */; };
 		49DB9E3A914167B8D7F4F7F8 /* MockHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77A3CD2FD912DFBD93D361A /* MockHTTPClient.swift */; };
+		4BEF9D5D210710C6CD1CC7D0 /* ScheduleClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F1368DFE43C2F590808B3A /* ScheduleClass.swift */; };
 		4EBB22022A56B0E83E26D8FB /* TodoEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B81CE12C09B1455EB90BA07F /* TodoEditSheet.swift */; };
 		541997E4DB1BDC2195C62FD9 /* DiningParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700361F6356B9A0A54B91DBD /* DiningParserTests.swift */; };
 		6138315DA6DE72E429B50E33 /* PersonalEventEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E5E6B2240DDDDD99C4D10E /* PersonalEventEditSheet.swift */; };
 		627AB891FC0FAF5E485605F5 /* SwissKnifeWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A88ED0CE044EE770247D3373 /* SwissKnifeWidgets.swift */; };
 		62FB711B5148CE44AF4ACE8A /* ICSParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC56A94C67FB83CEF05AD3DF /* ICSParser.swift */; };
 		680BE98A63A71521C12E6513 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4F36C6B48E2FB444CF3DE0 /* SettingsView.swift */; };
+		68FF4D7755ABB313A8692469 /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6F0ACE8F87DDCC97438137 /* AppModelContainer.swift */; };
 		6AFDDD1CDC8C66BD33FA5DBA /* ics-weekly.ics in Resources */ = {isa = PBXBuildFile; fileRef = B0598C29456DBF862E0E8699 /* ics-weekly.ics */; };
 		77ED75EF855F2ADADF890697 /* PomodoroLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90D09D8AFCE112A0B797759 /* PomodoroLiveActivity.swift */; };
+		78BFC806AB4136D3D9794E58 /* WidgetReloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8DA70372D27938DC8C9501 /* WidgetReloader.swift */; };
 		7F4A5068F4652A98FB9A7DC0 /* TodoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA4ED3E8FB6B70780EECF42 /* TodoRow.swift */; };
+		8314EC06D6B0A00339B5F46A /* SharedStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019E33B5FB0E2689102AA4AB /* SharedStorage.swift */; };
 		8757CC5D0E21AB8072DF3955 /* TodayDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EE826936B7B41BFA75FBF71 /* TodayDashboardView.swift */; };
+		884AB9FF0EDC10A117163F84 /* ToggleTodoIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86240F849252DAD7F4F1343C /* ToggleTodoIntent.swift */; };
 		891BDC73F544C44B7B26053F /* PersonalEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330E9BB2B8C13CDA343D7295 /* PersonalEvent.swift */; };
+		8D26070EFC0A1292E802CAD6 /* TodoWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C617949782E7CBDE6C3302 /* TodoWidget.swift */; };
 		8D6EA4298E4A3FE78960EB8C /* ClassEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB6E4C6F471CDC102EE7364C /* ClassEditSheet.swift */; };
 		8F8D1098F5C41B61B73EFCA5 /* ClassPeriod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D0EFCF6D41836BAEF58433 /* ClassPeriod.swift */; };
 		90ABD8DDB355C7E4105F4B85 /* ScheduleClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F1368DFE43C2F590808B3A /* ScheduleClass.swift */; };
@@ -48,6 +62,8 @@
 		9B87CB22ECC0839242385559 /* ClassesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8978F63D082125B6793831 /* ClassesView.swift */; };
 		A78E163702C3538167B6CF2F /* PomodoroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E55C4BDF127A9C0CEF67ED /* PomodoroView.swift */; };
 		B020D56A7AB742D316572B94 /* DiningService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1573D420C3E8959C3983BAF0 /* DiningService.swift */; };
+		B66E93F96E3478544BF0F3CC /* CachedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFF8210D8128B55B70DE84F /* CachedEvent.swift */; };
+		B8B87393EC08C093E4AAAF6A /* MenuWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6497E54EF3BA0DE1D2514EE /* MenuWidget.swift */; };
 		BEA805C3CCC8CB2B182AE83D /* MealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A106A618866B97560536365 /* MealView.swift */; };
 		C4C2C05CE3E736696204AAF6 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB90B7ED16E641F907E43170 /* Theme.swift */; };
 		C7C8FE0BE830A1201AEF0AEC /* EventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 136DCB9AE73DA4324A3F14DF /* EventsView.swift */; };
@@ -102,11 +118,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		019E33B5FB0E2689102AA4AB /* SharedStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedStorage.swift; sourceTree = "<group>"; };
 		01D7AB15BA97471D126F2D7F /* PomodoroActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroActivity.swift; sourceTree = "<group>"; };
 		026375F55FE9E7842C868240 /* NextClassWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextClassWidget.swift; sourceTree = "<group>"; };
 		05214FF5A0D20A717DC0B5F3 /* EventsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsService.swift; sourceTree = "<group>"; };
 		070D2B25BE3B190E6C1D33BE /* ICSParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICSParserTests.swift; sourceTree = "<group>"; };
 		0A106A618866B97560536365 /* MealView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealView.swift; sourceTree = "<group>"; };
+		0C8DA70372D27938DC8C9501 /* WidgetReloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetReloader.swift; sourceTree = "<group>"; };
 		136DCB9AE73DA4324A3F14DF /* EventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsView.swift; sourceTree = "<group>"; };
 		1573D420C3E8959C3983BAF0 /* DiningService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningService.swift; sourceTree = "<group>"; };
 		1C9228AB7BB53CF525E1AA35 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
@@ -121,15 +139,19 @@
 		44599103D2235A4560C56824 /* ics-canvas-updated.ics */ = {isa = PBXFileReference; path = "ics-canvas-updated.ics"; sourceTree = "<group>"; };
 		45D0EFCF6D41836BAEF58433 /* ClassPeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassPeriod.swift; sourceTree = "<group>"; };
 		51EDF3E97540E4D17E8C7D79 /* SwissKnifeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwissKnifeApp.swift; sourceTree = "<group>"; };
+		5E695050520C0B1AE0174397 /* AndySwissKnife.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AndySwissKnife.entitlements; sourceTree = "<group>"; };
 		5EE826936B7B41BFA75FBF71 /* TodayDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayDashboardView.swift; sourceTree = "<group>"; };
 		6A4C5BA3B543E15F98EB3514 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6BDE555AA06812977F66D5CF /* ReminderWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderWidget.swift; sourceTree = "<group>"; };
 		6C72A38932D974ACFFE72627 /* TodoSweeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoSweeper.swift; sourceTree = "<group>"; };
 		700361F6356B9A0A54B91DBD /* DiningParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningParserTests.swift; sourceTree = "<group>"; };
 		74DE5711E91ED38B80461908 /* ics-canvas.ics */ = {isa = PBXFileReference; path = "ics-canvas.ics"; sourceTree = "<group>"; };
 		7914539FD8CC3CFC11001E19 /* PersonalCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalCalendarView.swift; sourceTree = "<group>"; };
+		7ACF293B7A1272759389FBE9 /* SwissKnifeWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwissKnifeWidgets.entitlements; sourceTree = "<group>"; };
 		7B7D1DD1592E151C2F873A7C /* dining-broken.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "dining-broken.html"; sourceTree = "<group>"; };
 		7DE3F4200F1459F90DAD33F1 /* ScheduleEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleEditorView.swift; sourceTree = "<group>"; };
 		8433D981563165EA3996B85D /* TodayV2View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayV2View.swift; sourceTree = "<group>"; };
+		86240F849252DAD7F4F1343C /* ToggleTodoIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleTodoIntent.swift; sourceTree = "<group>"; };
 		88E55C4BDF127A9C0CEF67ED /* PomodoroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroView.swift; sourceTree = "<group>"; };
 		896B8600107023AA631023CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8A5AAB826B54B6F030A71EA9 /* PomodoroAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroAttributes.swift; sourceTree = "<group>"; };
@@ -152,11 +174,13 @@
 		CB7D2D6E1D577D8FEF8CD8DA /* dining-normal.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "dining-normal.html"; sourceTree = "<group>"; };
 		CDD58B20274EFCFC29596675 /* PomodoroTimerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerTests.swift; sourceTree = "<group>"; };
 		D5506D877B14199368003177 /* AssignmentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsView.swift; sourceTree = "<group>"; };
+		D6497E54EF3BA0DE1D2514EE /* MenuWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuWidget.swift; sourceTree = "<group>"; };
 		D77A3CD2FD912DFBD93D361A /* MockHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockHTTPClient.swift; sourceTree = "<group>"; };
 		D80AE48487F434A341189BB5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		DB90B7ED16E641F907E43170 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		DDD881A24D30AD5D90747EC7 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		E04B318D66BEDB598FF72C21 /* AndySwissKnife.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = AndySwissKnife.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E0C617949782E7CBDE6C3302 /* TodoWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoWidget.swift; sourceTree = "<group>"; };
 		E2F1368DFE43C2F590808B3A /* ScheduleClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleClass.swift; sourceTree = "<group>"; };
 		E6508432714136EC18A423DF /* AssignmentsSyncServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsSyncServiceTests.swift; sourceTree = "<group>"; };
 		EB8978F63D082125B6793831 /* ClassesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassesView.swift; sourceTree = "<group>"; };
@@ -217,8 +241,11 @@
 				8A5AAB826B54B6F030A71EA9 /* PomodoroAttributes.swift */,
 				2CC26334910ED03B763FD900 /* PomodoroTimer.swift */,
 				B573D2B21443B0B64EB94686 /* RRuleExpander.swift */,
+				019E33B5FB0E2689102AA4AB /* SharedStorage.swift */,
 				6C72A38932D974ACFFE72627 /* TodoSweeper.swift */,
+				86240F849252DAD7F4F1343C /* ToggleTodoIntent.swift */,
 				EF46299132CD55E2AE1B3204 /* UserSettings.swift */,
+				0C8DA70372D27938DC8C9501 /* WidgetReloader.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -268,9 +295,13 @@
 			isa = PBXGroup;
 			children = (
 				D80AE48487F434A341189BB5 /* Info.plist */,
+				D6497E54EF3BA0DE1D2514EE /* MenuWidget.swift */,
 				026375F55FE9E7842C868240 /* NextClassWidget.swift */,
 				B90D09D8AFCE112A0B797759 /* PomodoroLiveActivity.swift */,
+				6BDE555AA06812977F66D5CF /* ReminderWidget.swift */,
+				7ACF293B7A1272759389FBE9 /* SwissKnifeWidgets.entitlements */,
 				A88ED0CE044EE770247D3373 /* SwissKnifeWidgets.swift */,
+				E0C617949782E7CBDE6C3302 /* TodoWidget.swift */,
 			);
 			path = Widgets;
 			sourceTree = "<group>";
@@ -286,6 +317,7 @@
 		82F3F419614EE0435CAFC436 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				5E695050520C0B1AE0174397 /* AndySwissKnife.entitlements */,
 				6A4C5BA3B543E15F98EB3514 /* Assets.xcassets */,
 				896B8600107023AA631023CC /* Info.plist */,
 				9A39F271EA3ED78C622844F8 /* Models */,
@@ -571,6 +603,7 @@
 				0F08FDEC5D8915290F9A1E85 /* ScheduleEditorView.swift in Sources */,
 				3CC6023542F8E9F571CFD93A /* Secrets.swift in Sources */,
 				680BE98A63A71521C12E6513 /* SettingsView.swift in Sources */,
+				0282CD4C71E8D25589883461 /* SharedStorage.swift in Sources */,
 				07F399E92345871AAC1232E8 /* Style.swift in Sources */,
 				24A34537B6B25F0D48995DA8 /* SwissKnifeApp.swift in Sources */,
 				C4C2C05CE3E736696204AAF6 /* Theme.swift in Sources */,
@@ -580,7 +613,9 @@
 				4EBB22022A56B0E83E26D8FB /* TodoEditSheet.swift in Sources */,
 				7F4A5068F4652A98FB9A7DC0 /* TodoRow.swift in Sources */,
 				0D2614F7B2E6DE465C9B9BC6 /* TodoSweeper.swift in Sources */,
+				884AB9FF0EDC10A117163F84 /* ToggleTodoIntent.swift in Sources */,
 				ED268B42E722D7C8AB16C79E /* UserSettings.swift in Sources */,
+				2EBD198EACB8200A457317EA /* WidgetReloader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -588,12 +623,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				68FF4D7755ABB313A8692469 /* AppModelContainer.swift in Sources */,
+				B66E93F96E3478544BF0F3CC /* CachedEvent.swift in Sources */,
+				016F716E22191914C6DB98DC /* CachedMenu.swift in Sources */,
 				8F8D1098F5C41B61B73EFCA5 /* ClassPeriod.swift in Sources */,
+				4645E517243F49AC98D535DE /* DTOs.swift in Sources */,
+				B8B87393EC08C093E4AAAF6A /* MenuWidget.swift in Sources */,
 				91B76862A6A6A0BF8F758FE5 /* NextClassWidget.swift in Sources */,
+				09A3DE475699BF9A005ABB06 /* PersonalEvent.swift in Sources */,
 				27957918FE212DF5CD5D1026 /* PomodoroAttributes.swift in Sources */,
 				77ED75EF855F2ADADF890697 /* PomodoroLiveActivity.swift in Sources */,
+				0C342BC05850A679EAAE1C9D /* ReminderWidget.swift in Sources */,
 				CE9C4CF01D0E93CD861864FB /* Schedule.swift in Sources */,
+				4BEF9D5D210710C6CD1CC7D0 /* ScheduleClass.swift in Sources */,
+				8314EC06D6B0A00339B5F46A /* SharedStorage.swift in Sources */,
 				627AB891FC0FAF5E485605F5 /* SwissKnifeWidgets.swift in Sources */,
+				0F85E6C82DD5059C5099F8F0 /* Todo.swift in Sources */,
+				8D26070EFC0A1292E802CAD6 /* TodoWidget.swift in Sources */,
+				467F0A86716E7B1239A041E1 /* ToggleTodoIntent.swift in Sources */,
+				78BFC806AB4136D3D9794E58 /* WidgetReloader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -617,6 +665,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Sources/AndySwissKnife.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = Sources/Info.plist;
@@ -634,6 +683,7 @@
 		39332F73F0C9C3988F0A63D5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Widgets/SwissKnifeWidgets.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = Widgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Swiss Knife Widgets";
@@ -654,6 +704,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Sources/AndySwissKnife.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = Sources/Info.plist;
@@ -687,6 +738,7 @@
 		B9BF90E5CBAF802697679A78 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Widgets/SwissKnifeWidgets.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = Widgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Swiss Knife Widgets";
