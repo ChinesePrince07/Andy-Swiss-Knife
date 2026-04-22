@@ -471,7 +471,7 @@ struct TodayDashboardView: View {
 
     private var athleticsSecondary: String {
         guard let next = services.athletics.nextUpcoming() else {
-            return UserSettings.shared.athleticsFeedURL.isEmpty ? "Set feed in settings" : "—"
+            return AthleticSubscriptions.enabledIDs.isEmpty ? "Pick teams in settings" : "—"
         }
         let df = DateFormatter()
         df.dateFormat = Calendar.current.isDateInToday(next.start) ? "'Today' HH:mm" : "EEE MMM d"

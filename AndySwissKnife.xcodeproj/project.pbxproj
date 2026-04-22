@@ -72,6 +72,7 @@
 		B152DA41E6F6927EB0624FFC /* CalendarImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62067695A52BA871E230D768 /* CalendarImportView.swift */; };
 		B66E93F96E3478544BF0F3CC /* CachedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFF8210D8128B55B70DE84F /* CachedEvent.swift */; };
 		B8B87393EC08C093E4AAAF6A /* MenuWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6497E54EF3BA0DE1D2514EE /* MenuWidget.swift */; };
+		B8BEAEA03CEE8F63CC2E0B97 /* AthleticsPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20ACB5F59009C12DE97FEE87 /* AthleticsPickerView.swift */; };
 		BB4D670A88C4A4C458DC53B1 /* DeepLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35C596E06DEBEE3C8755EE6 /* DeepLinks.swift */; };
 		BEA805C3CCC8CB2B182AE83D /* MealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A106A618866B97560536365 /* MealView.swift */; };
 		C4C2C05CE3E736696204AAF6 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB90B7ED16E641F907E43170 /* Theme.swift */; };
@@ -84,6 +85,7 @@
 		D8EA24F60E247FB348E5062B /* ICSParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 070D2B25BE3B190E6C1D33BE /* ICSParserTests.swift */; };
 		DC8F742DC5FE8163BAE9AFBF /* DTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A377EBC72BD04D506FF4E8D /* DTOs.swift */; };
 		E4EC6B68423C1E51F2D1F2D8 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8509D41A53C3763789F4834 /* NotificationService.swift */; };
+		E70C843721EFCB101C33BC23 /* SuffieldAthletics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EB87794E7ACADEB2EC67F4 /* SuffieldAthletics.swift */; };
 		EB8886E4DF418F5F91F64DE6 /* DueGroupSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBE18788CF98EDE503602E4 /* DueGroupSection.swift */; };
 		ED268B42E722D7C8AB16C79E /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF46299132CD55E2AE1B3204 /* UserSettings.swift */; };
 		F1BD2818783E7EBBEEFB2BFF /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2160A5C955F771E7E1EB7D4F /* Schedule.swift */; };
@@ -139,6 +141,7 @@
 		1573D420C3E8959C3983BAF0 /* DiningService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningService.swift; sourceTree = "<group>"; };
 		18C35FB3564D92B6FEEC81D6 /* AthleticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthleticsView.swift; sourceTree = "<group>"; };
 		1C9228AB7BB53CF525E1AA35 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		20ACB5F59009C12DE97FEE87 /* AthleticsPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthleticsPickerView.swift; sourceTree = "<group>"; };
 		2160A5C955F771E7E1EB7D4F /* Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule.swift; sourceTree = "<group>"; };
 		2CC26334910ED03B763FD900 /* PomodoroTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimer.swift; sourceTree = "<group>"; };
 		2E3D6B91A2E210F4B3FD23E0 /* Style.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
@@ -189,6 +192,7 @@
 		B990742E695A11C76312EFB7 /* AthleticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthleticsService.swift; sourceTree = "<group>"; };
 		C8509D41A53C3763789F4834 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		C851A753B87D83DE7D673B96 /* ics-folded-description.ics */ = {isa = PBXFileReference; path = "ics-folded-description.ics"; sourceTree = "<group>"; };
+		C9EB87794E7ACADEB2EC67F4 /* SuffieldAthletics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuffieldAthletics.swift; sourceTree = "<group>"; };
 		CB7D2D6E1D577D8FEF8CD8DA /* dining-normal.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "dining-normal.html"; sourceTree = "<group>"; };
 		CDD58B20274EFCFC29596675 /* PomodoroTimerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerTests.swift; sourceTree = "<group>"; };
 		D5506D877B14199368003177 /* AssignmentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsView.swift; sourceTree = "<group>"; };
@@ -395,6 +399,7 @@
 				9A377EBC72BD04D506FF4E8D /* DTOs.swift */,
 				330E9BB2B8C13CDA343D7295 /* PersonalEvent.swift */,
 				E2F1368DFE43C2F590808B3A /* ScheduleClass.swift */,
+				C9EB87794E7ACADEB2EC67F4 /* SuffieldAthletics.swift */,
 				7C62439ECC17B4BD42818BE4 /* SuffieldTemplate.swift */,
 				2E486C027EFB8572A128000A /* Todo.swift */,
 			);
@@ -425,6 +430,7 @@
 		D31AE3AB0610EC8CD4FF0B1D /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				20ACB5F59009C12DE97FEE87 /* AthleticsPickerView.swift */,
 				62067695A52BA871E230D768 /* CalendarImportView.swift */,
 				EDFA3F8E82E3CDE5CCD03611 /* DashboardLayoutEditor.swift */,
 				7DE3F4200F1459F90DAD33F1 /* ScheduleEditorView.swift */,
@@ -603,6 +609,7 @@
 				19F46B57038614191321347A /* AppModelContainer.swift in Sources */,
 				328FA42CAE93A0C4E3E3D304 /* AssignmentsSyncService.swift in Sources */,
 				D520747D77E76A38D1AE079B /* AssignmentsView.swift in Sources */,
+				B8BEAEA03CEE8F63CC2E0B97 /* AthleticsPickerView.swift in Sources */,
 				D4C76C817FA851D48A3480AF /* AthleticsService.swift in Sources */,
 				7816210653243C57BCCD6517 /* AthleticsView.swift in Sources */,
 				F8F4B82C4879AB6A90B9272E /* CachedEvent.swift in Sources */,
@@ -642,6 +649,7 @@
 				0282CD4C71E8D25589883461 /* SharedStorage.swift in Sources */,
 				67543B8A78BCE8E5130B0483 /* SnapshotStore.swift in Sources */,
 				07F399E92345871AAC1232E8 /* Style.swift in Sources */,
+				E70C843721EFCB101C33BC23 /* SuffieldAthletics.swift in Sources */,
 				4F89E3E3AEBA9A529F45503A /* SuffieldTemplate.swift in Sources */,
 				24A34537B6B25F0D48995DA8 /* SwissKnifeApp.swift in Sources */,
 				C4C2C05CE3E736696204AAF6 /* Theme.swift in Sources */,

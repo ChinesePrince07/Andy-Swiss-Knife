@@ -2,30 +2,63 @@ import Foundation
 import SwiftData
 
 @MainActor
-final class AthleticsService {
-    static let sourceKey = "athletics"
+enum AthleticSubscriptions {
+    private static let key = "athletics.subscribedTeamIDs.v1"
+    static let sourcePrefix = "athletics-"
 
+    static var enabledIDs: Set<String> {
+        get { Set(UserDefaults.standard.stringArray(forKey: key) ?? []) }
+        set { UserDefaults.standard.set(Array(newValue), forKey: key) }
+    }
+
+    static func isEnabled(_ teamID: String) -> Bool { enabledIDs.contains(teamID) }
+
+    static func set(_ teamID: String, enabled: Bool) {
+        var ids = enabledIDs
+        if enabled { ids.insert(teamID) } else { ids.remove(teamID) }
+        enabledIDs = ids
+    }
+
+    static func sourceKey(for teamID: String) -> String {
+        sourcePrefix + teamID
+    }
+}
+
+@MainActor
+final class AthleticsService {
     private let http: HTTPClient
     private let context: ModelContext
-    private let cacheTTL: TimeInterval = 12 * 60 * 60
+    private let cacheTTL: TimeInterval = 6 * 60 * 60
 
     init(http: HTTPClient, context: ModelContext) {
         self.http = http
         self.context = context
     }
 
+    /// Syncs every currently-subscribed team. Call on app launch, on pull-
+    /// to-refresh, and when the user toggles a team on.
     @discardableResult
-    func sync(forceRefresh: Bool = false) async -> Int {
-        let raw = UserSettings.shared.athleticsFeedURL.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !raw.isEmpty, let url = URL(string: raw) else { return 0 }
-
+    func syncAllEnabled(forceRefresh: Bool = false) async -> Int {
+        let ids = AthleticSubscriptions.enabledIDs
+        guard !ids.isEmpty else { return 0 }
         let lastSync = UserDefaults.standard.object(forKey: "lastSync.athletics") as? Date
-        let needsFetch = forceRefresh || lastSync == nil
-            || Date.now.timeIntervalSince(lastSync!) > cacheTTL
-        guard needsFetch else { return 0 }
+        if !forceRefresh, let last = lastSync,
+           Date.now.timeIntervalSince(last) < cacheTTL {
+            return 0
+        }
+        var added = 0
+        for id in ids {
+            guard let team = SuffieldAthletics.team(for: id) else { continue }
+            added += await sync(team: team)
+        }
+        UserDefaults.standard.set(Date.now, forKey: "lastSync.athletics")
+        return added
+    }
 
+    @discardableResult
+    func sync(team: SuffieldTeam) async -> Int {
         let data: Data
-        do { data = try await http.data(for: url) } catch { return 0 }
+        do { data = try await http.data(for: team.feedURL) } catch { return 0 }
         let source = String(data: data, encoding: .utf8) ?? ""
         guard let events = try? ICSParser.parse(source) else { return 0 }
 
@@ -38,9 +71,9 @@ final class AthleticsService {
             expanded.append(contentsOf: RRuleExpander.expand(event: e, from: windowStart, to: windowEnd, calendar: cal))
         }
 
-        let key = Self.sourceKey
+        let sourceKey = AthleticSubscriptions.sourceKey(for: team.id)
         let descriptor = FetchDescriptor<CachedEvent>(
-            predicate: #Predicate { $0.source == key }
+            predicate: #Predicate { $0.source == sourceKey }
         )
         let existing = (try? context.fetch(descriptor)) ?? []
         let existingByID = Dictionary(uniqueKeysWithValues: existing.map { ($0.id, $0) })
@@ -54,6 +87,7 @@ final class AthleticsService {
                 row.start = e.start
                 row.end = e.end
                 row.location = e.location
+                row.calendarTitle = team.displayName
             } else {
                 context.insert(CachedEvent(
                     id: e.uid,
@@ -61,7 +95,8 @@ final class AthleticsService {
                     start: e.start,
                     end: e.end,
                     location: e.location,
-                    source: AthleticsService.sourceKey
+                    source: sourceKey,
+                    calendarTitle: team.displayName
                 ))
                 added += 1
             }
@@ -70,17 +105,26 @@ final class AthleticsService {
             context.delete(row)
         }
         try? context.save()
-        UserDefaults.standard.set(Date.now, forKey: "lastSync.athletics")
         return added
     }
 
+    func removeEvents(forTeamID id: String) {
+        let key = AthleticSubscriptions.sourceKey(for: id)
+        let predicate = #Predicate<CachedEvent> { $0.source == key }
+        let rows = (try? context.fetch(FetchDescriptor<CachedEvent>(predicate: predicate))) ?? []
+        for r in rows { context.delete(r) }
+        try? context.save()
+    }
+
     func nextUpcoming(now: Date = .now) -> CachedEvent? {
-        let key = Self.sourceKey
-        var descriptor = FetchDescriptor<CachedEvent>(
-            predicate: #Predicate { $0.source == key && $0.start >= now },
-            sortBy: [SortDescriptor(\.start)]
+        let prefix = AthleticSubscriptions.sourcePrefix
+        let descriptor = FetchDescriptor<CachedEvent>(
+            sortBy: [SortDescriptor(\CachedEvent.start)]
         )
-        descriptor.fetchLimit = 1
-        return (try? context.fetch(descriptor))?.first
+        let rows = (try? context.fetch(descriptor)) ?? []
+        return rows.first { event in
+            guard let src = event.source, src.hasPrefix(prefix) else { return false }
+            return event.start >= now
+        }
     }
 }

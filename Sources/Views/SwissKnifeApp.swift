@@ -48,7 +48,7 @@ final class Services {
         SnapshotStore.publishReminders(from: context)
         let importer = CalendarImporter(context: context)
         importer.syncEnabled()
-        Task { await self.athletics.sync() }
+        Task { await self.athletics.syncAllEnabled() }
         WidgetReloader.reloadAll()
     }
 

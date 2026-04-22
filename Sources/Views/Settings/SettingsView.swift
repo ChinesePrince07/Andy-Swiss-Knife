@@ -55,16 +55,20 @@ struct SettingsView: View {
             }
 
             Section {
-                TextField("https://…/athletic-schedule.ics",
-                          text: $userSettings.athleticsFeedURL)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled(true)
-                    .keyboardType(.URL)
-                    .font(.system(size: 12, design: .monospaced))
+                NavigationLink {
+                    AthleticsPickerView(services: services)
+                } label: {
+                    HStack {
+                        Text("Athletics teams")
+                        Spacer()
+                        Text("\(AthleticSubscriptions.enabledIDs.count) on")
+                            .foregroundStyle(AppColors.secondary)
+                    }
+                }
             } header: {
-                Text("Athletics feed URL")
+                Text("Athletics")
             } footer: {
-                Text("ICS feed for your athletic game schedule. Activate the Athletics card in Layout to see it on the dashboard.")
+                Text("Pick which Suffield teams' schedules sync into the Athletics card.")
             }
 
             Section {

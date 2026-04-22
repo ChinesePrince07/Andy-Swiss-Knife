@@ -5,9 +5,12 @@ struct AthleticsView: View {
     let services: Services
     @Environment(\.modelContext) private var modelContext
 
-    @Query(filter: #Predicate<CachedEvent> { $0.source == "athletics" },
-           sort: \CachedEvent.start)
-    private var games: [CachedEvent]
+    @Query(sort: \CachedEvent.start)
+    private var allEvents: [CachedEvent]
+
+    private var games: [CachedEvent] {
+        allEvents.filter { ($0.source ?? "").hasPrefix(AthleticSubscriptions.sourcePrefix) }
+    }
 
     @State private var didLoad = false
 
@@ -18,7 +21,7 @@ struct AthleticsView: View {
                 VStack(alignment: .leading, spacing: 14) {
                     header
 
-                    if UserSettings.shared.athleticsFeedURL.isEmpty {
+                    if AthleticSubscriptions.enabledIDs.isEmpty {
                         noFeedState
                     } else if visibleGames.isEmpty {
                         Text(didLoad ? "No upcoming games." : "Loading…")
@@ -55,10 +58,10 @@ struct AthleticsView: View {
 
     private var noFeedState: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("No athletics feed set.")
+            Text("No teams subscribed.")
                 .font(AppType.body)
                 .foregroundStyle(AppColors.secondary)
-            Text("Paste the athletic schedule ICS URL in Settings → Events.")
+            Text("Pick your sports in Settings → Athletics.")
                 .font(AppType.caption)
                 .foregroundStyle(AppColors.tertiary)
         }
@@ -101,11 +104,19 @@ struct AthleticsView: View {
                 Text(g.title)
                     .font(AppType.bodyMedium)
                     .foregroundStyle(AppColors.primary)
-                if let loc = g.location, !loc.isEmpty {
-                    Text(loc)
-                        .font(AppType.caption)
-                        .foregroundStyle(AppColors.secondary)
-                        .lineLimit(1)
+                HStack(spacing: 6) {
+                    if let team = g.calendarTitle {
+                        Text(team)
+                            .font(AppType.caption)
+                            .foregroundStyle(AppColors.accent)
+                            .lineLimit(1)
+                    }
+                    if let loc = g.location, !loc.isEmpty {
+                        Text("· \(loc)")
+                            .font(AppType.caption)
+                            .foregroundStyle(AppColors.secondary)
+                            .lineLimit(1)
+                    }
                 }
             }
             Spacer()
@@ -129,7 +140,7 @@ struct AthleticsView: View {
     }
 
     private func sync(force: Bool) async {
-        await services.athletics.sync(forceRefresh: force)
+        await services.athletics.syncAllEnabled(forceRefresh: force)
         didLoad = true
     }
 }
