@@ -76,7 +76,7 @@ struct TodayDashboardView: View {
         TimelineView(.periodic(from: .now, by: 60)) { ctx in
             VStack(alignment: .leading, spacing: 4) {
                 Text("\(UserSettings.shared.greeting(for: ctx.date)), \(UserSettings.shared.displayName)")
-                    .font(.system(size: 22, weight: .heavy, design: .monospaced))
+                    .font(.system(size: 28, weight: .heavy, design: .monospaced))
                     .foregroundStyle(AppColors.primary)
                 Text(Self.titleFormatter.string(from: ctx.date).uppercased())
                     .font(.system(size: 10, weight: .heavy, design: .monospaced))
