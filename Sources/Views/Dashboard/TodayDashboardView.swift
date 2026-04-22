@@ -74,12 +74,12 @@ struct TodayDashboardView: View {
 
     private var header: some View {
         TimelineView(.periodic(from: .now, by: 60)) { ctx in
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text("\(UserSettings.shared.greeting(for: ctx.date)), \(UserSettings.shared.displayName)")
-                    .font(AppType.displayTitle)
+                    .font(.system(size: 22, weight: .heavy, design: .monospaced))
                     .foregroundStyle(AppColors.primary)
                 Text(Self.titleFormatter.string(from: ctx.date).uppercased())
-                    .font(AppType.sectionLabel)
+                    .font(.system(size: 10, weight: .heavy, design: .monospaced))
                     .kerning(1.2)
                     .foregroundStyle(AppColors.secondary)
                 Text(counterLine)
@@ -97,12 +97,8 @@ struct TodayDashboardView: View {
                 SettingsView(services: services)
             } label: {
                 Image(systemName: "gearshape")
-                    .font(.system(size: 18))
+                    .font(.system(size: 20))
                     .foregroundStyle(AppColors.primary)
-                    .padding(8)
-                    .overlay(
-                        Rectangle().strokeBorder(AppColors.primary, lineWidth: 1.5)
-                    )
             }
             .buttonStyle(.plain)
         }
