@@ -140,8 +140,8 @@ struct PersonalCalendarView: View {
         HStack(spacing: 10) {
             Image(systemName: "plus")
                 .font(.system(size: 14, weight: .medium))
-                .foregroundStyle(AppColors.tertiary)
-            TextField("Add reminder…", text: $newTitle)
+                .foregroundStyle(AppColors.secondary)
+            TextField("", text: $newTitle, prompt: Text("Add reminder…").foregroundColor(AppColors.secondary))
                 .font(AppType.body)
                 .foregroundStyle(AppColors.primary)
                 .focused($addFocused)

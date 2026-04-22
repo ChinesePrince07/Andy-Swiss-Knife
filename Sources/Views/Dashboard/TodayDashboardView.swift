@@ -142,8 +142,8 @@ struct TodayDashboardView: View {
             HStack(spacing: 10) {
                 Image(systemName: "plus")
                     .font(.system(size: 14, weight: .medium))
-                    .foregroundStyle(AppColors.tertiary)
-                TextField("Add task…", text: $newTodoTitle)
+                    .foregroundStyle(AppColors.secondary)
+                TextField("", text: $newTodoTitle, prompt: Text("Add task…").foregroundColor(AppColors.secondary))
                     .font(AppType.body)
                     .foregroundStyle(AppColors.primary)
                     .focused($addFieldFocused)
@@ -155,7 +155,7 @@ struct TodayDashboardView: View {
                     } label: {
                         Image(systemName: "ellipsis.circle")
                             .font(.system(size: 14))
-                            .foregroundStyle(AppColors.tertiary)
+                            .foregroundStyle(AppColors.secondary)
                     }
                     .buttonStyle(.plain)
                 }
@@ -241,8 +241,8 @@ struct TodayDashboardView: View {
             HStack(spacing: 10) {
                 Image(systemName: "plus")
                     .font(.system(size: 14, weight: .medium))
-                    .foregroundStyle(AppColors.tertiary)
-                TextField("Add reminder…", text: $newReminderTitle)
+                    .foregroundStyle(AppColors.secondary)
+                TextField("", text: $newReminderTitle, prompt: Text("Add reminder…").foregroundColor(AppColors.secondary))
                     .font(AppType.body)
                     .foregroundStyle(AppColors.primary)
                     .focused($reminderFieldFocused)

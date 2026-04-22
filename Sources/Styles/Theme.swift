@@ -158,9 +158,8 @@ struct Theme: Identifiable, Hashable {
     )
 
     static let all: [Theme] = [
-        .brutalistStark, .brutalistInverse,
-        .brutalistBlood, .brutalistAcid, .brutalistElectric,
-        .brutalistHazard, .brutalistToxic
+        .brutalistStark, .brutalist, .brutalistInverse,
+        .brutalistAcid, .brutalistHazard, .brutalistToxic
     ]
 }
 

@@ -33,7 +33,7 @@ struct ReminderRow: View {
                     .onChange(of: titleFocused) { _, focused in
                         if !focused { commitTitle() }
                     }
-                TextField("Add note…", text: $notesDraft, axis: .vertical)
+                TextField("", text: $notesDraft, prompt: Text("Add note…").foregroundColor(AppColors.tertiary), axis: .vertical)
                     .font(AppType.caption)
                     .foregroundStyle(AppColors.secondary)
                     .focused($notesFocused)
