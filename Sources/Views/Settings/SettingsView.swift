@@ -48,10 +48,11 @@ struct SettingsView: View {
                         Text("arrange").foregroundStyle(AppColors.secondary)
                     }
                 }
+                Toggle("Pomodoro timer", isOn: $userSettings.pomodoroEnabled)
             } header: {
                 Text("Layout")
             } footer: {
-                Text("Drag cards on the dashboard grid into the order you want.")
+                Text("Drag cards on the dashboard grid into the order you want. Toggle Pomodoro on to add the focus timer card.")
             }
 
             Section {

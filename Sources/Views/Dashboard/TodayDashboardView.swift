@@ -347,8 +347,14 @@ struct TodayDashboardView: View {
 
     private var glanceGrid: some View {
         let layout = DashboardLayout.shared
+        let visible = layout.order.filter { card in
+            switch card {
+            case .pomodoro: return UserSettings.shared.pomodoroEnabled
+            default: return true
+            }
+        }
         return LazyVGrid(columns: [GridItem(.flexible(), spacing: 6), GridItem(.flexible(), spacing: 6)], spacing: 6) {
-            ForEach(layout.order, id: \.self) { card in
+            ForEach(visible, id: \.self) { card in
                 gridCell(for: card)
             }
         }
