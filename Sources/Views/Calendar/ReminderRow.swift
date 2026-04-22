@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ReminderRow: View {
     @Bindable var event: PersonalEvent
+    let dateLabel: String
     let onOpen: () -> Void
     let onDelete: () -> Void
     let onCommitTitle: (String) -> Void
@@ -12,10 +13,10 @@ struct ReminderRow: View {
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
             Button { onOpen() } label: {
-                Text(timeLabel)
-                    .font(AppType.caption)
+                Text(dateLabel)
+                    .font(.system(size: 11, design: .monospaced))
                     .foregroundStyle(AppColors.secondary)
-                    .frame(width: 78, alignment: .leading)
+                    .frame(width: 96, alignment: .leading)
             }
             .buttonStyle(.plain)
 
@@ -50,13 +51,6 @@ struct ReminderRow: View {
         .onChange(of: event.title) { _, new in
             if !titleFocused { titleDraft = new }
         }
-    }
-
-    private var timeLabel: String {
-        if event.isAllDay { return "All day" }
-        let df = DateFormatter()
-        df.dateFormat = "h:mm a"
-        return df.string(from: event.date)
     }
 
     private func commit() {

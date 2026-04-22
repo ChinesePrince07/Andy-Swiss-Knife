@@ -18,42 +18,16 @@ struct PersonalCalendarView: View {
         ZStack {
             ThemedBackground()
             ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
+                VStack(alignment: .leading, spacing: 14) {
                     header
-                    if visibleEvents.isEmpty {
+                    if events.isEmpty {
                         emptyState
                     } else {
-                        ForEach(grouped, id: \.0) { (day, dayEvents) in
-                            SectionLabel(text: Self.dayFormatter.string(from: day))
-                                .padding(.top, 4)
-                            HairlineDivider()
-                            ForEach(dayEvents) { e in
-                                eventRow(e)
-                                HairlineDivider()
-                            }
+                        ForEach(buckets, id: \.0) { bucket, items in
+                            bucketSection(bucket: bucket, items: items)
                         }
                     }
-
-                    HStack(spacing: 10) {
-                        Image(systemName: "plus")
-                            .font(.system(size: 14, weight: .medium))
-                            .foregroundStyle(AppColors.tertiary)
-                        TextField("Add reminder…", text: $newTitle)
-                            .font(AppType.body)
-                            .foregroundStyle(AppColors.primary)
-                            .focused($addFocused)
-                            .submitLabel(.done)
-                            .onSubmit { commitNewReminder() }
-                        if !newTitle.isEmpty {
-                            Button { showingAdd = true } label: {
-                                Image(systemName: "ellipsis.circle")
-                                    .font(.system(size: 14))
-                                    .foregroundStyle(AppColors.tertiary)
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    }
-                    .padding(.vertical, 10)
+                    inlineAddField
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 20)
@@ -61,7 +35,7 @@ struct PersonalCalendarView: View {
                 .padding(.bottom, 40)
             }
         }
-        .navigationTitle("Calendar")
+        .navigationTitle("Reminders")
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showingAdd) {
             PersonalEventEditSheet(services: services, existing: nil)
@@ -88,20 +62,10 @@ struct PersonalCalendarView: View {
             Text("Reminders")
                 .font(AppType.displayTitle)
                 .foregroundStyle(AppColors.primary)
-            Text("\(visibleEvents.count) upcoming")
+            Text("\(events.count) total")
                 .font(AppType.caption)
                 .foregroundStyle(AppColors.secondary)
         }
-    }
-
-    private var visibleEvents: [PersonalEvent] {
-        events
-    }
-
-    private var grouped: [(Date, [PersonalEvent])] {
-        let cal = Calendar.current
-        let groups = Dictionary(grouping: visibleEvents) { cal.startOfDay(for: $0.date) }
-        return groups.keys.sorted().map { ($0, (groups[$0] ?? []).sorted { $0.date < $1.date }) }
     }
 
     private var emptyState: some View {
@@ -111,9 +75,96 @@ struct PersonalCalendarView: View {
             .padding(.vertical, 20)
     }
 
-    private func eventRow(_ e: PersonalEvent) -> some View {
-        ReminderRow(event: e, onOpen: { editing = e }, onDelete: { delete(e) },
-                    onCommitTitle: { commitTitle(e, $0) })
+    private var buckets: [(DueBucket, [PersonalEvent])] {
+        var map: [DueBucket: [PersonalEvent]] = [:]
+        for e in events {
+            let b = DueBucket.bucket(for: e.date)
+            map[b, default: []].append(e)
+        }
+        return map.keys.sorted { $0.order < $1.order }.map { key in
+            let items = (map[key] ?? []).sorted { $0.date < $1.date }
+            return (key, items)
+        }
+    }
+
+    private func bucketSection(bucket: DueBucket, items: [PersonalEvent]) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                Text(bucket.title.uppercased())
+                    .font(.system(size: 12, weight: .heavy, design: .monospaced))
+                    .kerning(1.4)
+                    .foregroundStyle(bucket.isUrgent ? AppColors.accent : AppColors.primary)
+                if let subtitle = bucket.subtitle {
+                    Text(subtitle)
+                        .font(AppType.caption)
+                        .foregroundStyle(AppColors.tertiary)
+                }
+                Spacer()
+                Text("\(items.count)")
+                    .font(.system(size: 11, design: .monospaced))
+                    .foregroundStyle(AppColors.tertiary)
+            }
+            Rectangle()
+                .fill(bucket.isUrgent ? AppColors.accent : AppColors.primary)
+                .frame(height: bucket.isUrgent ? 2 : 1)
+                .padding(.bottom, 2)
+            ForEach(items) { e in
+                reminderRow(e)
+                HairlineDivider()
+            }
+        }
+    }
+
+    private func reminderRow(_ e: PersonalEvent) -> some View {
+        ReminderRow(
+            event: e,
+            dateLabel: rowDateLabel(for: e),
+            onOpen: { editing = e },
+            onDelete: { delete(e) },
+            onCommitTitle: { commitTitle(e, $0) }
+        )
+    }
+
+    private func rowDateLabel(for e: PersonalEvent) -> String {
+        let cal = Calendar.current
+        let df = DateFormatter()
+        if e.isAllDay {
+            df.dateFormat = "EEE MMM d"
+            return df.string(from: e.date)
+        }
+        if cal.isDateInToday(e.date) {
+            df.dateFormat = "HH:mm"
+            return df.string(from: e.date)
+        }
+        if cal.isDateInTomorrow(e.date) {
+            df.dateFormat = "'Tmrw' HH:mm"
+            return df.string(from: e.date)
+        }
+        df.dateFormat = "EEE MMM d · HH:mm"
+        return df.string(from: e.date)
+    }
+
+    private var inlineAddField: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "plus")
+                .font(.system(size: 14, weight: .medium))
+                .foregroundStyle(AppColors.tertiary)
+            TextField("Add reminder…", text: $newTitle)
+                .font(AppType.body)
+                .foregroundStyle(AppColors.primary)
+                .focused($addFocused)
+                .submitLabel(.done)
+                .onSubmit { commitNewReminder() }
+            if !newTitle.isEmpty {
+                Button { showingAdd = true } label: {
+                    Image(systemName: "ellipsis.circle")
+                        .font(.system(size: 14))
+                        .foregroundStyle(AppColors.tertiary)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.vertical, 10)
     }
 
     private func commitTitle(_ e: PersonalEvent, _ newTitle: String) {
@@ -123,13 +174,6 @@ struct PersonalCalendarView: View {
         try? modelContext.save()
         SnapshotStore.publishReminders(from: modelContext)
         WidgetReloader.reloadReminderWidgets()
-    }
-
-    private func timeLabel(for e: PersonalEvent) -> String {
-        if e.isAllDay { return "All day" }
-        let df = DateFormatter()
-        df.dateFormat = "h:mm a"
-        return df.string(from: e.date)
     }
 
     private func commitNewReminder() {
@@ -152,10 +196,4 @@ struct PersonalCalendarView: View {
         SnapshotStore.publishReminders(from: modelContext)
         WidgetReloader.reloadReminderWidgets()
     }
-
-    static let dayFormatter: DateFormatter = {
-        let df = DateFormatter()
-        df.dateFormat = "EEEE, MMM d"
-        return df
-    }()
 }
