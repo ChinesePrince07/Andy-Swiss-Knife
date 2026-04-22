@@ -359,18 +359,21 @@ struct TodayDashboardView: View {
     @ViewBuilder
     private func gridCell(for card: DashboardCard) -> some View {
         let isDragging = draggingCard == card
+        let isOther = draggingCard != nil && !isDragging
         cardView(for: card)
-            .scaleEffect(isDragging ? 1.06 : 1.0)
+            .scaleEffect(isDragging ? 1.12 : (isOther ? 0.96 : 1.0))
+            .opacity(isOther ? 0.75 : 1.0)
+            .rotationEffect(.degrees(isDragging ? 2.0 : 0))
             .shadow(
-                color: isDragging ? AppColors.primary.opacity(0.3) : .clear,
-                radius: isDragging ? 14 : 0,
+                color: isDragging ? AppColors.primary.opacity(0.45) : .clear,
+                radius: isDragging ? 26 : 0,
                 x: 0,
-                y: isDragging ? 8 : 0
+                y: isDragging ? 14 : 0
             )
             .offset(x: isDragging ? dragOffset.width : 0,
                     y: isDragging ? dragOffset.height : 0)
             .zIndex(isDragging ? 10 : 0)
-            .animation(isDragging ? nil : .spring(response: 0.35, dampingFraction: 0.78), value: isDragging)
+            .animation(isDragging ? nil : .spring(response: 0.35, dampingFraction: 0.72), value: draggingCard)
             .background(
                 GeometryReader { geo in
                     Color.clear.preference(

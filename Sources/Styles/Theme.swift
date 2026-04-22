@@ -107,9 +107,61 @@ struct Theme: Identifiable, Hashable {
         hairline: .black, accent: Color(red: 0.40, green: 0.65, blue: 0.10)
     )
 
+    static let brutalistBlood = brutalist(
+        id: "brutalist-blood", name: "Blood",
+        background: Color(white: 0.04), surface: Color(white: 0.10),
+        primary: Color(red: 1.0, green: 0.12, blue: 0.12),
+        secondary: Color(red: 1.0, green: 0.45, blue: 0.45),
+        tertiary: Color(red: 0.85, green: 0.35, blue: 0.35),
+        hairline: Color(red: 1.0, green: 0.12, blue: 0.12),
+        accent: .white
+    )
+
+    static let brutalistAcid = brutalist(
+        id: "brutalist-acid", name: "Acid",
+        background: .black, surface: Color(white: 0.08),
+        primary: Color(red: 0.60, green: 1.0, blue: 0.10),
+        secondary: Color(red: 0.75, green: 1.0, blue: 0.45),
+        tertiary: Color(red: 0.50, green: 0.80, blue: 0.30),
+        hairline: Color(red: 0.60, green: 1.0, blue: 0.10),
+        accent: Color(red: 1.0, green: 0.0, blue: 1.0)
+    )
+
+    static let brutalistElectric = brutalist(
+        id: "brutalist-electric", name: "Electric",
+        background: Color(red: 0.02, green: 0.02, blue: 0.10),
+        surface: Color(red: 0.05, green: 0.05, blue: 0.15),
+        primary: Color(red: 0.0, green: 0.95, blue: 1.0),
+        secondary: Color(red: 0.40, green: 0.95, blue: 1.0),
+        tertiary: Color(red: 0.30, green: 0.65, blue: 0.85),
+        hairline: Color(red: 0.0, green: 0.95, blue: 1.0),
+        accent: Color(red: 1.0, green: 0.30, blue: 0.80)
+    )
+
+    static let brutalistHazard = brutalist(
+        id: "brutalist-hazard", name: "Hazard",
+        background: Color(red: 1.0, green: 0.85, blue: 0.0),
+        surface: Color(red: 1.0, green: 0.92, blue: 0.30),
+        primary: .black, secondary: Color(white: 0.15), tertiary: Color(white: 0.28),
+        hairline: .black, accent: Color(red: 0.85, green: 0.0, blue: 0.0)
+    )
+
+    static let brutalistToxic = brutalist(
+        id: "brutalist-toxic", name: "Toxic",
+        background: Color(red: 0.05, green: 0.0, blue: 0.10),
+        surface: Color(red: 0.10, green: 0.0, blue: 0.18),
+        primary: Color(red: 1.0, green: 0.0, blue: 0.85),
+        secondary: Color(red: 1.0, green: 0.40, blue: 0.90),
+        tertiary: Color(red: 0.75, green: 0.30, blue: 0.70),
+        hairline: Color(red: 1.0, green: 0.0, blue: 0.85),
+        accent: Color(red: 0.50, green: 1.0, blue: 0.10)
+    )
+
     static let all: [Theme] = [
         .brutalistStark, .brutalist, .brutalistInverse,
-        .brutalistOrange, .brutalistPink, .brutalistLime
+        .brutalistOrange, .brutalistPink, .brutalistLime,
+        .brutalistBlood, .brutalistAcid, .brutalistElectric,
+        .brutalistHazard, .brutalistToxic
     ]
 }
 

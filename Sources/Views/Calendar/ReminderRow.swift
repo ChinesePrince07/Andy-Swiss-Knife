@@ -10,8 +10,10 @@ struct ReminderRow: View {
 
     @Environment(\.modelContext) private var modelContext
     @State private var titleDraft: String = ""
+    @State private var notesDraft: String = ""
     @State private var datePickerShown = false
     @FocusState private var titleFocused: Bool
+    @FocusState private var notesFocused: Bool
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 10) {
@@ -21,23 +23,25 @@ struct ReminderRow: View {
                 .frame(width: 96, alignment: .leading)
                 .onTapGesture { onOpen() }
 
-            VStack(alignment: .leading, spacing: 1) {
+            VStack(alignment: .leading, spacing: 2) {
                 TextField("", text: $titleDraft)
                     .font(AppType.bodyMedium)
                     .foregroundStyle(AppColors.primary)
                     .focused($titleFocused)
                     .submitLabel(.done)
-                    .onSubmit { commit() }
+                    .onSubmit { commitTitle() }
                     .onChange(of: titleFocused) { _, focused in
-                        if !focused { commit() }
+                        if !focused { commitTitle() }
                     }
-                if let notes = event.notes, !notes.isEmpty {
-                    Text(notes)
-                        .font(AppType.caption)
-                        .foregroundStyle(AppColors.secondary)
-                        .lineLimit(1)
-                        .onTapGesture { onOpen() }
-                }
+                TextField("Add note…", text: $notesDraft, axis: .vertical)
+                    .font(AppType.caption)
+                    .foregroundStyle(AppColors.secondary)
+                    .focused($notesFocused)
+                    .lineLimit(1...3)
+                    .submitLabel(.done)
+                    .onChange(of: notesFocused) { _, focused in
+                        if !focused { commitNotes() }
+                    }
             }
 
             Button { datePickerShown = true } label: {
@@ -76,13 +80,19 @@ struct ReminderRow: View {
             .buttonStyle(.plain)
         }
         .padding(.vertical, 6)
-        .onAppear { titleDraft = event.title }
+        .onAppear {
+            titleDraft = event.title
+            notesDraft = event.notes ?? ""
+        }
         .onChange(of: event.title) { _, new in
             if !titleFocused { titleDraft = new }
         }
+        .onChange(of: event.notes) { _, new in
+            if !notesFocused { notesDraft = new ?? "" }
+        }
     }
 
-    private func commit() {
+    private func commitTitle() {
         let trimmed = titleDraft.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else {
             titleDraft = event.title
@@ -90,6 +100,17 @@ struct ReminderRow: View {
         }
         if trimmed != event.title {
             onCommitTitle(trimmed)
+        }
+    }
+
+    private func commitNotes() {
+        let trimmed = notesDraft.trimmingCharacters(in: .whitespacesAndNewlines)
+        let newVal: String? = trimmed.isEmpty ? nil : trimmed
+        if newVal != event.notes {
+            event.notes = newVal
+            try? modelContext.save()
+            SnapshotStore.publishReminders(from: modelContext)
+            WidgetReloader.reloadReminderWidgets()
         }
     }
 }

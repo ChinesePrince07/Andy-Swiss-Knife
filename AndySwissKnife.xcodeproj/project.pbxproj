@@ -148,9 +148,9 @@
 		2E486C027EFB8572A128000A /* Todo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Todo.swift; sourceTree = "<group>"; };
 		330E9BB2B8C13CDA343D7295 /* PersonalEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalEvent.swift; sourceTree = "<group>"; };
 		3D6F0ACE8F87DDCC97438137 /* AppModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelContainer.swift; sourceTree = "<group>"; };
-		3E718826D524695FC534A2C7 /* ics-simple.ics */ = {isa = PBXFileReference; path = "ics-simple.ics"; sourceTree = "<group>"; };
-		4409C76389596E8A8F6491E4 /* SwissKnifeWidgets.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = SwissKnifeWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		44599103D2235A4560C56824 /* ics-canvas-updated.ics */ = {isa = PBXFileReference; path = "ics-canvas-updated.ics"; sourceTree = "<group>"; };
+		3E718826D524695FC534A2C7 /* ics-simple.ics */ = {isa = PBXFileReference; lastKnownFileType = text; path = "ics-simple.ics"; sourceTree = "<group>"; };
+		4409C76389596E8A8F6491E4 /* SwissKnifeWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SwissKnifeWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		44599103D2235A4560C56824 /* ics-canvas-updated.ics */ = {isa = PBXFileReference; lastKnownFileType = text; path = "ics-canvas-updated.ics"; sourceTree = "<group>"; };
 		45D0EFCF6D41836BAEF58433 /* ClassPeriod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassPeriod.swift; sourceTree = "<group>"; };
 		51EDF3E97540E4D17E8C7D79 /* SwissKnifeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwissKnifeApp.swift; sourceTree = "<group>"; };
 		5E695050520C0B1AE0174397 /* AndySwissKnife.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AndySwissKnife.entitlements; sourceTree = "<group>"; };
@@ -161,7 +161,7 @@
 		6C72A38932D974ACFFE72627 /* TodoSweeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoSweeper.swift; sourceTree = "<group>"; };
 		6F6DED12FF93B8A00E879914 /* DashboardLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardLayout.swift; sourceTree = "<group>"; };
 		700361F6356B9A0A54B91DBD /* DiningParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningParserTests.swift; sourceTree = "<group>"; };
-		74DE5711E91ED38B80461908 /* ics-canvas.ics */ = {isa = PBXFileReference; path = "ics-canvas.ics"; sourceTree = "<group>"; };
+		74DE5711E91ED38B80461908 /* ics-canvas.ics */ = {isa = PBXFileReference; lastKnownFileType = text; path = "ics-canvas.ics"; sourceTree = "<group>"; };
 		7914539FD8CC3CFC11001E19 /* PersonalCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalCalendarView.swift; sourceTree = "<group>"; };
 		7ACF293B7A1272759389FBE9 /* SwissKnifeWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwissKnifeWidgets.entitlements; sourceTree = "<group>"; };
 		7B7D1DD1592E151C2F873A7C /* dining-broken.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "dining-broken.html"; sourceTree = "<group>"; };
@@ -176,13 +176,13 @@
 		8A5AAB826B54B6F030A71EA9 /* PomodoroAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroAttributes.swift; sourceTree = "<group>"; };
 		8C4F36C6B48E2FB444CF3DE0 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		8CA4ED3E8FB6B70780EECF42 /* TodoRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoRow.swift; sourceTree = "<group>"; };
-		972D7E648764DEFAD68BBF71 /* AndySwissKnifeTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = AndySwissKnifeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		972D7E648764DEFAD68BBF71 /* AndySwissKnifeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AndySwissKnifeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A377EBC72BD04D506FF4E8D /* DTOs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTOs.swift; sourceTree = "<group>"; };
 		9DE29B303DD49919976371BC /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 		A88ED0CE044EE770247D3373 /* SwissKnifeWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwissKnifeWidgets.swift; sourceTree = "<group>"; };
 		AE649F9598138060C7A34068 /* ReminderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderRow.swift; sourceTree = "<group>"; };
 		AF68A95B24C59E22AFE2ED9F /* DiningParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningParser.swift; sourceTree = "<group>"; };
-		B0598C29456DBF862E0E8699 /* ics-weekly.ics */ = {isa = PBXFileReference; path = "ics-weekly.ics"; sourceTree = "<group>"; };
+		B0598C29456DBF862E0E8699 /* ics-weekly.ics */ = {isa = PBXFileReference; lastKnownFileType = text; path = "ics-weekly.ics"; sourceTree = "<group>"; };
 		B35C596E06DEBEE3C8755EE6 /* DeepLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinks.swift; sourceTree = "<group>"; };
 		B573D2B21443B0B64EB94686 /* RRuleExpander.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RRuleExpander.swift; sourceTree = "<group>"; };
 		B6E5E6B2240DDDDD99C4D10E /* PersonalEventEditSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalEventEditSheet.swift; sourceTree = "<group>"; };
@@ -191,7 +191,7 @@
 		B9714F48D41526FB4B96674D /* CachedMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedMenu.swift; sourceTree = "<group>"; };
 		B990742E695A11C76312EFB7 /* AthleticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthleticsService.swift; sourceTree = "<group>"; };
 		C8509D41A53C3763789F4834 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
-		C851A753B87D83DE7D673B96 /* ics-folded-description.ics */ = {isa = PBXFileReference; path = "ics-folded-description.ics"; sourceTree = "<group>"; };
+		C851A753B87D83DE7D673B96 /* ics-folded-description.ics */ = {isa = PBXFileReference; lastKnownFileType = text; path = "ics-folded-description.ics"; sourceTree = "<group>"; };
 		C9EB87794E7ACADEB2EC67F4 /* SuffieldAthletics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuffieldAthletics.swift; sourceTree = "<group>"; };
 		CB7D2D6E1D577D8FEF8CD8DA /* dining-normal.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "dining-normal.html"; sourceTree = "<group>"; };
 		CDD58B20274EFCFC29596675 /* PomodoroTimerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimerTests.swift; sourceTree = "<group>"; };
@@ -201,7 +201,7 @@
 		D80AE48487F434A341189BB5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		DB90B7ED16E641F907E43170 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		DDD881A24D30AD5D90747EC7 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
-		E04B318D66BEDB598FF72C21 /* AndySwissKnife.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = AndySwissKnife.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E04B318D66BEDB598FF72C21 /* AndySwissKnife.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AndySwissKnife.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0C617949782E7CBDE6C3302 /* TodoWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoWidget.swift; sourceTree = "<group>"; };
 		E2F1368DFE43C2F590808B3A /* ScheduleClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleClass.swift; sourceTree = "<group>"; };
 		E6508432714136EC18A423DF /* AssignmentsSyncServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsSyncServiceTests.swift; sourceTree = "<group>"; };
@@ -530,15 +530,12 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					36FEC12B7951261FCEA74BE4 = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 					77935422F82DF462C8CBFED0 = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 					B4A7FABACAF2B8EAEE55E8CD = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -714,6 +711,7 @@
 				CODE_SIGN_ENTITLEMENTS = Sources/AndySwissKnife.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6X5A9JD86A;
 				INFOPLIST_FILE = Sources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -731,6 +729,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Widgets/SwissKnifeWidgets.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6X5A9JD86A;
 				INFOPLIST_FILE = Widgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Swiss Knife Widgets";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -753,6 +752,7 @@
 				CODE_SIGN_ENTITLEMENTS = Sources/AndySwissKnife.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6X5A9JD86A;
 				INFOPLIST_FILE = Sources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -769,6 +769,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 6X5A9JD86A;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -786,6 +787,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Widgets/SwissKnifeWidgets.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6X5A9JD86A;
 				INFOPLIST_FILE = Widgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Swiss Knife Widgets";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -865,6 +867,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = 6X5A9JD86A;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
