@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import UniformTypeIdentifiers
 
 struct TodayDashboardView: View {
     let services: Services
@@ -207,67 +208,53 @@ struct TodayDashboardView: View {
         let layout = DashboardLayout.shared
         return LazyVGrid(columns: [GridItem(.flexible(), spacing: 6), GridItem(.flexible(), spacing: 6)], spacing: 6) {
             ForEach(layout.order, id: \.self) { card in
-                wiggleWrapper(for: card) {
-                    cardView(for: card)
-                }
+                gridCell(for: card)
             }
         }
         .buttonStyle(.plain)
-        .onLongPressGesture(minimumDuration: 0.4) {
-            enterEditMode()
-        }
         .overlay(alignment: .topTrailing) {
             if isEditingGrid {
-                Button("Done") {
+                Button {
                     exitEditMode()
+                } label: {
+                    Text("DONE")
+                        .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                        .kerning(1.2)
+                        .foregroundStyle(AppColors.surface)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(AppColors.accent)
                 }
-                .font(.system(size: 12, weight: .heavy, design: .monospaced))
-                .foregroundStyle(AppColors.accent)
-                .padding(.horizontal, 10)
-                .padding(.vertical, 5)
-                .background(AppColors.surface)
-                .overlay(Rectangle().strokeBorder(AppColors.accent, lineWidth: 2))
-                .offset(x: -4, y: -14)
+                .offset(x: -2, y: -16)
             }
         }
     }
 
     @ViewBuilder
-    private func wiggleWrapper<Content: View>(for card: DashboardCard, @ViewBuilder content: () -> Content) -> some View {
-        let wrapped = content()
+    private func gridCell(for card: DashboardCard) -> some View {
+        let content = cardView(for: card)
             .rotationEffect(
                 .degrees(isEditingGrid ? (wiggleOffset(for: card) ? 1.2 : -1.2) : 0)
             )
-            .scaleEffect(draggingCard == card ? 1.05 : 1.0)
-            .opacity(draggingCard == card ? 0.6 : 1.0)
-            .allowsHitTesting(!isEditingGrid || draggingCard == nil)
+            .scaleEffect(draggingCard == card ? 1.08 : 1.0)
+            .opacity(draggingCard == card ? 0.4 : 1.0)
 
         if isEditingGrid {
-            wrapped
-                .draggable(card.rawValue) {
-                    content()
-                        .frame(maxWidth: 170)
-                        .onAppear { draggingCard = card }
-                        .onDisappear { draggingCard = nil }
+            content
+                .onDrag {
+                    draggingCard = card
+                    return NSItemProvider(object: card.rawValue as NSString)
                 }
-                .dropDestination(for: String.self) { items, _ in
-                    guard let raw = items.first,
-                          let from = DashboardCard(rawValue: raw),
-                          let fromIdx = DashboardLayout.shared.order.firstIndex(of: from),
-                          let toIdx = DashboardLayout.shared.order.firstIndex(of: card)
-                    else { return false }
-                    if fromIdx == toIdx { return false }
-                    var order = DashboardLayout.shared.order
-                    order.remove(at: fromIdx)
-                    let adjusted = toIdx > fromIdx ? toIdx - 1 : toIdx
-                    order.insert(from, at: adjusted)
-                    withAnimation(.snappy(duration: 0.25)) {
-                        DashboardLayout.shared.order = order
-                    }
-                    return true
-                }
+                .onDrop(of: [.text], delegate: CardDropDelegate(
+                    target: card,
+                    dragging: $draggingCard
+                ))
         } else {
-            wrapped
+            content
+                .simultaneousGesture(
+                    LongPressGesture(minimumDuration: 0.45)
+                        .onEnded { _ in enterEditMode() }
+                )
         }
     }
 
@@ -293,37 +280,50 @@ struct TodayDashboardView: View {
 
     @ViewBuilder
     private func cardView(for card: DashboardCard) -> some View {
+        if isEditingGrid {
+            rawCardContent(for: card)
+        } else {
+            NavigationLink {
+                destination(for: card)
+            } label: {
+                rawCardContent(for: card)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func rawCardContent(for card: DashboardCard) -> some View {
         switch card {
         case .nextClass:
-            NavigationLink { ClassesView() } label: {
-                TimelineView(.periodic(from: .now, by: 60)) { ctx in
-                    GlanceCard(
-                        label: "Next class",
-                        primary: nextClassPrimary(now: ctx.date),
-                        secondary: nextClassSecondary(now: ctx.date)
-                    )
-                }
+            TimelineView(.periodic(from: .now, by: 60)) { ctx in
+                GlanceCard(
+                    label: "Next class",
+                    primary: nextClassPrimary(now: ctx.date),
+                    secondary: nextClassSecondary(now: ctx.date)
+                )
             }
         case .reminders:
-            NavigationLink { PersonalCalendarView(services: services) } label: {
-                GlanceCard(label: "Reminders", primary: remindersPrimary, secondary: remindersSecondary)
-            }
+            GlanceCard(label: "Reminders", primary: remindersPrimary, secondary: remindersSecondary)
         case .canvas:
-            NavigationLink { AssignmentsView(services: services) } label: {
-                GlanceCard(label: "Canvas", primary: canvasPrimary, secondary: canvasSecondary)
-            }
+            GlanceCard(label: "Canvas", primary: canvasPrimary, secondary: canvasSecondary)
         case .meal:
-            NavigationLink { MealView(services: services) } label: {
-                GlanceCard(label: mealCardLabel, primary: mealPrimary, secondary: mealSecondary, error: mealError)
-            }
+            GlanceCard(label: mealCardLabel, primary: mealPrimary, secondary: mealSecondary, error: mealError)
         case .pomodoro:
-            NavigationLink { PomodoroView(services: services) } label: {
-                GlanceCard(label: "Pomodoro", primary: "Start", secondary: "25 min focus")
-            }
+            GlanceCard(label: "Pomodoro", primary: "Start", secondary: "25 min focus")
         case .events:
-            NavigationLink { EventsView(services: services) } label: {
-                GlanceCard(label: "Events", primary: nextEventPrimary, secondary: nextEventSecondary)
-            }
+            GlanceCard(label: "Events", primary: nextEventPrimary, secondary: nextEventSecondary)
+        }
+    }
+
+    @ViewBuilder
+    private func destination(for card: DashboardCard) -> some View {
+        switch card {
+        case .nextClass: ClassesView()
+        case .reminders: PersonalCalendarView(services: services)
+        case .canvas:    AssignmentsView(services: services)
+        case .meal:      MealView(services: services)
+        case .pomodoro:  PomodoroView(services: services)
+        case .events:    EventsView(services: services)
         }
     }
 
@@ -477,6 +477,34 @@ struct TodayDashboardView: View {
         df.dateFormat = "EEEE, MMM d"
         return df
     }()
+}
+
+struct CardDropDelegate: DropDelegate {
+    let target: DashboardCard
+    @Binding var dragging: DashboardCard?
+
+    func dropEntered(info: DropInfo) {
+        guard let dragging, dragging != target else { return }
+        var order = DashboardLayout.shared.order
+        guard let fromIdx = order.firstIndex(of: dragging),
+              let toIdx = order.firstIndex(of: target)
+        else { return }
+        if fromIdx == toIdx { return }
+        withAnimation(.snappy(duration: 0.22)) {
+            order.move(fromOffsets: IndexSet(integer: fromIdx),
+                       toOffset: toIdx > fromIdx ? toIdx + 1 : toIdx)
+            DashboardLayout.shared.order = order
+        }
+    }
+
+    func performDrop(info: DropInfo) -> Bool {
+        dragging = nil
+        return true
+    }
+
+    func dropUpdated(info: DropInfo) -> DropProposal? {
+        DropProposal(operation: .move)
+    }
 }
 
 struct GlanceCard: View {
