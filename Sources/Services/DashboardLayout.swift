@@ -39,7 +39,7 @@ enum DashboardCard: String, CaseIterable, Identifiable, Codable {
 final class DashboardLayout {
     static let shared = DashboardLayout()
     private static let activeKey = "dashboard.active.v2"
-    private static let defaultActive: [DashboardCard] = [.nextClass, .canvas, .meal, .events]
+    private static let defaultActive: [DashboardCard] = [.nextClass, .canvas, .meal, .athletics]
 
     var active: [DashboardCard] {
         didSet { persist() }

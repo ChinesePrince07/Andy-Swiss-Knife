@@ -29,39 +29,24 @@ struct AthleticsPickerView: View {
     }
 
     var body: some View {
-        List {
-            if !subscribed.isEmpty {
-                Section {
-                    HStack {
-                        Text("\(subscribed.count) subscribed")
-                            .foregroundStyle(.secondary)
-                        Spacer()
-                        Button(role: .destructive) {
-                            unsubscribeAll()
-                        } label: {
-                            Text("Clear all")
+        ZStack {
+            ThemedBackground()
+            ScrollView {
+                VStack(alignment: .leading, spacing: 22) {
+                    searchField
+                    if !subscribed.isEmpty { subscribedSummary }
+                    ForEach(AthleticSeason.allCases, id: \.self) { season in
+                        let buckets = bucketsForSeason(season)
+                        if !buckets.isEmpty {
+                            seasonSection(season: season, buckets: buckets)
                         }
                     }
                 }
-            }
-
-            ForEach(AthleticSeason.allCases, id: \.self) { season in
-                let buckets = bucketsForSeason(season)
-                if !buckets.isEmpty {
-                    Section(season.title) {
-                        ForEach(buckets, id: \.sport) { bucket in
-                            sportHeader(bucket.sport)
-                            ForEach(bucket.teams) { team in
-                                Toggle(isOn: binding(for: team)) {
-                                    Text(team.shortName)
-                                }
-                            }
-                        }
-                    }
-                }
+                .padding(.horizontal, 20)
+                .padding(.top, 8)
+                .padding(.bottom, 40)
             }
         }
-        .searchable(text: $query, prompt: "Filter sports")
         .navigationTitle("Athletics teams")
         .navigationBarTitleDisplayMode(.inline)
         .overlay(alignment: .bottom) {
@@ -69,29 +54,99 @@ struct AthleticsPickerView: View {
                 HStack(spacing: 8) {
                     ProgressView()
                     Text("Syncing…")
+                        .font(.system(size: 12, weight: .heavy, design: .monospaced))
+                        .kerning(1.1)
                 }
-                .padding(10)
-                .background(.regularMaterial, in: Capsule())
-                .padding(.bottom, 20)
+                .padding(.horizontal, 14).padding(.vertical, 8)
+                .background(AppColors.surface)
+                .overlay(Rectangle().strokeBorder(AppColors.primary, lineWidth: 2))
+                .padding(.bottom, 24)
             }
         }
     }
 
-    private func sportHeader(_ sport: String) -> some View {
-        Text(sport)
-            .font(.subheadline.weight(.semibold))
-            .foregroundStyle(.secondary)
-            .listRowSeparator(.hidden)
-            .listRowBackground(Color.clear)
+    private var searchField: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 13, weight: .medium))
+                .foregroundStyle(AppColors.tertiary)
+            TextField("Filter sports", text: $query)
+                .textInputAutocapitalization(.never)
+                .foregroundStyle(AppColors.primary)
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 8)
+        .overlay(Rectangle().strokeBorder(AppColors.primary, lineWidth: 1.5))
     }
 
-    private func binding(for team: SuffieldTeam) -> Binding<Bool> {
-        Binding(
-            get: { subscribed.contains(team.id) },
-            set: { newValue in
-                toggle(team, on: newValue)
+    private var subscribedSummary: some View {
+        HStack {
+            Text("\(subscribed.count) SUBSCRIBED")
+                .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                .kerning(1.3)
+                .foregroundStyle(AppColors.primary)
+            Spacer()
+            Button { unsubscribeAll() } label: {
+                Text("CLEAR")
+                    .font(.system(size: 10, weight: .heavy, design: .monospaced))
+                    .kerning(1.1)
+                    .foregroundStyle(AppColors.accent)
+                    .padding(.horizontal, 8).padding(.vertical, 4)
+                    .overlay(Rectangle().strokeBorder(AppColors.accent, lineWidth: 1.5))
             }
-        )
+            .buttonStyle(.plain)
+        }
+    }
+
+    private func seasonSection(season: AthleticSeason, buckets: [SportBucket]) -> some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(season.title.uppercased())
+                .font(.system(size: 20, weight: .heavy, design: .monospaced))
+                .kerning(1.5)
+                .foregroundStyle(AppColors.primary)
+            Rectangle().fill(AppColors.primary).frame(height: 2)
+
+            ForEach(buckets, id: \.sport) { bucket in
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(bucket.sport.uppercased())
+                        .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                        .kerning(1.2)
+                        .foregroundStyle(AppColors.tertiary)
+                        .padding(.top, 6)
+                    ForEach(bucket.teams) { team in
+                        teamRow(team)
+                        HairlineDivider()
+                    }
+                }
+            }
+        }
+    }
+
+    private func teamRow(_ team: SuffieldTeam) -> some View {
+        let on = subscribed.contains(team.id)
+        return Button {
+            toggle(team, on: !on)
+        } label: {
+            HStack(spacing: 12) {
+                ZStack {
+                    Rectangle()
+                        .strokeBorder(AppColors.primary, lineWidth: 2)
+                        .frame(width: 22, height: 22)
+                    if on {
+                        Rectangle()
+                            .fill(AppColors.primary)
+                            .frame(width: 14, height: 14)
+                    }
+                }
+                Text(team.shortName)
+                    .font(AppType.body)
+                    .foregroundStyle(AppColors.primary)
+                Spacer()
+            }
+            .padding(.vertical, 8)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
     }
 
     private func toggle(_ team: SuffieldTeam, on: Bool) {

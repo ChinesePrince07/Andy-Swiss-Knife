@@ -25,6 +25,8 @@ struct TodayDashboardView: View {
     @State private var isEditingGrid = false
     @State private var wigglePhase = false
     @State private var draggingCard: DashboardCard?
+    @State private var dragOffset: CGSize = .zero
+    @State private var cardFrames: [DashboardCard: CGRect] = [:]
     private let deepLinks = DeepLinks.shared
 
     var body: some View {
@@ -368,41 +370,91 @@ struct TodayDashboardView: View {
                     gridCell(for: card)
                 }
             }
+            .coordinateSpace(name: "dashGrid")
             .buttonStyle(.plain)
+            .onPreferenceChange(CardFramesKey.self) { frames in
+                cardFrames = frames
+            }
         }
     }
 
     @ViewBuilder
     private func gridCell(for card: DashboardCard) -> some View {
         let isDragging = draggingCard == card
-        let content = cardView(for: card)
-            .offset(y: isEditingGrid ? (wigglePhase ? -2 : -4) : 0)
+        let base = cardView(for: card)
             .scaleEffect(isDragging ? 1.06 : (isEditingGrid ? 1.01 : 1.0))
             .shadow(
-                color: isEditingGrid ? AppColors.primary.opacity(0.25) : .clear,
-                radius: isDragging ? 10 : 4,
+                color: isEditingGrid ? AppColors.primary.opacity(0.3) : .clear,
+                radius: isDragging ? 14 : 4,
                 x: 0,
-                y: isDragging ? 5 : 3
+                y: isDragging ? 8 : 3
             )
-            .opacity(isDragging ? 0.85 : 1.0)
-            .animation(.easeInOut(duration: 0.2), value: isDragging)
+            .offset(x: isDragging ? dragOffset.width : 0,
+                    y: isDragging ? dragOffset.height : (isEditingGrid ? (wigglePhase ? -2 : -4) : 0))
+            .zIndex(isDragging ? 10 : 0)
+            .animation(isDragging ? nil : .spring(response: 0.35, dampingFraction: 0.78), value: dragOffset)
+            .background(
+                GeometryReader { geo in
+                    Color.clear.preference(
+                        key: CardFramesKey.self,
+                        value: [card: geo.frame(in: .named("dashGrid"))]
+                    )
+                }
+            )
 
         if isEditingGrid {
-            content
-                .onDrag {
-                    draggingCard = card
-                    return NSItemProvider(object: card.rawValue as NSString)
-                }
-                .onDrop(of: [.text], delegate: CardDropDelegate(
-                    target: card,
-                    dragging: $draggingCard
-                ))
+            base.gesture(
+                DragGesture(coordinateSpace: .named("dashGrid"))
+                    .onChanged { value in
+                        if draggingCard == nil {
+                            draggingCard = card
+                        }
+                        dragOffset = value.translation
+                        handleSwap(draggedCard: card, location: value.location)
+                    }
+                    .onEnded { _ in
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) {
+                            draggingCard = nil
+                            dragOffset = .zero
+                        }
+                    }
+            )
         } else {
-            content
-                .simultaneousGesture(
-                    LongPressGesture(minimumDuration: 0.45)
-                        .onEnded { _ in enterEditMode() }
-                )
+            base.simultaneousGesture(
+                LongPressGesture(minimumDuration: 0.45)
+                    .onEnded { _ in enterEditMode() }
+            )
+        }
+    }
+
+    private func handleSwap(draggedCard: DashboardCard, location: CGPoint) {
+        // Find the cell whose frame the drag finger is inside (excluding
+        // the dragged card itself).
+        guard let targetEntry = cardFrames.first(where: { entry in
+            entry.key != draggedCard && entry.value.contains(location)
+        }) else { return }
+        let target = targetEntry.key
+        guard let fromIdx = DashboardLayout.shared.active.firstIndex(of: draggedCard),
+              let toIdx = DashboardLayout.shared.active.firstIndex(of: target)
+        else { return }
+        var active = DashboardLayout.shared.active
+        active.remove(at: fromIdx)
+        active.insert(draggedCard, at: toIdx)
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.78)) {
+            DashboardLayout.shared.active = active
+        }
+        // After swap, the dragged card's cell has moved. Shift dragOffset so
+        // the finger remains visually on the card.
+        if let newFrame = cardFrames[draggedCard],
+           let oldFrame = targetEntry.value as CGRect? {
+            let delta = CGSize(
+                width: oldFrame.midX - newFrame.midX,
+                height: oldFrame.midY - newFrame.midY
+            )
+            dragOffset = CGSize(
+                width: dragOffset.width + delta.width,
+                height: dragOffset.height + delta.height
+            )
         }
     }
 
@@ -635,6 +687,13 @@ struct TodayDashboardView: View {
         df.dateFormat = "EEEE, MMM d"
         return df
     }()
+}
+
+struct CardFramesKey: PreferenceKey {
+    static let defaultValue: [DashboardCard: CGRect] = [:]
+    static func reduce(value: inout [DashboardCard: CGRect], nextValue: () -> [DashboardCard: CGRect]) {
+        value.merge(nextValue(), uniquingKeysWith: { _, new in new })
+    }
 }
 
 struct CardDropDelegate: DropDelegate {
