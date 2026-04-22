@@ -29,28 +29,18 @@ struct TodayDashboardView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 18) {
-                header
+            VStack(alignment: .leading, spacing: 16) {
+                headerWithSettings
                 todoSection
                 remindersSection
                 glanceGrid
             }
             .padding(.horizontal, 16)
-            .padding(.top, 8)
+            .padding(.top, 0)
             .padding(.bottom, 40)
         }
         .background(ThemedBackground())
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                NavigationLink {
-                    SettingsView(services: services)
-                } label: {
-                    Image(systemName: "gearshape")
-                        .foregroundStyle(AppColors.primary)
-                }
-            }
-        }
+        .navigationBarHidden(true)
         .refreshable {
             await refreshAll()
         }
@@ -97,6 +87,26 @@ struct TodayDashboardView: View {
                     .foregroundStyle(AppColors.secondary)
             }
         }
+    }
+
+    private var headerWithSettings: some View {
+        HStack(alignment: .top, spacing: 12) {
+            header
+            Spacer()
+            NavigationLink {
+                SettingsView(services: services)
+            } label: {
+                Image(systemName: "gearshape")
+                    .font(.system(size: 18))
+                    .foregroundStyle(AppColors.primary)
+                    .padding(8)
+                    .overlay(
+                        Rectangle().strokeBorder(AppColors.primary, lineWidth: 1.5)
+                    )
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.top, 4)
     }
 
     private var counterLine: String {
@@ -284,28 +294,18 @@ struct TodayDashboardView: View {
 
     private func reminderRowLabel(_ e: PersonalEvent) -> String {
         let cal = Calendar.current
+        if cal.isDateInToday(e.date) { return "Today" }
+        if cal.isDateInTomorrow(e.date) { return "Tomorrow" }
         let df = DateFormatter()
-        if e.isAllDay {
-            df.dateFormat = "EEE MMM d"
-            return df.string(from: e.date)
-        }
-        if cal.isDateInToday(e.date) {
-            df.dateFormat = "HH:mm"
-            return df.string(from: e.date)
-        }
-        if cal.isDateInTomorrow(e.date) {
-            df.dateFormat = "'Tmrw' HH:mm"
-            return df.string(from: e.date)
-        }
-        df.dateFormat = "EEE MMM d · HH:mm"
+        df.dateFormat = "EEE MMM d"
         return df.string(from: e.date)
     }
 
     private func commitNewReminder() {
         let trimmed = newReminderTitle.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return }
-        let defaultDate = Calendar.current.date(byAdding: .hour, value: 1, to: .now) ?? .now
-        let event = PersonalEvent(title: trimmed, date: defaultDate)
+        let defaultDate = Calendar.current.startOfDay(for: .now)
+        let event = PersonalEvent(title: trimmed, date: defaultDate, isAllDay: true)
         modelContext.insert(event)
         try? modelContext.save()
         SnapshotStore.publishReminders(from: modelContext)

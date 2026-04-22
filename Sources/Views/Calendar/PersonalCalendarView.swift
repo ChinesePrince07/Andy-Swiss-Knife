@@ -11,7 +11,7 @@ struct PersonalCalendarView: View {
     @State private var showingAdd = false
     @State private var editing: PersonalEvent?
     @State private var newTitle: String = ""
-    @State private var newDate: Date = Calendar.current.date(byAdding: .hour, value: 1, to: .now) ?? .now
+    @State private var newDate: Date = Calendar.current.startOfDay(for: .now)
     @State private var showingDatePopover = false
     @FocusState private var addFocused: Bool
     private let deepLinks = DeepLinks.shared
@@ -129,20 +129,10 @@ struct PersonalCalendarView: View {
 
     private func rowDateLabel(for e: PersonalEvent) -> String {
         let cal = Calendar.current
+        if cal.isDateInToday(e.date) { return "Today" }
+        if cal.isDateInTomorrow(e.date) { return "Tomorrow" }
         let df = DateFormatter()
-        if e.isAllDay {
-            df.dateFormat = "EEE MMM d"
-            return df.string(from: e.date)
-        }
-        if cal.isDateInToday(e.date) {
-            df.dateFormat = "HH:mm"
-            return df.string(from: e.date)
-        }
-        if cal.isDateInTomorrow(e.date) {
-            df.dateFormat = "'Tmrw' HH:mm"
-            return df.string(from: e.date)
-        }
-        df.dateFormat = "EEE MMM d · HH:mm"
+        df.dateFormat = "EEE MMM d"
         return df.string(from: e.date)
     }
 
@@ -168,7 +158,14 @@ struct PersonalCalendarView: View {
             }
             .buttonStyle(.plain)
             .popover(isPresented: $showingDatePopover) {
-                DatePicker("Due", selection: $newDate, displayedComponents: [.date, .hourAndMinute])
+                DatePicker(
+                    "Due",
+                    selection: Binding(
+                        get: { newDate },
+                        set: { newDate = Calendar.current.startOfDay(for: $0) }
+                    ),
+                    displayedComponents: [.date]
+                )
                     .datePickerStyle(.graphical)
                     .padding()
                     .presentationCompactAdaptation(.popover)
@@ -188,13 +185,9 @@ struct PersonalCalendarView: View {
     private func shortDate(_ d: Date) -> String {
         let cal = Calendar.current
         let df = DateFormatter()
-        if cal.isDateInToday(d) {
-            df.dateFormat = "'Today' HH:mm"
-        } else if cal.isDateInTomorrow(d) {
-            df.dateFormat = "'Tmrw' HH:mm"
-        } else {
-            df.dateFormat = "MMM d · HH:mm"
-        }
+        if cal.isDateInToday(d) { return "Today" }
+        if cal.isDateInTomorrow(d) { return "Tmrw" }
+        df.dateFormat = "MMM d"
         return df.string(from: d)
     }
 
@@ -216,7 +209,7 @@ struct PersonalCalendarView: View {
         SnapshotStore.publishReminders(from: modelContext)
         WidgetReloader.reloadReminderWidgets()
         newTitle = ""
-        newDate = Calendar.current.date(byAdding: .hour, value: 1, to: .now) ?? .now
+        newDate = Calendar.current.startOfDay(for: .now)
         addFocused = true
     }
 

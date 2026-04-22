@@ -53,13 +53,13 @@ struct ReminderRow: View {
                         selection: Binding(
                             get: { event.date },
                             set: { newVal in
-                                event.date = newVal
+                                event.date = Calendar.current.startOfDay(for: newVal)
                                 try? modelContext.save()
                                 SnapshotStore.publishReminders(from: modelContext)
                                 WidgetReloader.reloadReminderWidgets()
                             }
                         ),
-                        displayedComponents: [.date, .hourAndMinute]
+                        displayedComponents: [.date]
                     )
                     .datePickerStyle(.graphical)
                 }
