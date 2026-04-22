@@ -32,13 +32,15 @@ struct AthleticsPickerView: View {
         List {
             if !subscribed.isEmpty {
                 Section {
-                    Text("\(subscribed.count) subscribed")
-                        .font(AppType.caption)
-                        .foregroundStyle(AppColors.secondary)
-                    Button(role: .destructive) {
-                        unsubscribeAll()
-                    } label: {
-                        Text("Unsubscribe from all")
+                    HStack {
+                        Text("\(subscribed.count) subscribed")
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Button(role: .destructive) {
+                            unsubscribeAll()
+                        } label: {
+                            Text("Clear all")
+                        }
                     }
                 }
             }
@@ -46,26 +48,15 @@ struct AthleticsPickerView: View {
             ForEach(AthleticSeason.allCases, id: \.self) { season in
                 let buckets = bucketsForSeason(season)
                 if !buckets.isEmpty {
-                    Section {
+                    Section(season.title) {
                         ForEach(buckets, id: \.sport) { bucket in
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(bucket.sport)
-                                    .font(.system(size: 11, weight: .heavy, design: .monospaced))
-                                    .kerning(1.1)
-                                    .foregroundStyle(AppColors.tertiary)
-                                    .padding(.top, 4)
-                                ForEach(bucket.teams) { team in
-                                    Toggle(isOn: binding(for: team)) {
-                                        Text(team.shortName)
-                                            .font(AppType.body)
-                                            .foregroundStyle(AppColors.primary)
-                                    }
-                                    .padding(.leading, 2)
+                            sportHeader(bucket.sport)
+                            ForEach(bucket.teams) { team in
+                                Toggle(isOn: binding(for: team)) {
+                                    Text(team.shortName)
                                 }
                             }
                         }
-                    } header: {
-                        Text(season.title.uppercased())
                     }
                 }
             }
@@ -77,13 +68,21 @@ struct AthleticsPickerView: View {
             if isSyncing {
                 HStack(spacing: 8) {
                     ProgressView()
-                    Text("Syncing…").font(AppType.caption)
+                    Text("Syncing…")
                 }
                 .padding(10)
                 .background(.regularMaterial, in: Capsule())
                 .padding(.bottom, 20)
             }
         }
+    }
+
+    private func sportHeader(_ sport: String) -> some View {
+        Text(sport)
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(.secondary)
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.clear)
     }
 
     private func binding(for team: SuffieldTeam) -> Binding<Bool> {
