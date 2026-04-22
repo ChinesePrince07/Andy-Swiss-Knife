@@ -33,6 +33,7 @@ final class Services {
     let pomodoro: PomodoroTimer
     let sweeper: TodoSweeper
     let athletics: AthleticsService
+    let weather: WeatherService
 
     init(context: ModelContext) {
         let http = URLSessionHTTPClient()
@@ -43,6 +44,7 @@ final class Services {
         self.pomodoro = PomodoroTimer()
         self.sweeper = TodoSweeper(context: context)
         self.athletics = AthleticsService(http: http, context: context)
+        self.weather = WeatherService(http: http)
         Self.seedScheduleIfNeeded(context: context)
         SnapshotStore.publishTodos(from: context)
         SnapshotStore.publishReminders(from: context)

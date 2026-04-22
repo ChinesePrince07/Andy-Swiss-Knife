@@ -18,6 +18,7 @@ struct TodayDashboardView: View {
     @State private var nextEvent: Event?
     @State private var isRefreshing = false
     @State private var mealError: Bool = false
+    @State private var weather: DailyWeather?
     @State private var showingAddSheet = false
     @State private var showingAddReminderSheet = false
     @State private var newTodoTitle: String = ""
@@ -86,9 +87,25 @@ struct TodayDashboardView: View {
                     .font(.system(size: 10, weight: .heavy, design: .monospaced))
                     .kerning(1.2)
                     .foregroundStyle(AppColors.secondary)
-                Text(counterLine)
-                    .font(AppType.caption)
+                weatherLine
+            }
+        }
+    }
+
+    private var weatherLine: some View {
+        HStack(spacing: 6) {
+            if let w = weather {
+                Image(systemName: w.symbolName)
+                    .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(AppColors.secondary)
+                Text("H \(Int(w.highC.rounded()))°  L \(Int(w.lowC.rounded()))°")
+                    .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                    .kerning(1.1)
+                    .foregroundStyle(AppColors.secondary)
+            } else {
+                Text("—")
+                    .font(AppType.caption)
+                    .foregroundStyle(AppColors.tertiary)
             }
         }
     }
@@ -655,8 +672,13 @@ struct TodayDashboardView: View {
         async let meal: Void = refreshMeal()
         async let events: Void = refreshEvents()
         async let canvas: Void = refreshCanvas()
-        _ = await (meal, events, canvas)
+        async let wx: Void = refreshWeather()
+        _ = await (meal, events, canvas, wx)
         isRefreshing = false
+    }
+
+    private func refreshWeather() async {
+        weather = await services.weather.today()
     }
 
     private func refreshMeal() async {

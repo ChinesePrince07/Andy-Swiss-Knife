@@ -42,7 +42,9 @@ final class AthleticsService {
         let ids = AthleticSubscriptions.enabledIDs
         guard !ids.isEmpty else { return 0 }
         let lastSync = UserDefaults.standard.object(forKey: "lastSync.athletics") as? Date
-        if !forceRefresh, let last = lastSync,
+        let lastSyncedIDs = Set(UserDefaults.standard.stringArray(forKey: "lastSync.athletics.ids") ?? [])
+        let newTeamAdded = !ids.isSubset(of: lastSyncedIDs)
+        if !forceRefresh, !newTeamAdded, let last = lastSync,
            Date.now.timeIntervalSince(last) < cacheTTL {
             return 0
         }
@@ -52,6 +54,7 @@ final class AthleticsService {
             added += await sync(team: team)
         }
         UserDefaults.standard.set(Date.now, forKey: "lastSync.athletics")
+        UserDefaults.standard.set(Array(ids), forKey: "lastSync.athletics.ids")
         return added
     }
 
