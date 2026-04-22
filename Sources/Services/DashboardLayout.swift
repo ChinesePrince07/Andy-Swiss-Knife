@@ -3,7 +3,6 @@ import Observation
 
 enum DashboardCard: String, CaseIterable, Identifiable, Codable {
     case nextClass = "nextClass"
-    case reminders = "reminders"
     case canvas = "canvas"
     case meal = "meal"
     case pomodoro = "pomodoro"
@@ -14,7 +13,6 @@ enum DashboardCard: String, CaseIterable, Identifiable, Codable {
     var label: String {
         switch self {
         case .nextClass: return "Next class"
-        case .reminders: return "Reminders"
         case .canvas:    return "Canvas"
         case .meal:      return "Meal"
         case .pomodoro:  return "Pomodoro"
@@ -25,7 +23,6 @@ enum DashboardCard: String, CaseIterable, Identifiable, Codable {
     var iconName: String {
         switch self {
         case .nextClass: return "graduationcap"
-        case .reminders: return "calendar"
         case .canvas:    return "book"
         case .meal:      return "fork.knife"
         case .pomodoro:  return "timer"
@@ -46,8 +43,10 @@ final class DashboardLayout {
 
     private init() {
         if let data = UserDefaults.standard.data(forKey: Self.key),
-           let decoded = try? JSONDecoder().decode([DashboardCard].self, from: data) {
-            // Append any newly added cards that aren't in persisted layout.
+           let raw = try? JSONDecoder().decode([String].self, from: data) {
+            // Decode as strings first so removed cases (e.g. .reminders)
+            // don't crash the decoder — they just drop out.
+            let decoded = raw.compactMap(DashboardCard.init(rawValue:))
             let missing = DashboardCard.allCases.filter { !decoded.contains($0) }
             self.order = decoded + missing
         } else {

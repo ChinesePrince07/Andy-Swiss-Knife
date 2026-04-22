@@ -32,6 +32,7 @@ struct TodayDashboardView: View {
             VStack(alignment: .leading, spacing: 18) {
                 header
                 todoSection
+                remindersSection
                 glanceGrid
             }
             .padding(.horizontal, 16)
@@ -181,6 +182,146 @@ struct TodayDashboardView: View {
         try? modelContext.save()
     }
 
+    @State private var newReminderTitle: String = ""
+    @FocusState private var reminderFieldFocused: Bool
+
+    private var upcomingReminders: [PersonalEvent] {
+        let cal = Calendar.current
+        let cutoff = cal.date(byAdding: .day, value: -1, to: cal.startOfDay(for: .now)) ?? .now
+        return personalEvents
+            .filter { $0.date >= cutoff }
+            .sorted { $0.date < $1.date }
+    }
+
+    private var reminderBuckets: [(DueBucket, [PersonalEvent])] {
+        var map: [DueBucket: [PersonalEvent]] = [:]
+        for e in upcomingReminders {
+            let b = DueBucket.bucket(for: e.date)
+            map[b, default: []].append(e)
+        }
+        return map.keys.sorted { $0.order < $1.order }.map { key in
+            let items = (map[key] ?? []).sorted { $0.date < $1.date }
+            return (key, items)
+        }
+    }
+
+    private var remindersSection: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            NavigationLink {
+                PersonalCalendarView(services: services)
+            } label: {
+                HStack {
+                    SectionLabel(text: "Reminders")
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundStyle(AppColors.tertiary)
+                }
+            }
+            .buttonStyle(.plain)
+
+            if upcomingReminders.isEmpty {
+                HairlineDivider()
+                Text("No reminders yet.")
+                    .font(AppType.body)
+                    .foregroundStyle(AppColors.secondary)
+                    .padding(.vertical, 10)
+            } else {
+                ForEach(reminderBuckets.prefix(3), id: \.0) { bucket, items in
+                    reminderBucketSection(bucket: bucket, items: items)
+                }
+            }
+
+            HStack(spacing: 10) {
+                Image(systemName: "plus")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(AppColors.tertiary)
+                TextField("Add reminder…", text: $newReminderTitle)
+                    .font(AppType.body)
+                    .foregroundStyle(AppColors.primary)
+                    .focused($reminderFieldFocused)
+                    .submitLabel(.done)
+                    .onSubmit { commitNewReminder() }
+            }
+            .padding(.vertical, 8)
+        }
+    }
+
+    private func reminderBucketSection(bucket: DueBucket, items: [PersonalEvent]) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                Text(bucket.title.uppercased())
+                    .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                    .kerning(1.3)
+                    .foregroundStyle(bucket.isUrgent ? AppColors.accent : AppColors.primary)
+                Spacer()
+                Text("\(items.count)")
+                    .font(.system(size: 10, design: .monospaced))
+                    .foregroundStyle(AppColors.tertiary)
+            }
+            Rectangle()
+                .fill(bucket.isUrgent ? AppColors.accent : AppColors.primary)
+                .frame(height: bucket.isUrgent ? 1.5 : 0.8)
+            ForEach(items.prefix(4)) { e in
+                ReminderRow(
+                    event: e,
+                    dateLabel: reminderRowLabel(e),
+                    onOpen: {},
+                    onDelete: { deleteReminder(e) },
+                    onCommitTitle: { newVal in
+                        let trimmed = newVal.trimmingCharacters(in: .whitespaces)
+                        guard !trimmed.isEmpty, trimmed != e.title else { return }
+                        e.title = trimmed
+                        try? modelContext.save()
+                        SnapshotStore.publishReminders(from: modelContext)
+                        WidgetReloader.reloadReminderWidgets()
+                    }
+                )
+                HairlineDivider()
+            }
+        }
+    }
+
+    private func reminderRowLabel(_ e: PersonalEvent) -> String {
+        let cal = Calendar.current
+        let df = DateFormatter()
+        if e.isAllDay {
+            df.dateFormat = "EEE MMM d"
+            return df.string(from: e.date)
+        }
+        if cal.isDateInToday(e.date) {
+            df.dateFormat = "HH:mm"
+            return df.string(from: e.date)
+        }
+        if cal.isDateInTomorrow(e.date) {
+            df.dateFormat = "'Tmrw' HH:mm"
+            return df.string(from: e.date)
+        }
+        df.dateFormat = "EEE MMM d · HH:mm"
+        return df.string(from: e.date)
+    }
+
+    private func commitNewReminder() {
+        let trimmed = newReminderTitle.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else { return }
+        let defaultDate = Calendar.current.date(byAdding: .hour, value: 1, to: .now) ?? .now
+        let event = PersonalEvent(title: trimmed, date: defaultDate)
+        modelContext.insert(event)
+        try? modelContext.save()
+        SnapshotStore.publishReminders(from: modelContext)
+        WidgetReloader.reloadReminderWidgets()
+        newReminderTitle = ""
+        reminderFieldFocused = true
+    }
+
+    private func deleteReminder(_ e: PersonalEvent) {
+        services.notifications.cancel(for: e)
+        modelContext.delete(e)
+        try? modelContext.save()
+        SnapshotStore.publishReminders(from: modelContext)
+        WidgetReloader.reloadReminderWidgets()
+    }
+
     private var sortedTodos: [Todo] {
         let open = allTodos.filter { !$0.isDone }.sorted { lhs, rhs in
             switch (lhs.dueDate, rhs.dueDate) {
@@ -302,8 +443,6 @@ struct TodayDashboardView: View {
                     secondary: nextClassSecondary(now: ctx.date)
                 )
             }
-        case .reminders:
-            GlanceCard(label: "Reminders", primary: remindersPrimary, secondary: remindersSecondary)
         case .canvas:
             GlanceCard(label: "Canvas", primary: canvasPrimary, secondary: canvasSecondary)
         case .meal:
@@ -319,7 +458,6 @@ struct TodayDashboardView: View {
     private func destination(for card: DashboardCard) -> some View {
         switch card {
         case .nextClass: ClassesView()
-        case .reminders: PersonalCalendarView(services: services)
         case .canvas:    AssignmentsView(services: services)
         case .meal:      MealView(services: services)
         case .pomodoro:  PomodoroView(services: services)
