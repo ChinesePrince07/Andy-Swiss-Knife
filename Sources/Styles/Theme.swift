@@ -108,7 +108,7 @@ struct Theme: Identifiable, Hashable {
     )
 
     static let all: [Theme] = [
-        .brutalist, .brutalistStark, .brutalistInverse,
+        .brutalistStark, .brutalist, .brutalistInverse,
         .brutalistOrange, .brutalistPink, .brutalistLime
     ]
 }
@@ -123,7 +123,7 @@ final class ThemeManager {
 
     init() {
         let raw = UserDefaults.standard.string(forKey: Self.storageKey)
-        self.current = Theme.all.first(where: { $0.id == raw }) ?? .brutalist
+        self.current = Theme.all.first(where: { $0.id == raw }) ?? .brutalistStark
     }
 
     func select(_ theme: Theme) {
