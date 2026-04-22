@@ -31,11 +31,14 @@ struct PersonalCalendarView: View {
                     }
                     inlineAddField
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 .padding(.horizontal, 20)
                 .padding(.top, 8)
                 .padding(.bottom, 40)
+                .contentShape(Rectangle())
+                .onTapGesture { dismissKeyboard() }
             }
+            .scrollDismissesKeyboard(.interactively)
         }
         .navigationTitle("Reminders")
         .navigationBarTitleDisplayMode(.inline)
@@ -84,7 +87,12 @@ struct PersonalCalendarView: View {
             map[b, default: []].append(e)
         }
         return map.keys.sorted { $0.order < $1.order }.map { key in
-            let items = (map[key] ?? []).sorted { $0.date < $1.date }
+            let items = (map[key] ?? []).sorted { lhs, rhs in
+                if lhs.date != rhs.date { return lhs.date < rhs.date }
+                let l = lhs.sortOrder ?? 0
+                let r = rhs.sortOrder ?? 0
+                return l > r
+            }
             return (key, items)
         }
     }
@@ -112,6 +120,10 @@ struct PersonalCalendarView: View {
                 .padding(.bottom, 2)
             ForEach(items) { e in
                 reminderRow(e)
+                    .draggable(e.id.uuidString)
+                    .dropDestination(for: String.self) { dropped, _ in
+                        reorder(droppedIDs: dropped, target: e, within: items)
+                    }
                 HairlineDivider()
             }
         }
@@ -219,5 +231,22 @@ struct PersonalCalendarView: View {
         try? modelContext.save()
         SnapshotStore.publishReminders(from: modelContext)
         WidgetReloader.reloadReminderWidgets()
+    }
+
+    private func reorder(droppedIDs: [String], target: PersonalEvent, within bucket: [PersonalEvent]) -> Bool {
+        guard let raw = droppedIDs.first, let id = UUID(uuidString: raw),
+              let dropped = bucket.first(where: { $0.id == id }), dropped.id != target.id else { return false }
+        var arr = bucket
+        arr.removeAll { $0.id == dropped.id }
+        guard let idx = arr.firstIndex(where: { $0.id == target.id }) else { return false }
+        arr.insert(dropped, at: idx)
+        let total = arr.count
+        for (i, r) in arr.enumerated() {
+            r.sortOrder = Double(total - i)
+        }
+        try? modelContext.save()
+        SnapshotStore.publishReminders(from: modelContext)
+        WidgetReloader.reloadReminderWidgets()
+        return true
     }
 }

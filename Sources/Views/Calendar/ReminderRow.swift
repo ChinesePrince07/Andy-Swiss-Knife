@@ -29,7 +29,10 @@ struct ReminderRow: View {
                     .foregroundStyle(AppColors.primary)
                     .focused($titleFocused)
                     .submitLabel(.done)
-                    .onSubmit { commitTitle() }
+                    .onSubmit {
+                        commitTitle()
+                        titleFocused = false
+                    }
                     .onChange(of: titleFocused) { _, focused in
                         if !focused { commitTitle() }
                     }

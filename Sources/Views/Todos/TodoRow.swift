@@ -23,13 +23,16 @@ struct TodoRow: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 if todo.source == .manual && !todo.isDone {
-                    TextField("", text: $titleDraft, axis: .vertical)
+                    TextField("", text: $titleDraft)
                         .font(AppType.body)
                         .foregroundStyle(AppColors.primary)
                         .multilineTextAlignment(.leading)
                         .focused($titleFocused)
                         .submitLabel(.done)
-                        .onSubmit { commitTitle() }
+                        .onSubmit {
+                            commitTitle()
+                            titleFocused = false
+                        }
                         .onChange(of: titleFocused) { _, focused in
                             if !focused { commitTitle() }
                         }

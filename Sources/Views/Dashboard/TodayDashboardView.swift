@@ -38,7 +38,11 @@ struct TodayDashboardView: View {
             .padding(.horizontal, 16)
             .padding(.top, 0)
             .padding(.bottom, 40)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .contentShape(Rectangle())
+            .onTapGesture { dismissKeyboard() }
         }
+        .scrollDismissesKeyboard(.interactively)
         .background(ThemedBackground())
         .navigationBarHidden(true)
         .refreshable {
@@ -135,7 +139,8 @@ struct TodayDashboardView: View {
                         subtitle: bucket.subtitle,
                         isUrgent: bucket.isUrgent,
                         items: todos,
-                        services: services
+                        services: services,
+                        allowReorder: bucket == .someday
                     )
                 }
             }
@@ -167,7 +172,9 @@ struct TodayDashboardView: View {
     private func commitNewTodo() {
         let trimmed = newTodoTitle.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return }
-        let todo = Todo(title: trimmed)
+        // New undated todos get highest sortOrder so they appear at the top.
+        let maxOrder = allTodos.compactMap(\.sortOrder).max() ?? 0
+        let todo = Todo(title: trimmed, sortOrder: maxOrder + 1)
         modelContext.insert(todo)
         try? modelContext.save()
         SnapshotStore.publishTodos(from: modelContext)
@@ -206,7 +213,12 @@ struct TodayDashboardView: View {
             map[b, default: []].append(e)
         }
         return map.keys.sorted { $0.order < $1.order }.map { key in
-            let items = (map[key] ?? []).sorted { $0.date < $1.date }
+            let items = (map[key] ?? []).sorted { lhs, rhs in
+                if lhs.date != rhs.date { return lhs.date < rhs.date }
+                let l = lhs.sortOrder ?? 0
+                let r = rhs.sortOrder ?? 0
+                return l > r
+            }
             return (key, items)
         }
     }
@@ -283,6 +295,10 @@ struct TodayDashboardView: View {
                         WidgetReloader.reloadReminderWidgets()
                     }
                 )
+                .draggable(e.id.uuidString)
+                .dropDestination(for: String.self) { dropped, _ in
+                    reorderReminder(droppedIDs: dropped, target: e, within: Array(items.prefix(4)))
+                }
                 HairlineDivider()
             }
         }
@@ -316,6 +332,23 @@ struct TodayDashboardView: View {
         try? modelContext.save()
         SnapshotStore.publishReminders(from: modelContext)
         WidgetReloader.reloadReminderWidgets()
+    }
+
+    private func reorderReminder(droppedIDs: [String], target: PersonalEvent, within bucket: [PersonalEvent]) -> Bool {
+        guard let raw = droppedIDs.first, let id = UUID(uuidString: raw),
+              let dropped = bucket.first(where: { $0.id == id }), dropped.id != target.id else { return false }
+        var arr = bucket
+        arr.removeAll { $0.id == dropped.id }
+        guard let idx = arr.firstIndex(where: { $0.id == target.id }) else { return false }
+        arr.insert(dropped, at: idx)
+        let total = arr.count
+        for (i, r) in arr.enumerated() {
+            r.sortOrder = Double(total - i)
+        }
+        try? modelContext.save()
+        SnapshotStore.publishReminders(from: modelContext)
+        WidgetReloader.reloadReminderWidgets()
+        return true
     }
 
     private var sortedTodos: [Todo] {

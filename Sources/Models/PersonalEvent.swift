@@ -12,6 +12,7 @@ final class PersonalEvent {
     var createdAt: Date
     var externalID: String?    // EKEvent.eventIdentifier when imported from Apple Calendar
     var sourceCalendar: String?
+    var sortOrder: Double?
 
     init(
         id: UUID = UUID(),
@@ -22,7 +23,8 @@ final class PersonalEvent {
         isAllDay: Bool = false,
         createdAt: Date = .now,
         externalID: String? = nil,
-        sourceCalendar: String? = nil
+        sourceCalendar: String? = nil,
+        sortOrder: Double? = nil
     ) {
         self.id = id
         self.title = title
@@ -33,5 +35,6 @@ final class PersonalEvent {
         self.createdAt = createdAt
         self.externalID = externalID
         self.sourceCalendar = sourceCalendar
+        self.sortOrder = sortOrder
     }
 }
