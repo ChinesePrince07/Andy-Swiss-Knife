@@ -4,11 +4,24 @@ enum AthleticGender: String, Hashable {
     case boys, girls, coed
 }
 
+enum AthleticSeason: String, Hashable, CaseIterable {
+    case fall, winter, spring
+
+    var title: String {
+        switch self {
+        case .fall:   return "Fall"
+        case .winter: return "Winter"
+        case .spring: return "Spring"
+        }
+    }
+}
+
 struct SuffieldTeam: Identifiable, Hashable {
     let id: String          // "168"
     let sport: String       // "Soccer"
     let level: String       // "Varsity", "J.V.", "Tiger A", "Tiger B"
     let gender: AthleticGender
+    let season: AthleticSeason
 
     var feedURL: URL {
         URL(string: "https://www.suffieldacademy.org/calendar/team_\(id).ics")!
@@ -38,76 +51,69 @@ struct SuffieldTeam: Identifiable, Hashable {
 
 enum SuffieldAthletics {
     static let teams: [SuffieldTeam] = [
-        // Baseball
-        SuffieldTeam(id: "168", sport: "Baseball", level: "Varsity", gender: .coed),
-        SuffieldTeam(id: "146", sport: "Baseball", level: "J.V.", gender: .coed),
-        // Basketball
-        SuffieldTeam(id: "169", sport: "Basketball", level: "Varsity", gender: .boys),
-        SuffieldTeam(id: "133", sport: "Basketball", level: "J.V.", gender: .boys),
-        SuffieldTeam(id: "134", sport: "Basketball", level: "Tiger A", gender: .boys),
-        SuffieldTeam(id: "170", sport: "Basketball", level: "Varsity", gender: .girls),
-        SuffieldTeam(id: "135", sport: "Basketball", level: "J.V.", gender: .girls),
-        // Crew
-        SuffieldTeam(id: "171", sport: "Crew", level: "Varsity", gender: .coed),
-        SuffieldTeam(id: "172", sport: "Crew", level: "Varsity", gender: .girls),
-        // Cross Country
-        SuffieldTeam(id: "120", sport: "Cross Country", level: "Varsity", gender: .boys),
-        SuffieldTeam(id: "121", sport: "Cross Country", level: "Varsity", gender: .girls),
-        // Diving
-        SuffieldTeam(id: "136", sport: "Diving", level: "Varsity", gender: .coed),
-        // Field Hockey
-        SuffieldTeam(id: "122", sport: "Field Hockey", level: "Varsity", gender: .coed),
-        SuffieldTeam(id: "123", sport: "Field Hockey", level: "J.V.", gender: .coed),
-        // Football
-        SuffieldTeam(id: "161", sport: "Football", level: "Varsity", gender: .coed),
-        SuffieldTeam(id: "124", sport: "Football", level: "J.V.", gender: .coed),
-        // Golf
-        SuffieldTeam(id: "147", sport: "Golf", level: "Varsity", gender: .coed),
-        SuffieldTeam(id: "165", sport: "Golf", level: "J.V.", gender: .coed),
-        // Lacrosse
-        SuffieldTeam(id: "148", sport: "Lacrosse", level: "Varsity", gender: .boys),
-        SuffieldTeam(id: "149", sport: "Lacrosse", level: "J.V.", gender: .boys),
-        SuffieldTeam(id: "150", sport: "Lacrosse", level: "Varsity", gender: .girls),
-        SuffieldTeam(id: "151", sport: "Lacrosse", level: "J.V.", gender: .girls),
-        // Riflery
-        SuffieldTeam(id: "137", sport: "Riflery", level: "Varsity", gender: .coed),
-        // Alpine Skiing
-        SuffieldTeam(id: "138", sport: "Alpine Skiing", level: "Varsity", gender: .coed),
-        // Soccer
-        SuffieldTeam(id: "125", sport: "Soccer", level: "Varsity", gender: .boys),
-        SuffieldTeam(id: "166", sport: "Soccer", level: "J.V.", gender: .boys),
-        SuffieldTeam(id: "126", sport: "Soccer", level: "Tiger A", gender: .boys),
-        SuffieldTeam(id: "127", sport: "Soccer", level: "Tiger B", gender: .boys),
-        SuffieldTeam(id: "128", sport: "Soccer", level: "Varsity", gender: .girls),
-        SuffieldTeam(id: "129", sport: "Soccer", level: "J.V.", gender: .girls),
-        // Softball
-        SuffieldTeam(id: "152", sport: "Softball", level: "Varsity", gender: .coed),
-        // Squash
-        SuffieldTeam(id: "139", sport: "Squash", level: "Varsity", gender: .boys),
-        SuffieldTeam(id: "140", sport: "Squash", level: "J.V.", gender: .boys),
-        SuffieldTeam(id: "167", sport: "Squash", level: "Tiger A", gender: .boys),
-        SuffieldTeam(id: "141", sport: "Squash", level: "Varsity", gender: .girls),
-        SuffieldTeam(id: "142", sport: "Squash", level: "J.V.", gender: .girls),
-        // Swimming
-        SuffieldTeam(id: "143", sport: "Swimming", level: "Varsity", gender: .boys),
-        SuffieldTeam(id: "144", sport: "Swimming", level: "Varsity", gender: .girls),
-        // Tennis
-        SuffieldTeam(id: "154", sport: "Tennis", level: "Varsity", gender: .boys),
-        SuffieldTeam(id: "155", sport: "Tennis", level: "J.V.", gender: .boys),
-        SuffieldTeam(id: "156", sport: "Tennis", level: "Varsity", gender: .girls),
-        SuffieldTeam(id: "157", sport: "Tennis", level: "J.V.", gender: .girls),
-        // Track
-        SuffieldTeam(id: "158", sport: "Track", level: "Varsity", gender: .boys),
-        SuffieldTeam(id: "159", sport: "Track", level: "Varsity", gender: .girls),
-        // Volleyball
-        SuffieldTeam(id: "131", sport: "Volleyball", level: "Varsity", gender: .coed),
-        SuffieldTeam(id: "132", sport: "Volleyball", level: "J.V.", gender: .coed),
-        // Water Polo
-        SuffieldTeam(id: "130", sport: "Water Polo", level: "Varsity", gender: .boys),
-        SuffieldTeam(id: "162", sport: "Water Polo", level: "J.V.", gender: .boys),
-        // Wrestling
-        SuffieldTeam(id: "145", sport: "Wrestling", level: "Varsity", gender: .coed)
+        // Fall sports
+        SuffieldTeam(id: "120", sport: "Cross Country", level: "Varsity", gender: .boys, season: .fall),
+        SuffieldTeam(id: "121", sport: "Cross Country", level: "Varsity", gender: .girls, season: .fall),
+        SuffieldTeam(id: "122", sport: "Field Hockey", level: "Varsity", gender: .coed, season: .fall),
+        SuffieldTeam(id: "123", sport: "Field Hockey", level: "J.V.", gender: .coed, season: .fall),
+        SuffieldTeam(id: "161", sport: "Football", level: "Varsity", gender: .coed, season: .fall),
+        SuffieldTeam(id: "124", sport: "Football", level: "J.V.", gender: .coed, season: .fall),
+        SuffieldTeam(id: "125", sport: "Soccer", level: "Varsity", gender: .boys, season: .fall),
+        SuffieldTeam(id: "166", sport: "Soccer", level: "J.V.", gender: .boys, season: .fall),
+        SuffieldTeam(id: "126", sport: "Soccer", level: "Tiger A", gender: .boys, season: .fall),
+        SuffieldTeam(id: "127", sport: "Soccer", level: "Tiger B", gender: .boys, season: .fall),
+        SuffieldTeam(id: "128", sport: "Soccer", level: "Varsity", gender: .girls, season: .fall),
+        SuffieldTeam(id: "129", sport: "Soccer", level: "J.V.", gender: .girls, season: .fall),
+        SuffieldTeam(id: "131", sport: "Volleyball", level: "Varsity", gender: .coed, season: .fall),
+        SuffieldTeam(id: "132", sport: "Volleyball", level: "J.V.", gender: .coed, season: .fall),
+        SuffieldTeam(id: "130", sport: "Water Polo", level: "Varsity", gender: .boys, season: .fall),
+        SuffieldTeam(id: "162", sport: "Water Polo", level: "J.V.", gender: .boys, season: .fall),
+
+        // Winter sports
+        SuffieldTeam(id: "169", sport: "Basketball", level: "Varsity", gender: .boys, season: .winter),
+        SuffieldTeam(id: "133", sport: "Basketball", level: "J.V.", gender: .boys, season: .winter),
+        SuffieldTeam(id: "134", sport: "Basketball", level: "Tiger A", gender: .boys, season: .winter),
+        SuffieldTeam(id: "170", sport: "Basketball", level: "Varsity", gender: .girls, season: .winter),
+        SuffieldTeam(id: "135", sport: "Basketball", level: "J.V.", gender: .girls, season: .winter),
+        SuffieldTeam(id: "136", sport: "Diving", level: "Varsity", gender: .coed, season: .winter),
+        SuffieldTeam(id: "137", sport: "Riflery", level: "Varsity", gender: .coed, season: .winter),
+        SuffieldTeam(id: "138", sport: "Alpine Skiing", level: "Varsity", gender: .coed, season: .winter),
+        SuffieldTeam(id: "139", sport: "Squash", level: "Varsity", gender: .boys, season: .winter),
+        SuffieldTeam(id: "140", sport: "Squash", level: "J.V.", gender: .boys, season: .winter),
+        SuffieldTeam(id: "167", sport: "Squash", level: "Tiger A", gender: .boys, season: .winter),
+        SuffieldTeam(id: "141", sport: "Squash", level: "Varsity", gender: .girls, season: .winter),
+        SuffieldTeam(id: "142", sport: "Squash", level: "J.V.", gender: .girls, season: .winter),
+        SuffieldTeam(id: "143", sport: "Swimming", level: "Varsity", gender: .boys, season: .winter),
+        SuffieldTeam(id: "144", sport: "Swimming", level: "Varsity", gender: .girls, season: .winter),
+        SuffieldTeam(id: "145", sport: "Wrestling", level: "Varsity", gender: .coed, season: .winter),
+
+        // Spring sports
+        SuffieldTeam(id: "168", sport: "Baseball", level: "Varsity", gender: .coed, season: .spring),
+        SuffieldTeam(id: "146", sport: "Baseball", level: "J.V.", gender: .coed, season: .spring),
+        SuffieldTeam(id: "171", sport: "Crew", level: "Varsity", gender: .coed, season: .spring),
+        SuffieldTeam(id: "172", sport: "Crew", level: "Varsity", gender: .girls, season: .spring),
+        SuffieldTeam(id: "147", sport: "Golf", level: "Varsity", gender: .coed, season: .spring),
+        SuffieldTeam(id: "165", sport: "Golf", level: "J.V.", gender: .coed, season: .spring),
+        SuffieldTeam(id: "148", sport: "Lacrosse", level: "Varsity", gender: .boys, season: .spring),
+        SuffieldTeam(id: "149", sport: "Lacrosse", level: "J.V.", gender: .boys, season: .spring),
+        SuffieldTeam(id: "150", sport: "Lacrosse", level: "Varsity", gender: .girls, season: .spring),
+        SuffieldTeam(id: "151", sport: "Lacrosse", level: "J.V.", gender: .girls, season: .spring),
+        SuffieldTeam(id: "152", sport: "Softball", level: "Varsity", gender: .coed, season: .spring),
+        SuffieldTeam(id: "154", sport: "Tennis", level: "Varsity", gender: .boys, season: .spring),
+        SuffieldTeam(id: "155", sport: "Tennis", level: "J.V.", gender: .boys, season: .spring),
+        SuffieldTeam(id: "156", sport: "Tennis", level: "Varsity", gender: .girls, season: .spring),
+        SuffieldTeam(id: "157", sport: "Tennis", level: "J.V.", gender: .girls, season: .spring),
+        SuffieldTeam(id: "158", sport: "Track", level: "Varsity", gender: .boys, season: .spring),
+        SuffieldTeam(id: "159", sport: "Track", level: "Varsity", gender: .girls, season: .spring)
     ]
+
+    static func teams(in season: AthleticSeason) -> [(sport: String, teams: [SuffieldTeam])] {
+        let filtered = teams.filter { $0.season == season }
+        let grouped = Dictionary(grouping: filtered) { $0.sport }
+        return grouped.keys.sorted().map { sport in
+            (sport: sport, teams: (grouped[sport] ?? []).sorted(by: teamOrder))
+        }
+    }
 
     static var bySport: [(sport: String, teams: [SuffieldTeam])] {
         let grouped = Dictionary(grouping: teams) { $0.sport }

@@ -343,38 +343,49 @@ struct TodayDashboardView: View {
 
     private var glanceGrid: some View {
         let layout = DashboardLayout.shared
-        return LazyVGrid(columns: [GridItem(.flexible(), spacing: 6), GridItem(.flexible(), spacing: 6)], spacing: 6) {
-            ForEach(layout.active, id: \.self) { card in
-                gridCell(for: card)
-            }
-        }
-        .buttonStyle(.plain)
-        .overlay(alignment: .topTrailing) {
+        return VStack(alignment: .leading, spacing: 8) {
             if isEditingGrid {
-                Button {
-                    exitEditMode()
-                } label: {
-                    Text("DONE")
+                HStack {
+                    Text("ARRANGING")
                         .font(.system(size: 11, weight: .heavy, design: .monospaced))
-                        .kerning(1.2)
-                        .foregroundStyle(AppColors.surface)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
-                        .background(AppColors.accent)
+                        .kerning(1.3)
+                        .foregroundStyle(AppColors.tertiary)
+                    Spacer()
+                    Button { exitEditMode() } label: {
+                        Text("DONE")
+                            .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                            .kerning(1.2)
+                            .foregroundStyle(AppColors.primary)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 5)
+                            .overlay(Rectangle().strokeBorder(AppColors.primary, lineWidth: 2))
+                    }
+                    .buttonStyle(.plain)
                 }
-                .offset(x: -2, y: -16)
             }
+            LazyVGrid(columns: [GridItem(.flexible(), spacing: 6), GridItem(.flexible(), spacing: 6)], spacing: 6) {
+                ForEach(layout.active, id: \.self) { card in
+                    gridCell(for: card)
+                }
+            }
+            .buttonStyle(.plain)
         }
     }
 
     @ViewBuilder
     private func gridCell(for card: DashboardCard) -> some View {
+        let isDragging = draggingCard == card
         let content = cardView(for: card)
-            .rotationEffect(
-                .degrees(isEditingGrid ? (wiggleOffset(for: card) ? 1.2 : -1.2) : 0)
+            .offset(y: isEditingGrid ? (wigglePhase ? -2 : -4) : 0)
+            .scaleEffect(isDragging ? 1.06 : (isEditingGrid ? 1.01 : 1.0))
+            .shadow(
+                color: isEditingGrid ? AppColors.primary.opacity(0.25) : .clear,
+                radius: isDragging ? 10 : 4,
+                x: 0,
+                y: isDragging ? 5 : 3
             )
-            .scaleEffect(draggingCard == card ? 1.08 : 1.0)
-            .opacity(draggingCard == card ? 0.4 : 1.0)
+            .opacity(isDragging ? 0.85 : 1.0)
+            .animation(.easeInOut(duration: 0.2), value: isDragging)
 
         if isEditingGrid {
             content
@@ -395,22 +406,18 @@ struct TodayDashboardView: View {
         }
     }
 
-    private func wiggleOffset(for card: DashboardCard) -> Bool {
-        let idx = DashboardLayout.shared.active.firstIndex(of: card) ?? 0
-        return idx.isMultiple(of: 2) ? wigglePhase : !wigglePhase
-    }
-
     private func enterEditMode() {
         guard !isEditingGrid else { return }
         isEditingGrid = true
-        withAnimation(.easeInOut(duration: 0.12).repeatForever(autoreverses: true)) {
+        withAnimation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true)) {
             wigglePhase.toggle()
         }
     }
 
     private func exitEditMode() {
-        withAnimation(.easeInOut(duration: 0.12)) {
+        withAnimation(.easeInOut(duration: 0.2)) {
             wigglePhase = false
+            draggingCard = nil
         }
         isEditingGrid = false
     }

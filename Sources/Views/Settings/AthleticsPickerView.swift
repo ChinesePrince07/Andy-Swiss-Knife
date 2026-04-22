@@ -9,16 +9,22 @@ struct AthleticsPickerView: View {
     @State private var isSyncing = false
     @State private var query: String = ""
 
-    private var filteredSports: [(sport: String, teams: [SuffieldTeam])] {
-        let source = SuffieldAthletics.bySport
+    private struct SportBucket: Hashable {
+        let sport: String
+        let teams: [SuffieldTeam]
+    }
+
+    private func bucketsForSeason(_ season: AthleticSeason) -> [SportBucket] {
+        let raw = SuffieldAthletics.teams(in: season)
         let q = query.trimmingCharacters(in: .whitespaces).lowercased()
-        guard !q.isEmpty else { return source }
-        return source.compactMap { group in
-            let filtered = group.teams.filter {
-                $0.sport.lowercased().contains(q)
-                || $0.displayName.lowercased().contains(q)
-            }
-            return filtered.isEmpty ? nil : (sport: group.sport, teams: filtered)
+        return raw.compactMap { group in
+            let filtered = q.isEmpty
+                ? group.teams
+                : group.teams.filter {
+                    $0.sport.lowercased().contains(q)
+                    || $0.displayName.lowercased().contains(q)
+                }
+            return filtered.isEmpty ? nil : SportBucket(sport: group.sport, teams: filtered)
         }
     }
 
@@ -37,21 +43,29 @@ struct AthleticsPickerView: View {
                 }
             }
 
-            ForEach(filteredSports, id: \.sport) { group in
-                Section(group.sport) {
-                    ForEach(group.teams) { team in
-                        Toggle(isOn: binding(for: team)) {
+            ForEach(AthleticSeason.allCases, id: \.self) { season in
+                let buckets = bucketsForSeason(season)
+                if !buckets.isEmpty {
+                    Section {
+                        ForEach(buckets, id: \.sport) { bucket in
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(team.shortName)
-                                    .font(AppType.body)
-                                    .foregroundStyle(AppColors.primary)
-                                if subscribed.contains(team.id) {
-                                    Text("Syncing")
-                                        .font(.system(size: 10, weight: .semibold, design: .monospaced))
-                                        .foregroundStyle(AppColors.accent)
+                                Text(bucket.sport)
+                                    .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                                    .kerning(1.1)
+                                    .foregroundStyle(AppColors.tertiary)
+                                    .padding(.top, 4)
+                                ForEach(bucket.teams) { team in
+                                    Toggle(isOn: binding(for: team)) {
+                                        Text(team.shortName)
+                                            .font(AppType.body)
+                                            .foregroundStyle(AppColors.primary)
+                                    }
+                                    .padding(.leading, 2)
                                 }
                             }
                         }
+                    } header: {
+                        Text(season.title.uppercased())
                     }
                 }
             }
