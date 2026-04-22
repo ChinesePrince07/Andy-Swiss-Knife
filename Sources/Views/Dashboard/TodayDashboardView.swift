@@ -343,14 +343,8 @@ struct TodayDashboardView: View {
 
     private var glanceGrid: some View {
         let layout = DashboardLayout.shared
-        let visible = layout.order.filter { card in
-            switch card {
-            case .pomodoro: return UserSettings.shared.pomodoroEnabled
-            default: return true
-            }
-        }
         return LazyVGrid(columns: [GridItem(.flexible(), spacing: 6), GridItem(.flexible(), spacing: 6)], spacing: 6) {
-            ForEach(visible, id: \.self) { card in
+            ForEach(layout.active, id: \.self) { card in
                 gridCell(for: card)
             }
         }
@@ -402,7 +396,7 @@ struct TodayDashboardView: View {
     }
 
     private func wiggleOffset(for card: DashboardCard) -> Bool {
-        let idx = DashboardLayout.shared.order.firstIndex(of: card) ?? 0
+        let idx = DashboardLayout.shared.active.firstIndex(of: card) ?? 0
         return idx.isMultiple(of: 2) ? wigglePhase : !wigglePhase
     }
 
@@ -453,6 +447,8 @@ struct TodayDashboardView: View {
             GlanceCard(label: "Pomodoro", primary: "Start", secondary: "25 min focus")
         case .events:
             GlanceCard(label: "Events", primary: nextEventPrimary, secondary: nextEventSecondary)
+        case .athletics:
+            GlanceCard(label: "Athletics", primary: athleticsPrimary, secondary: athleticsSecondary)
         }
     }
 
@@ -464,7 +460,22 @@ struct TodayDashboardView: View {
         case .meal:      MealView(services: services)
         case .pomodoro:  PomodoroView(services: services)
         case .events:    EventsView(services: services)
+        case .athletics: AthleticsView(services: services)
         }
+    }
+
+    private var athleticsPrimary: String {
+        guard let next = services.athletics.nextUpcoming() else { return "None soon" }
+        return next.title
+    }
+
+    private var athleticsSecondary: String {
+        guard let next = services.athletics.nextUpcoming() else {
+            return UserSettings.shared.athleticsFeedURL.isEmpty ? "Set feed in settings" : "—"
+        }
+        let df = DateFormatter()
+        df.dateFormat = Calendar.current.isDateInToday(next.start) ? "'Today' HH:mm" : "EEE MMM d"
+        return df.string(from: next.start)
     }
 
     private var visibleCanvasTodos: [Todo] {
@@ -625,15 +636,15 @@ struct CardDropDelegate: DropDelegate {
 
     func dropEntered(info: DropInfo) {
         guard let dragging, dragging != target else { return }
-        var order = DashboardLayout.shared.order
-        guard let fromIdx = order.firstIndex(of: dragging),
-              let toIdx = order.firstIndex(of: target)
+        var active = DashboardLayout.shared.active
+        guard let fromIdx = active.firstIndex(of: dragging),
+              let toIdx = active.firstIndex(of: target)
         else { return }
         if fromIdx == toIdx { return }
         withAnimation(.snappy(duration: 0.22)) {
-            order.move(fromOffsets: IndexSet(integer: fromIdx),
-                       toOffset: toIdx > fromIdx ? toIdx + 1 : toIdx)
-            DashboardLayout.shared.order = order
+            active.move(fromOffsets: IndexSet(integer: fromIdx),
+                        toOffset: toIdx > fromIdx ? toIdx + 1 : toIdx)
+            DashboardLayout.shared.active = active
         }
     }
 

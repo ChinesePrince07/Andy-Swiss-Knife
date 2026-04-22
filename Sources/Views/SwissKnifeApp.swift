@@ -32,6 +32,7 @@ final class Services {
     let notifications: NotificationService
     let pomodoro: PomodoroTimer
     let sweeper: TodoSweeper
+    let athletics: AthleticsService
 
     init(context: ModelContext) {
         let http = URLSessionHTTPClient()
@@ -41,12 +42,13 @@ final class Services {
         self.notifications = NotificationService()
         self.pomodoro = PomodoroTimer()
         self.sweeper = TodoSweeper(context: context)
+        self.athletics = AthleticsService(http: http, context: context)
         Self.seedScheduleIfNeeded(context: context)
         SnapshotStore.publishTodos(from: context)
         SnapshotStore.publishReminders(from: context)
-        // Sync any enabled Apple Calendars so Events tab has fresh data.
         let importer = CalendarImporter(context: context)
         importer.syncEnabled()
+        Task { await self.athletics.sync() }
         WidgetReloader.reloadAll()
     }
 

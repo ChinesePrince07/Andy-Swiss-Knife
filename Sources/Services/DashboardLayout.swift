@@ -5,8 +5,9 @@ enum DashboardCard: String, CaseIterable, Identifiable, Codable {
     case nextClass = "nextClass"
     case canvas = "canvas"
     case meal = "meal"
-    case pomodoro = "pomodoro"
     case events = "events"
+    case athletics = "athletics"
+    case pomodoro = "pomodoro"
 
     var id: String { rawValue }
 
@@ -15,8 +16,9 @@ enum DashboardCard: String, CaseIterable, Identifiable, Codable {
         case .nextClass: return "Next class"
         case .canvas:    return "Canvas"
         case .meal:      return "Meal"
-        case .pomodoro:  return "Pomodoro"
         case .events:    return "Events"
+        case .athletics: return "Athletics"
+        case .pomodoro:  return "Pomodoro"
         }
     }
 
@@ -25,8 +27,9 @@ enum DashboardCard: String, CaseIterable, Identifiable, Codable {
         case .nextClass: return "graduationcap"
         case .canvas:    return "book"
         case .meal:      return "fork.knife"
-        case .pomodoro:  return "timer"
         case .events:    return "calendar.badge.clock"
+        case .athletics: return "figure.run"
+        case .pomodoro:  return "timer"
         }
     }
 }
@@ -35,36 +38,45 @@ enum DashboardCard: String, CaseIterable, Identifiable, Codable {
 @MainActor
 final class DashboardLayout {
     static let shared = DashboardLayout()
-    private static let key = "dashboard.layout.v1"
+    private static let activeKey = "dashboard.active.v2"
+    private static let defaultActive: [DashboardCard] = [.nextClass, .canvas, .meal, .events]
 
-    var order: [DashboardCard] {
+    var active: [DashboardCard] {
         didSet { persist() }
     }
 
+    var inactive: [DashboardCard] {
+        DashboardCard.allCases.filter { !active.contains($0) }
+    }
+
     private init() {
-        if let data = UserDefaults.standard.data(forKey: Self.key),
-           let raw = try? JSONDecoder().decode([String].self, from: data) {
-            // Decode as strings first so removed cases (e.g. .reminders)
-            // don't crash the decoder — they just drop out.
-            let decoded = raw.compactMap(DashboardCard.init(rawValue:))
-            let missing = DashboardCard.allCases.filter { !decoded.contains($0) }
-            self.order = decoded + missing
+        let stored = UserDefaults.standard.stringArray(forKey: Self.activeKey) ?? []
+        let decoded = stored.compactMap(DashboardCard.init(rawValue:))
+        if !decoded.isEmpty {
+            self.active = decoded
         } else {
-            self.order = DashboardCard.allCases
+            self.active = Self.defaultActive
         }
     }
 
     private func persist() {
-        if let data = try? JSONEncoder().encode(order) {
-            UserDefaults.standard.set(data, forKey: Self.key)
-        }
+        UserDefaults.standard.set(active.map(\.rawValue), forKey: Self.activeKey)
     }
 
     func move(from source: IndexSet, to destination: Int) {
-        order.move(fromOffsets: source, toOffset: destination)
+        active.move(fromOffsets: source, toOffset: destination)
+    }
+
+    func activate(_ card: DashboardCard) {
+        guard !active.contains(card) else { return }
+        active.append(card)
+    }
+
+    func deactivate(_ card: DashboardCard) {
+        active.removeAll { $0 == card }
     }
 
     func resetDefault() {
-        order = DashboardCard.allCases
+        active = Self.defaultActive
     }
 }

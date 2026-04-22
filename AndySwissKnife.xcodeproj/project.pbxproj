@@ -53,6 +53,7 @@
 		6AFDDD1CDC8C66BD33FA5DBA /* ics-weekly.ics in Resources */ = {isa = PBXBuildFile; fileRef = B0598C29456DBF862E0E8699 /* ics-weekly.ics */; };
 		723E4E283E614F0AFFE5DC89 /* DashboardLayoutEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFA3F8E82E3CDE5CCD03611 /* DashboardLayoutEditor.swift */; };
 		77ED75EF855F2ADADF890697 /* PomodoroLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90D09D8AFCE112A0B797759 /* PomodoroLiveActivity.swift */; };
+		7816210653243C57BCCD6517 /* AthleticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C35FB3564D92B6FEEC81D6 /* AthleticsView.swift */; };
 		78BFC806AB4136D3D9794E58 /* WidgetReloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8DA70372D27938DC8C9501 /* WidgetReloader.swift */; };
 		7F4A5068F4652A98FB9A7DC0 /* TodoRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CA4ED3E8FB6B70780EECF42 /* TodoRow.swift */; };
 		8314EC06D6B0A00339B5F46A /* SharedStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019E33B5FB0E2689102AA4AB /* SharedStorage.swift */; };
@@ -78,6 +79,7 @@
 		CB7663856201DAC527E545C9 /* PersonalCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7914539FD8CC3CFC11001E19 /* PersonalCalendarView.swift */; };
 		CCF7AFE7DBB40BE619BD40C0 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE29B303DD49919976371BC /* HTTPClient.swift */; };
 		CE9C4CF01D0E93CD861864FB /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2160A5C955F771E7E1EB7D4F /* Schedule.swift */; };
+		D4C76C817FA851D48A3480AF /* AthleticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B990742E695A11C76312EFB7 /* AthleticsService.swift */; };
 		D520747D77E76A38D1AE079B /* AssignmentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5506D877B14199368003177 /* AssignmentsView.swift */; };
 		D8EA24F60E247FB348E5062B /* ICSParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 070D2B25BE3B190E6C1D33BE /* ICSParserTests.swift */; };
 		DC8F742DC5FE8163BAE9AFBF /* DTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A377EBC72BD04D506FF4E8D /* DTOs.swift */; };
@@ -135,6 +137,7 @@
 		0C8DA70372D27938DC8C9501 /* WidgetReloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetReloader.swift; sourceTree = "<group>"; };
 		136DCB9AE73DA4324A3F14DF /* EventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsView.swift; sourceTree = "<group>"; };
 		1573D420C3E8959C3983BAF0 /* DiningService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningService.swift; sourceTree = "<group>"; };
+		18C35FB3564D92B6FEEC81D6 /* AthleticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthleticsView.swift; sourceTree = "<group>"; };
 		1C9228AB7BB53CF525E1AA35 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		2160A5C955F771E7E1EB7D4F /* Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule.swift; sourceTree = "<group>"; };
 		2CC26334910ED03B763FD900 /* PomodoroTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimer.swift; sourceTree = "<group>"; };
@@ -183,6 +186,7 @@
 		B81CE12C09B1455EB90BA07F /* TodoEditSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoEditSheet.swift; sourceTree = "<group>"; };
 		B90D09D8AFCE112A0B797759 /* PomodoroLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroLiveActivity.swift; sourceTree = "<group>"; };
 		B9714F48D41526FB4B96674D /* CachedMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedMenu.swift; sourceTree = "<group>"; };
+		B990742E695A11C76312EFB7 /* AthleticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthleticsService.swift; sourceTree = "<group>"; };
 		C8509D41A53C3763789F4834 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		C851A753B87D83DE7D673B96 /* ics-folded-description.ics */ = {isa = PBXFileReference; path = "ics-folded-description.ics"; sourceTree = "<group>"; };
 		CB7D2D6E1D577D8FEF8CD8DA /* dining-normal.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "dining-normal.html"; sourceTree = "<group>"; };
@@ -220,6 +224,7 @@
 			children = (
 				51EDF3E97540E4D17E8C7D79 /* SwissKnifeApp.swift */,
 				7D9293169823088B0E282278 /* Assignments */,
+				6E6D2E0857486F374ECE0C8D /* Athletics */,
 				EF242A95A435DAF62BB2717E /* Calendar */,
 				6EAF4C86391B2C81C0595B62 /* Classes */,
 				05D0AAD2A688DB9864EBB0CB /* Dashboard */,
@@ -244,6 +249,7 @@
 			isa = PBXGroup;
 			children = (
 				FCAF5A288944379AC9A965BC /* AssignmentsSyncService.swift */,
+				B990742E695A11C76312EFB7 /* AthleticsService.swift */,
 				8914BC4C0FABA3E1577AEDB0 /* CalendarImporter.swift */,
 				1C9228AB7BB53CF525E1AA35 /* Config.swift */,
 				6F6DED12FF93B8A00E879914 /* DashboardLayout.swift */,
@@ -300,6 +306,14 @@
 				8CA4ED3E8FB6B70780EECF42 /* TodoRow.swift */,
 			);
 			path = Todos;
+			sourceTree = "<group>";
+		};
+		6E6D2E0857486F374ECE0C8D /* Athletics */ = {
+			isa = PBXGroup;
+			children = (
+				18C35FB3564D92B6FEEC81D6 /* AthleticsView.swift */,
+			);
+			path = Athletics;
 			sourceTree = "<group>";
 		};
 		6EAF4C86391B2C81C0595B62 /* Classes */ = {
@@ -589,6 +603,8 @@
 				19F46B57038614191321347A /* AppModelContainer.swift in Sources */,
 				328FA42CAE93A0C4E3E3D304 /* AssignmentsSyncService.swift in Sources */,
 				D520747D77E76A38D1AE079B /* AssignmentsView.swift in Sources */,
+				D4C76C817FA851D48A3480AF /* AthleticsService.swift in Sources */,
+				7816210653243C57BCCD6517 /* AthleticsView.swift in Sources */,
 				F8F4B82C4879AB6A90B9272E /* CachedEvent.swift in Sources */,
 				20D162DDF5FAD5F0E6F02789 /* CachedMenu.swift in Sources */,
 				B152DA41E6F6927EB0624FFC /* CalendarImportView.swift in Sources */,

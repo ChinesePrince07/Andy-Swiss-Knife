@@ -48,11 +48,23 @@ struct SettingsView: View {
                         Text("arrange").foregroundStyle(AppColors.secondary)
                     }
                 }
-                Toggle("Pomodoro timer", isOn: $userSettings.pomodoroEnabled)
             } header: {
                 Text("Layout")
             } footer: {
-                Text("Drag cards on the dashboard grid into the order you want. Toggle Pomodoro on to add the focus timer card.")
+                Text("Reorder cards, hide ones you don't use, and re-activate hidden cards like Pomodoro or Athletics.")
+            }
+
+            Section {
+                TextField("https://…/athletic-schedule.ics",
+                          text: $userSettings.athleticsFeedURL)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled(true)
+                    .keyboardType(.URL)
+                    .font(.system(size: 12, design: .monospaced))
+            } header: {
+                Text("Athletics feed URL")
+            } footer: {
+                Text("ICS feed for your athletic game schedule. Activate the Athletics card in Layout to see it on the dashboard.")
             }
 
             Section {
