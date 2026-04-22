@@ -22,8 +22,6 @@ struct TodayDashboardView: View {
     @State private var showingAddReminderSheet = false
     @State private var newTodoTitle: String = ""
     @FocusState private var addFieldFocused: Bool
-    @State private var isEditingGrid = false
-    @State private var wigglePhase = false
     @State private var draggingCard: DashboardCard?
     @State private var dragOffset: CGSize = .zero
     @State private var cardFrames: [DashboardCard: CGRect] = [:]
@@ -345,54 +343,34 @@ struct TodayDashboardView: View {
 
     private var glanceGrid: some View {
         let layout = DashboardLayout.shared
-        return VStack(alignment: .leading, spacing: 8) {
-            if isEditingGrid {
-                HStack {
-                    Text("ARRANGING")
-                        .font(.system(size: 11, weight: .heavy, design: .monospaced))
-                        .kerning(1.3)
-                        .foregroundStyle(AppColors.tertiary)
-                    Spacer()
-                    Button { exitEditMode() } label: {
-                        Text("DONE")
-                            .font(.system(size: 11, weight: .heavy, design: .monospaced))
-                            .kerning(1.2)
-                            .foregroundStyle(AppColors.primary)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 5)
-                            .overlay(Rectangle().strokeBorder(AppColors.primary, lineWidth: 2))
-                    }
-                    .buttonStyle(.plain)
-                }
+        return LazyVGrid(columns: [GridItem(.flexible(), spacing: 6), GridItem(.flexible(), spacing: 6)], spacing: 6) {
+            ForEach(layout.active, id: \.self) { card in
+                gridCell(for: card)
             }
-            LazyVGrid(columns: [GridItem(.flexible(), spacing: 6), GridItem(.flexible(), spacing: 6)], spacing: 6) {
-                ForEach(layout.active, id: \.self) { card in
-                    gridCell(for: card)
-                }
-            }
-            .coordinateSpace(name: "dashGrid")
-            .buttonStyle(.plain)
-            .onPreferenceChange(CardFramesKey.self) { frames in
-                cardFrames = frames
-            }
+        }
+        .animation(.spring(response: 0.32, dampingFraction: 0.78), value: layout.active)
+        .coordinateSpace(name: "dashGrid")
+        .buttonStyle(.plain)
+        .onPreferenceChange(CardFramesKey.self) { frames in
+            cardFrames = frames
         }
     }
 
     @ViewBuilder
     private func gridCell(for card: DashboardCard) -> some View {
         let isDragging = draggingCard == card
-        let base = cardView(for: card)
-            .scaleEffect(isDragging ? 1.06 : (isEditingGrid ? 1.01 : 1.0))
+        cardView(for: card)
+            .scaleEffect(isDragging ? 1.06 : 1.0)
             .shadow(
-                color: isEditingGrid ? AppColors.primary.opacity(0.3) : .clear,
-                radius: isDragging ? 14 : 4,
+                color: isDragging ? AppColors.primary.opacity(0.3) : .clear,
+                radius: isDragging ? 14 : 0,
                 x: 0,
-                y: isDragging ? 8 : 3
+                y: isDragging ? 8 : 0
             )
             .offset(x: isDragging ? dragOffset.width : 0,
-                    y: isDragging ? dragOffset.height : (isEditingGrid ? (wigglePhase ? -2 : -4) : 0))
+                    y: isDragging ? dragOffset.height : 0)
             .zIndex(isDragging ? 10 : 0)
-            .animation(isDragging ? nil : .spring(response: 0.35, dampingFraction: 0.78), value: dragOffset)
+            .animation(isDragging ? nil : .spring(response: 0.35, dampingFraction: 0.78), value: isDragging)
             .background(
                 GeometryReader { geo in
                     Color.clear.preference(
@@ -401,30 +379,31 @@ struct TodayDashboardView: View {
                     )
                 }
             )
-
-        if isEditingGrid {
-            base.gesture(
-                DragGesture(coordinateSpace: .named("dashGrid"))
+            .gesture(
+                LongPressGesture(minimumDuration: 0.35)
+                    .sequenced(before: DragGesture(coordinateSpace: .named("dashGrid")))
                     .onChanged { value in
-                        if draggingCard == nil {
-                            draggingCard = card
+                        switch value {
+                        case .second(true, let drag):
+                            if draggingCard == nil {
+                                draggingCard = card
+                                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                            }
+                            if let drag {
+                                dragOffset = drag.translation
+                                handleSwap(draggedCard: card, location: drag.location)
+                            }
+                        default:
+                            break
                         }
-                        dragOffset = value.translation
-                        handleSwap(draggedCard: card, location: value.location)
                     }
                     .onEnded { _ in
-                        withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.78)) {
                             draggingCard = nil
                             dragOffset = .zero
                         }
                     }
             )
-        } else {
-            base.simultaneousGesture(
-                LongPressGesture(minimumDuration: 0.45)
-                    .onEnded { _ in enterEditMode() }
-            )
-        }
     }
 
     private func handleSwap(draggedCard: DashboardCard, location: CGPoint) {
@@ -458,25 +437,10 @@ struct TodayDashboardView: View {
         }
     }
 
-    private func enterEditMode() {
-        guard !isEditingGrid else { return }
-        isEditingGrid = true
-        withAnimation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true)) {
-            wigglePhase.toggle()
-        }
-    }
-
-    private func exitEditMode() {
-        withAnimation(.easeInOut(duration: 0.2)) {
-            wigglePhase = false
-            draggingCard = nil
-        }
-        isEditingGrid = false
-    }
 
     @ViewBuilder
     private func cardView(for card: DashboardCard) -> some View {
-        if isEditingGrid {
+        if draggingCard == card {
             rawCardContent(for: card)
         } else {
             NavigationLink {
