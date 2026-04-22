@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 struct ReminderRow: View {
     @Bindable var event: PersonalEvent
@@ -7,18 +8,18 @@ struct ReminderRow: View {
     let onDelete: () -> Void
     let onCommitTitle: (String) -> Void
 
+    @Environment(\.modelContext) private var modelContext
     @State private var titleDraft: String = ""
+    @State private var datePickerShown = false
     @FocusState private var titleFocused: Bool
 
     var body: some View {
-        HStack(alignment: .firstTextBaseline, spacing: 12) {
-            Button { onOpen() } label: {
-                Text(dateLabel)
-                    .font(.system(size: 11, design: .monospaced))
-                    .foregroundStyle(AppColors.secondary)
-                    .frame(width: 96, alignment: .leading)
-            }
-            .buttonStyle(.plain)
+        HStack(alignment: .firstTextBaseline, spacing: 10) {
+            Text(dateLabel)
+                .font(.system(size: 11, design: .monospaced))
+                .foregroundStyle(AppColors.secondary)
+                .frame(width: 96, alignment: .leading)
+                .onTapGesture { onOpen() }
 
             VStack(alignment: .leading, spacing: 1) {
                 TextField("", text: $titleDraft)
@@ -37,6 +38,34 @@ struct ReminderRow: View {
                         .lineLimit(1)
                         .onTapGesture { onOpen() }
                 }
+            }
+
+            Button { datePickerShown = true } label: {
+                Image(systemName: "calendar")
+                    .font(.system(size: 13))
+                    .foregroundStyle(AppColors.tertiary)
+            }
+            .buttonStyle(.plain)
+            .popover(isPresented: $datePickerShown) {
+                VStack(alignment: .leading, spacing: 8) {
+                    DatePicker(
+                        "Due",
+                        selection: Binding(
+                            get: { event.date },
+                            set: { newVal in
+                                event.date = newVal
+                                try? modelContext.save()
+                                SnapshotStore.publishReminders(from: modelContext)
+                                WidgetReloader.reloadReminderWidgets()
+                            }
+                        ),
+                        displayedComponents: [.date, .hourAndMinute]
+                    )
+                    .datePickerStyle(.graphical)
+                }
+                .padding()
+                .frame(minWidth: 320)
+                .presentationCompactAdaptation(.popover)
             }
 
             Button { onDelete() } label: {

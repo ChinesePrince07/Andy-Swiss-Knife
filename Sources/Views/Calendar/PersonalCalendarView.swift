@@ -11,6 +11,8 @@ struct PersonalCalendarView: View {
     @State private var showingAdd = false
     @State private var editing: PersonalEvent?
     @State private var newTitle: String = ""
+    @State private var newDate: Date = Calendar.current.date(byAdding: .hour, value: 1, to: .now) ?? .now
+    @State private var showingDatePopover = false
     @FocusState private var addFocused: Bool
     private let deepLinks = DeepLinks.shared
 
@@ -155,6 +157,22 @@ struct PersonalCalendarView: View {
                 .focused($addFocused)
                 .submitLabel(.done)
                 .onSubmit { commitNewReminder() }
+            Button { showingDatePopover = true } label: {
+                HStack(spacing: 4) {
+                    Image(systemName: "calendar")
+                        .font(.system(size: 13))
+                    Text(shortDate(newDate))
+                        .font(.system(size: 11, design: .monospaced))
+                }
+                .foregroundStyle(AppColors.secondary)
+            }
+            .buttonStyle(.plain)
+            .popover(isPresented: $showingDatePopover) {
+                DatePicker("Due", selection: $newDate, displayedComponents: [.date, .hourAndMinute])
+                    .datePickerStyle(.graphical)
+                    .padding()
+                    .presentationCompactAdaptation(.popover)
+            }
             if !newTitle.isEmpty {
                 Button { showingAdd = true } label: {
                     Image(systemName: "ellipsis.circle")
@@ -165,6 +183,19 @@ struct PersonalCalendarView: View {
             }
         }
         .padding(.vertical, 10)
+    }
+
+    private func shortDate(_ d: Date) -> String {
+        let cal = Calendar.current
+        let df = DateFormatter()
+        if cal.isDateInToday(d) {
+            df.dateFormat = "'Today' HH:mm"
+        } else if cal.isDateInTomorrow(d) {
+            df.dateFormat = "'Tmrw' HH:mm"
+        } else {
+            df.dateFormat = "MMM d · HH:mm"
+        }
+        return df.string(from: d)
     }
 
     private func commitTitle(_ e: PersonalEvent, _ newTitle: String) {
@@ -179,13 +210,13 @@ struct PersonalCalendarView: View {
     private func commitNewReminder() {
         let trimmed = newTitle.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return }
-        let defaultDate = Calendar.current.date(byAdding: .hour, value: 1, to: .now) ?? .now
-        let event = PersonalEvent(title: trimmed, date: defaultDate)
+        let event = PersonalEvent(title: trimmed, date: newDate)
         modelContext.insert(event)
         try? modelContext.save()
         SnapshotStore.publishReminders(from: modelContext)
         WidgetReloader.reloadReminderWidgets()
         newTitle = ""
+        newDate = Calendar.current.date(byAdding: .hour, value: 1, to: .now) ?? .now
         addFocused = true
     }
 
