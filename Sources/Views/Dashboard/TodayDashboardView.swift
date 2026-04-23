@@ -238,6 +238,8 @@ struct TodayDashboardView: View {
     }
 
     @State private var newReminderTitle: String = ""
+    @State private var newReminderDate: Date = Calendar.current.startOfDay(for: .now)
+    @State private var showingReminderDatePicker = false
     @FocusState private var reminderFieldFocused: Bool
 
     private var upcomingReminders: [PersonalEvent] {
@@ -302,6 +304,29 @@ struct TodayDashboardView: View {
                     .focused($reminderFieldFocused)
                     .submitLabel(.done)
                     .onSubmit { commitNewReminder() }
+                Button { showingReminderDatePicker = true } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "calendar")
+                            .font(.system(size: 13))
+                        Text(shortReminderDate)
+                            .font(.system(size: 11, design: .monospaced))
+                    }
+                    .foregroundStyle(AppColors.secondary)
+                }
+                .buttonStyle(.plain)
+                .popover(isPresented: $showingReminderDatePicker) {
+                    DatePicker(
+                        "Due",
+                        selection: Binding(
+                            get: { newReminderDate },
+                            set: { newReminderDate = Calendar.current.startOfDay(for: $0) }
+                        ),
+                        displayedComponents: [.date]
+                    )
+                    .datePickerStyle(.graphical)
+                    .padding()
+                    .presentationCompactAdaptation(.popover)
+                }
             }
             .padding(.vertical, 8)
         }
@@ -355,16 +380,24 @@ struct TodayDashboardView: View {
         return df.string(from: e.date)
     }
 
+    private var shortReminderDate: String {
+        let cal = Calendar.current
+        if cal.isDateInToday(newReminderDate) { return "Today" }
+        if cal.isDateInTomorrow(newReminderDate) { return "Tmrw" }
+        let df = DateFormatter(); df.dateFormat = "MMM d"
+        return df.string(from: newReminderDate)
+    }
+
     private func commitNewReminder() {
         let trimmed = newReminderTitle.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return }
-        let defaultDate = Calendar.current.startOfDay(for: .now)
-        let event = PersonalEvent(title: trimmed, date: defaultDate, isAllDay: true)
+        let event = PersonalEvent(title: trimmed, date: newReminderDate, isAllDay: true)
         modelContext.insert(event)
         try? modelContext.save()
         SnapshotStore.publishReminders(from: modelContext)
         WidgetReloader.reloadReminderWidgets()
         newReminderTitle = ""
+        newReminderDate = Calendar.current.startOfDay(for: .now)
         reminderFieldFocused = true
     }
 
