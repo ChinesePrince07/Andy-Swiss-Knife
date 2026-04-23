@@ -1,10 +1,13 @@
 import SwiftUI
 import SwiftData
+import UniformTypeIdentifiers
 
 struct ScheduleEditorView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \ScheduleClass.sortKey) private var allClasses: [ScheduleClass]
     @State private var confirmReseed = false
+    @State private var showingImporter = false
+    @State private var importResult: String?
 
     var body: some View {
         ScrollView {
@@ -17,6 +20,28 @@ struct ScheduleEditorView: View {
                     .font(AppType.caption)
                     .foregroundStyle(AppColors.secondary)
                     .fixedSize(horizontal: false, vertical: true)
+
+                HStack(spacing: 12) {
+                    Button { showingImporter = true } label: {
+                        HStack(spacing: 6) {
+                            Image(systemName: "doc.text")
+                                .font(.system(size: 13))
+                            Text("IMPORT PDF")
+                                .font(.system(size: 10, weight: .heavy, design: .monospaced))
+                                .kerning(1.1)
+                        }
+                        .foregroundStyle(AppColors.primary)
+                        .padding(.horizontal, 12).padding(.vertical, 8)
+                        .overlay(Rectangle().strokeBorder(AppColors.primary, lineWidth: 2))
+                    }
+                    .buttonStyle(.plain)
+
+                    if let result = importResult {
+                        Text(result)
+                            .font(.system(size: 10, design: .monospaced))
+                            .foregroundStyle(result.contains("Error") ? AppColors.accent : AppColors.secondary)
+                    }
+                }
 
                 ForEach(SuffieldTemplate.periods) { period in
                     PeriodCard(
@@ -49,6 +74,31 @@ struct ScheduleEditorView: View {
             Button("Reset", role: .destructive) { reseedTemplate(clearing: true) }
         } message: {
             Text("This clears every course name and restores the blank A–G period grid.")
+        }
+        .fileImporter(isPresented: $showingImporter, allowedContentTypes: [UTType.pdf]) { result in
+            handlePDFImport(result)
+        }
+    }
+
+    private func handlePDFImport(_ result: Result<URL, Error>) {
+        switch result {
+        case .failure:
+            importResult = "Error: couldn't open file"
+        case .success(let url):
+            guard url.startAccessingSecurityScopedResource() else {
+                importResult = "Error: no access"
+                return
+            }
+            defer { url.stopAccessingSecurityScopedResource() }
+            guard let courses = SchedulePDFParser.parse(url: url), !courses.isEmpty else {
+                importResult = "Error: no courses found"
+                return
+            }
+            for course in courses {
+                guard let period = SuffieldTemplate.periods.first(where: { $0.letter == course.periodLetter }) else { continue }
+                upsert(period: period, name: course.name, room: course.room, teacher: course.teacher)
+            }
+            importResult = "\(courses.count) courses imported"
         }
     }
 

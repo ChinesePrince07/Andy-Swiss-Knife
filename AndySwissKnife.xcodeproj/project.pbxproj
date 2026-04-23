@@ -78,6 +78,7 @@
 		B8BEAEA03CEE8F63CC2E0B97 /* AthleticsPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20ACB5F59009C12DE97FEE87 /* AthleticsPickerView.swift */; };
 		BB4D670A88C4A4C458DC53B1 /* DeepLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35C596E06DEBEE3C8755EE6 /* DeepLinks.swift */; };
 		BEA805C3CCC8CB2B182AE83D /* MealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A106A618866B97560536365 /* MealView.swift */; };
+		C46F422DE1C992DDCA878BF7 /* SchedulePDFParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AAAACD8E32DE6F1D723E4C7 /* SchedulePDFParser.swift */; };
 		C4C2C05CE3E736696204AAF6 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB90B7ED16E641F907E43170 /* Theme.swift */; };
 		C6BE84B03E3728AEB396D4DB /* ReorderableTodoList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761E7C7A5276036790460B18 /* ReorderableTodoList.swift */; };
 		C7C8FE0BE830A1201AEF0AEC /* EventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 136DCB9AE73DA4324A3F14DF /* EventsView.swift */; };
@@ -163,6 +164,7 @@
 		5EE826936B7B41BFA75FBF71 /* TodayDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayDashboardView.swift; sourceTree = "<group>"; };
 		62067695A52BA871E230D768 /* CalendarImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarImportView.swift; sourceTree = "<group>"; };
 		6A4C5BA3B543E15F98EB3514 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6AAAACD8E32DE6F1D723E4C7 /* SchedulePDFParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulePDFParser.swift; sourceTree = "<group>"; };
 		6BDE555AA06812977F66D5CF /* ReminderWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderWidget.swift; sourceTree = "<group>"; };
 		6C72A38932D974ACFFE72627 /* TodoSweeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoSweeper.swift; sourceTree = "<group>"; };
 		6F6DED12FF93B8A00E879914 /* DashboardLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardLayout.swift; sourceTree = "<group>"; };
@@ -279,6 +281,7 @@
 				8A5AAB826B54B6F030A71EA9 /* PomodoroAttributes.swift */,
 				2CC26334910ED03B763FD900 /* PomodoroTimer.swift */,
 				B573D2B21443B0B64EB94686 /* RRuleExpander.swift */,
+				6AAAACD8E32DE6F1D723E4C7 /* SchedulePDFParser.swift */,
 				019E33B5FB0E2689102AA4AB /* SharedStorage.swift */,
 				85B50B8323C1872173961C2F /* SnapshotStore.swift */,
 				6C72A38932D974ACFFE72627 /* TodoSweeper.swift */,
@@ -671,6 +674,7 @@
 				F1BD2818783E7EBBEEFB2BFF /* Schedule.swift in Sources */,
 				90ABD8DDB355C7E4105F4B85 /* ScheduleClass.swift in Sources */,
 				0F08FDEC5D8915290F9A1E85 /* ScheduleEditorView.swift in Sources */,
+				C46F422DE1C992DDCA878BF7 /* SchedulePDFParser.swift in Sources */,
 				3CC6023542F8E9F571CFD93A /* Secrets.swift in Sources */,
 				680BE98A63A71521C12E6513 /* SettingsView.swift in Sources */,
 				0282CD4C71E8D25589883461 /* SharedStorage.swift in Sources */,
