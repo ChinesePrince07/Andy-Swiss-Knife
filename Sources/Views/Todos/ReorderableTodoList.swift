@@ -62,6 +62,11 @@ struct ReorderableTodoList: View {
         .offset(x: isDragging ? dragOffset.width : 0,
                 y: isDragging ? dragOffset.height : 0)
         .zIndex(isDragging ? 10 : 0)
+        .transaction { t in
+            // Dragged row follows the finger instantly; never let the parent
+            // animation lerp its offset or slot position.
+            if isDragging { t.animation = nil }
+        }
         .gesture(dragGesture(for: todo))
     }
 

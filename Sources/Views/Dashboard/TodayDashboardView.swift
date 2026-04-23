@@ -28,6 +28,7 @@ struct TodayDashboardView: View {
     @State private var cardFrames: [DashboardCard: CGRect] = [:]
     @State private var dragCardFrames: [DashboardCard: CGRect] = [:]
     @State private var lastSwappedCard: DashboardCard?
+    @State private var workingActive: [DashboardCard] = []
     private let deepLinks = DeepLinks.shared
 
     var body: some View {
@@ -394,13 +395,13 @@ struct TodayDashboardView: View {
 
 
     private var glanceGrid: some View {
-        let layout = DashboardLayout.shared
+        let active = draggingCard == nil ? DashboardLayout.shared.active : workingActive
         return LazyVGrid(columns: [GridItem(.flexible(), spacing: 6), GridItem(.flexible(), spacing: 6)], spacing: 6) {
-            ForEach(layout.active, id: \.self) { card in
+            ForEach(active, id: \.self) { card in
                 gridCell(for: card)
             }
         }
-        .animation(.spring(response: 0.32, dampingFraction: 0.78), value: layout.active)
+        .animation(.spring(response: 0.32, dampingFraction: 0.78), value: active)
         .coordinateSpace(name: "dashGrid")
         .buttonStyle(.plain)
         .onPreferenceChange(CardFramesKey.self) { frames in
@@ -434,6 +435,9 @@ struct TodayDashboardView: View {
                     )
                 }
             )
+            .transaction { t in
+                if isDragging { t.animation = nil }
+            }
             .highPriorityGesture(
                 LongPressGesture(minimumDuration: 0.35)
                     .sequenced(before: DragGesture(coordinateSpace: .named("dashGrid")))
@@ -442,6 +446,7 @@ struct TodayDashboardView: View {
                         case .second(true, let drag):
                             if draggingCard == nil {
                                 draggingCard = card
+                                workingActive = DashboardLayout.shared.active
                                 dragCardFrames = cardFrames
                                 lastSwappedCard = nil
                                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
@@ -455,12 +460,16 @@ struct TodayDashboardView: View {
                         }
                     }
                     .onEnded { _ in
+                        if !workingActive.isEmpty {
+                            DashboardLayout.shared.active = workingActive
+                        }
                         withAnimation(.spring(response: 0.3, dampingFraction: 0.78)) {
                             draggingCard = nil
                             dragOffset = .zero
                         }
                         lastSwappedCard = nil
                         dragCardFrames = [:]
+                        workingActive = []
                     }
             )
     }
@@ -470,8 +479,8 @@ struct TodayDashboardView: View {
             entry.key != draggedCard && entry.value.contains(location)
         }) else { return }
         if hit.key == lastSwappedCard { return }
-        guard let fromIdx = DashboardLayout.shared.active.firstIndex(of: draggedCard),
-              let toIdx = DashboardLayout.shared.active.firstIndex(of: hit.key),
+        guard let fromIdx = workingActive.firstIndex(of: draggedCard),
+              let toIdx = workingActive.firstIndex(of: hit.key),
               let oldDraggedFrame = dragCardFrames[draggedCard]
         else { return }
         let oldTargetFrame = hit.value
@@ -479,12 +488,8 @@ struct TodayDashboardView: View {
         dragCardFrames[draggedCard] = oldTargetFrame
         dragCardFrames[hit.key] = oldDraggedFrame
 
-        var active = DashboardLayout.shared.active
-        active.remove(at: fromIdx)
-        active.insert(draggedCard, at: toIdx)
-        withAnimation(.spring(response: 0.3, dampingFraction: 0.78)) {
-            DashboardLayout.shared.active = active
-        }
+        workingActive.remove(at: fromIdx)
+        workingActive.insert(draggedCard, at: toIdx)
 
         let delta = CGSize(
             width: oldDraggedFrame.midX - oldTargetFrame.midX,
