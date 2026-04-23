@@ -18,12 +18,12 @@ struct SettingsView: View {
         return ZStack {
             ThemedBackground()
             ScrollView {
-                VStack(alignment: .leading, spacing: 26) {
+                VStack(alignment: .leading, spacing: 14) {
                     Text("SETTINGS")
-                        .font(.system(size: 22, weight: .heavy, design: .monospaced))
-                        .kerning(1.8)
+                        .font(.system(size: 20, weight: .heavy, design: .monospaced))
+                        .kerning(1.6)
                         .foregroundStyle(AppColors.primary)
-                        .padding(.top, 4)
+                        .padding(.top, 2)
 
                     youSection(name: $userSettings.displayName)
                     themeSection
@@ -38,7 +38,7 @@ struct SettingsView: View {
                     aboutSection
                 }
                 .padding(.horizontal, 20)
-                .padding(.bottom, 40)
+                .padding(.bottom, 30)
             }
         }
         .navigationTitle("")
@@ -88,8 +88,6 @@ struct SettingsView: View {
             NavigationLink { ScheduleEditorView() } label: {
                 brutalRow("My classes", value: "edit")
             }
-        } footer: {
-            "Classes power the Next Class card and the Classes screen."
         }
     }
 
@@ -98,25 +96,61 @@ struct SettingsView: View {
             NavigationLink { DashboardLayoutEditor() } label: {
                 brutalRow("Customize dashboard", value: "arrange")
             }
-        } footer: {
-            "Reorder cards, hide unused, re-activate hidden like Pomodoro or Events."
         }
     }
 
     private func canvasSection(url: Binding<String>) -> some View {
-        settingsBlock(title: "Canvas feed URL") {
-            brutalField {
-                TextField("https://…instructure.com/feeds/calendars/user_….ics",
-                          text: url)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled(true)
-                    .keyboardType(.URL)
-                    .font(.system(size: 11, design: .monospaced))
-                    .foregroundStyle(AppColors.primary)
+        settingsBlock(title: "Canvas feed") {
+            VStack(alignment: .leading, spacing: 6) {
+                HStack {
+                    Text(url.wrappedValue.isEmpty ? "NOT SUBSCRIBED" : "SUBSCRIBED")
+                        .font(.system(size: 10, weight: .heavy, design: .monospaced))
+                        .kerning(1.2)
+                        .foregroundStyle(url.wrappedValue.isEmpty ? AppColors.accent : AppColors.primary)
+                    Spacer()
+                    if let canvasSync {
+                        Text(Self.syncFormatter.string(from: canvasSync))
+                            .font(.system(size: 10, design: .monospaced))
+                            .foregroundStyle(AppColors.tertiary)
+                    }
+                }
+                if !url.wrappedValue.isEmpty {
+                    Text(shortenCanvas(url.wrappedValue))
+                        .font(.system(size: 11, design: .monospaced))
+                        .foregroundStyle(AppColors.secondary)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                }
+                brutalField {
+                    TextField("https://…instructure.com/feeds/calendars/user_….ics",
+                              text: url)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled(true)
+                        .keyboardType(.URL)
+                        .font(.system(size: 11, design: .monospaced))
+                        .foregroundStyle(AppColors.primary)
+                }
+                if !url.wrappedValue.isEmpty {
+                    Button { url.wrappedValue = "" } label: {
+                        Text("CLEAR FEED")
+                            .font(.system(size: 10, weight: .heavy, design: .monospaced))
+                            .kerning(1.1)
+                            .foregroundStyle(AppColors.accent)
+                            .padding(.horizontal, 8).padding(.vertical, 4)
+                            .overlay(Rectangle().strokeBorder(AppColors.accent, lineWidth: 1.5))
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.top, 2)
+                }
             }
         } footer: {
             "Canvas → Calendar → sidebar → Calendar Feed → copy URL."
         }
+    }
+
+    private func shortenCanvas(_ s: String) -> String {
+        guard let url = URL(string: s), let host = url.host else { return s }
+        return "\(host)\(url.path)"
     }
 
     private var athleticsSection: some View {
@@ -189,7 +223,7 @@ struct SettingsView: View {
                     .kerning(1.1)
                     .foregroundStyle(AppColors.secondary)
             }
-            .padding(.vertical, 10)
+            .padding(.vertical, 6)
         }
     }
 
@@ -204,7 +238,7 @@ struct SettingsView: View {
                     .font(.system(size: 11, design: .monospaced))
                     .foregroundStyle(AppColors.secondary)
             }
-            .padding(.vertical, 10)
+            .padding(.vertical, 6)
         }
     }
 
@@ -216,20 +250,19 @@ struct SettingsView: View {
         @ViewBuilder content: () -> Content,
         footer: (() -> String)? = nil
     ) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 8) {
                 Text(title.uppercased())
-                    .font(.system(size: 11, weight: .heavy, design: .monospaced))
-                    .kerning(1.3)
+                    .font(.system(size: 10, weight: .heavy, design: .monospaced))
+                    .kerning(1.2)
                     .foregroundStyle(AppColors.primary)
-                Rectangle().fill(AppColors.primary).frame(height: 2)
+                Rectangle().fill(AppColors.primary).frame(height: 1.5)
             }
             content()
             if let footerText = footer?() {
                 Text(footerText)
-                    .font(.system(size: 10, design: .monospaced))
+                    .font(.system(size: 9, design: .monospaced))
                     .foregroundStyle(AppColors.tertiary)
-                    .padding(.top, 2)
             }
         }
     }
@@ -248,12 +281,12 @@ struct SettingsView: View {
                 .font(.system(size: 11, weight: .semibold))
                 .foregroundStyle(AppColors.tertiary)
         }
-        .padding(.vertical, 12)
+        .padding(.vertical, 8)
     }
 
     private func brutalField<Content: View>(@ViewBuilder content: () -> Content) -> some View {
         content()
-            .padding(.horizontal, 10).padding(.vertical, 10)
+            .padding(.horizontal, 8).padding(.vertical, 8)
             .overlay(Rectangle().strokeBorder(AppColors.primary, lineWidth: 1.5))
     }
 
@@ -284,7 +317,7 @@ struct SettingsView: View {
                 .font(.system(size: 11, design: .monospaced))
                 .foregroundStyle(AppColors.secondary)
         }
-        .padding(.vertical, 10)
+        .padding(.vertical, 6)
     }
 
     private var authLabel: String {
