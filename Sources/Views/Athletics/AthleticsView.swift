@@ -18,10 +18,7 @@ struct AthleticsView: View {
                     if AthleticSubscriptions.enabledIDs.isEmpty {
                         noFeedState
                     } else if visibleGames.isEmpty {
-                        Text(didLoad ? "No upcoming games." : "Loading…")
-                            .font(AppType.body)
-                            .foregroundStyle(AppColors.secondary)
-                            .padding(.vertical, 20)
+                        emptyGamesState
                     } else {
                         ForEach(grouped, id: \.0) { day, list in
                             daySection(day: day, games: list)
@@ -72,6 +69,45 @@ struct AthleticsView: View {
                 .foregroundStyle(AppColors.tertiary)
         }
         .padding(.top, 20)
+    }
+
+    private var emptyGamesState: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(didLoad ? "No upcoming games." : "Loading…")
+                .font(AppType.body)
+                .foregroundStyle(AppColors.secondary)
+            if didLoad {
+                Text("Teams with empty feeds are likely off-season.")
+                    .font(AppType.caption)
+                    .foregroundStyle(AppColors.tertiary)
+                Rectangle().fill(AppColors.tertiary).frame(height: 1).padding(.vertical, 2)
+                ForEach(Array(AthleticSubscriptions.enabledIDs).sorted(), id: \.self) { id in
+                    subscribedRow(teamID: id)
+                }
+            }
+        }
+        .padding(.top, 20)
+    }
+
+    private func subscribedRow(teamID: String) -> some View {
+        let team = SuffieldAthletics.team(for: teamID)
+        let count = games.filter { ($0.source ?? "") == AthleticSubscriptions.sourceKey(for: teamID) }.count
+        return HStack(alignment: .firstTextBaseline) {
+            Text(team?.displayName ?? "Team \(teamID)")
+                .font(AppType.body)
+                .foregroundStyle(AppColors.primary)
+            if let season = team?.season {
+                Text(season.title.uppercased())
+                    .font(.system(size: 9, weight: .heavy, design: .monospaced))
+                    .kerning(1.1)
+                    .foregroundStyle(AppColors.tertiary)
+            }
+            Spacer()
+            Text("\(count) games")
+                .font(.system(size: 11, design: .monospaced))
+                .foregroundStyle(count == 0 ? AppColors.accent : AppColors.secondary)
+        }
+        .padding(.vertical, 4)
     }
 
     private var visibleGames: [CachedEvent] {
