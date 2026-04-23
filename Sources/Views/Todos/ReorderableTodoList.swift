@@ -11,7 +11,9 @@ struct ReorderableTodoList: View {
     @Environment(\.modelContext) private var modelContext
     @State private var draggingID: UUID?
     @State private var dragOffset: CGSize = .zero
-    @State private var frames: [UUID: CGRect] = [:]
+    @State private var liveFrames: [UUID: CGRect] = [:]
+    @State private var dragFrames: [UUID: CGRect] = [:]
+    @State private var lastSwappedID: UUID?
 
     private let coordSpace = "todoReorder"
 
@@ -22,7 +24,7 @@ struct ReorderableTodoList: View {
             }
         }
         .coordinateSpace(name: coordSpace)
-        .onPreferenceChange(TodoRowFramesKey.self) { frames = $0 }
+        .onPreferenceChange(TodoRowFramesKey.self) { liveFrames = $0 }
     }
 
     @ViewBuilder
@@ -52,65 +54,82 @@ struct ReorderableTodoList: View {
         .zIndex(isDragging ? 10 : 0)
         .opacity(draggingID != nil && !isDragging ? 0.92 : 1.0)
         .animation(isDragging ? nil : .spring(response: 0.32, dampingFraction: 0.76), value: draggingID)
-        .gesture(
-            LongPressGesture(minimumDuration: 0.30)
-                .sequenced(before: DragGesture(coordinateSpace: .named(coordSpace)))
-                .onChanged { value in
-                    switch value {
-                    case .second(true, let drag):
-                        if draggingID == nil {
-                            draggingID = todo.id
-                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                        }
-                        if let drag {
-                            dragOffset = drag.translation
-                            handleSwap(dragged: todo, location: drag.location)
-                        }
-                    default:
-                        break
+        .gesture(dragGesture(for: todo))
+    }
+
+    private func dragGesture(for todo: Todo) -> some Gesture {
+        LongPressGesture(minimumDuration: 0.30)
+            .sequenced(before: DragGesture(coordinateSpace: .named(coordSpace)))
+            .onChanged { value in
+                switch value {
+                case .second(true, let drag):
+                    if draggingID == nil {
+                        draggingID = todo.id
+                        // Freeze the frame snapshot at lift time so the hit-
+                        // test doesn't chase a moving target during reorder.
+                        dragFrames = liveFrames
+                        lastSwappedID = nil
+                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                     }
-                }
-                .onEnded { _ in
-                    withAnimation(.spring(response: 0.3, dampingFraction: 0.78)) {
-                        draggingID = nil
-                        dragOffset = .zero
+                    if let drag {
+                        dragOffset = drag.translation
+                        handleSwap(dragged: todo, location: drag.location)
                     }
+                default:
+                    break
                 }
-        )
+            }
+            .onEnded { _ in
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.78)) {
+                    draggingID = nil
+                    dragOffset = .zero
+                }
+                lastSwappedID = nil
+                dragFrames = [:]
+            }
     }
 
     private func handleSwap(dragged: Todo, location: CGPoint) {
-        guard let targetEntry = frames.first(where: { entry in
+        guard let hit = dragFrames.first(where: { entry in
             entry.key != dragged.id && entry.value.contains(location)
         }) else { return }
-        let targetID = targetEntry.key
+        // Debounce: don't re-swap with the same neighbour until finger has
+        // moved to a different row. Prevents oscillation on boundaries.
+        if hit.key == lastSwappedID { return }
+
         guard let fromIdx = items.firstIndex(where: { $0.id == dragged.id }),
-              let toIdx = items.firstIndex(where: { $0.id == targetID })
+              let toIdx = items.firstIndex(where: { $0.id == hit.key }),
+              let oldDraggedFrame = dragFrames[dragged.id]
         else { return }
+        let oldTargetFrame = hit.value
+
+        // Swap entries in the snapshot so subsequent hit tests and offset
+        // rebases use the new logical layout.
+        dragFrames[dragged.id] = oldTargetFrame
+        dragFrames[hit.key] = oldDraggedFrame
+
         var arr = items
         arr.remove(at: fromIdx)
         arr.insert(dragged, at: toIdx)
         let total = arr.count
-        withAnimation(.spring(response: 0.28, dampingFraction: 0.76)) {
-            for (i, t) in arr.enumerated() {
-                t.sortOrder = Double(total - i)
-            }
+        for (i, t) in arr.enumerated() {
+            t.sortOrder = Double(total - i)
         }
         try? modelContext.save()
         SnapshotStore.publishTodos(from: modelContext)
         WidgetReloader.reloadTodoWidgets()
-        // Keep the finger visually on the dragged row after layout shifts.
-        if let oldFrame = targetEntry.value as CGRect?,
-           let newFrame = frames[dragged.id] {
-            let delta = CGSize(
-                width: oldFrame.midX - newFrame.midX,
-                height: oldFrame.midY - newFrame.midY
-            )
-            dragOffset = CGSize(
-                width: dragOffset.width + delta.width,
-                height: dragOffset.height + delta.height
-            )
-        }
+
+        // Rebase offset so the card stays under the finger after layout shift.
+        let delta = CGSize(
+            width: oldDraggedFrame.midX - oldTargetFrame.midX,
+            height: oldDraggedFrame.midY - oldTargetFrame.midY
+        )
+        dragOffset = CGSize(
+            width: dragOffset.width + delta.width,
+            height: dragOffset.height + delta.height
+        )
+
+        lastSwappedID = hit.key
     }
 }
 

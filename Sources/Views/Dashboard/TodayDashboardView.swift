@@ -26,6 +26,8 @@ struct TodayDashboardView: View {
     @State private var draggingCard: DashboardCard?
     @State private var dragOffset: CGSize = .zero
     @State private var cardFrames: [DashboardCard: CGRect] = [:]
+    @State private var dragCardFrames: [DashboardCard: CGRect] = [:]
+    @State private var lastSwappedCard: DashboardCard?
     private let deepLinks = DeepLinks.shared
 
     var body: some View {
@@ -440,6 +442,8 @@ struct TodayDashboardView: View {
                         case .second(true, let drag):
                             if draggingCard == nil {
                                 draggingCard = card
+                                dragCardFrames = cardFrames
+                                lastSwappedCard = nil
                                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                             }
                             if let drag {
@@ -455,39 +459,43 @@ struct TodayDashboardView: View {
                             draggingCard = nil
                             dragOffset = .zero
                         }
+                        lastSwappedCard = nil
+                        dragCardFrames = [:]
                     }
             )
     }
 
     private func handleSwap(draggedCard: DashboardCard, location: CGPoint) {
-        // Find the cell whose frame the drag finger is inside (excluding
-        // the dragged card itself).
-        guard let targetEntry = cardFrames.first(where: { entry in
+        guard let hit = dragCardFrames.first(where: { entry in
             entry.key != draggedCard && entry.value.contains(location)
         }) else { return }
-        let target = targetEntry.key
+        if hit.key == lastSwappedCard { return }
         guard let fromIdx = DashboardLayout.shared.active.firstIndex(of: draggedCard),
-              let toIdx = DashboardLayout.shared.active.firstIndex(of: target)
+              let toIdx = DashboardLayout.shared.active.firstIndex(of: hit.key),
+              let oldDraggedFrame = dragCardFrames[draggedCard]
         else { return }
+        let oldTargetFrame = hit.value
+
+        dragCardFrames[draggedCard] = oldTargetFrame
+        dragCardFrames[hit.key] = oldDraggedFrame
+
         var active = DashboardLayout.shared.active
         active.remove(at: fromIdx)
         active.insert(draggedCard, at: toIdx)
         withAnimation(.spring(response: 0.3, dampingFraction: 0.78)) {
             DashboardLayout.shared.active = active
         }
-        // After swap, the dragged card's cell has moved. Shift dragOffset so
-        // the finger remains visually on the card.
-        if let newFrame = cardFrames[draggedCard],
-           let oldFrame = targetEntry.value as CGRect? {
-            let delta = CGSize(
-                width: oldFrame.midX - newFrame.midX,
-                height: oldFrame.midY - newFrame.midY
-            )
-            dragOffset = CGSize(
-                width: dragOffset.width + delta.width,
-                height: dragOffset.height + delta.height
-            )
-        }
+
+        let delta = CGSize(
+            width: oldDraggedFrame.midX - oldTargetFrame.midX,
+            height: oldDraggedFrame.midY - oldTargetFrame.midY
+        )
+        dragOffset = CGSize(
+            width: dragOffset.width + delta.width,
+            height: dragOffset.height + delta.height
+        )
+
+        lastSwappedCard = hit.key
     }
 
 
