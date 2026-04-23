@@ -101,56 +101,20 @@ struct SettingsView: View {
 
     private func canvasSection(url: Binding<String>) -> some View {
         settingsBlock(title: "Canvas feed") {
-            VStack(alignment: .leading, spacing: 6) {
-                HStack {
-                    Text(url.wrappedValue.isEmpty ? "NOT SUBSCRIBED" : "SUBSCRIBED")
-                        .font(.system(size: 10, weight: .heavy, design: .monospaced))
-                        .kerning(1.2)
-                        .foregroundStyle(url.wrappedValue.isEmpty ? AppColors.accent : AppColors.primary)
-                    Spacer()
-                    if let canvasSync {
-                        Text(Self.syncFormatter.string(from: canvasSync))
-                            .font(.system(size: 10, design: .monospaced))
-                            .foregroundStyle(AppColors.tertiary)
-                    }
-                }
-                if !url.wrappedValue.isEmpty {
-                    Text(shortenCanvas(url.wrappedValue))
-                        .font(.system(size: 11, design: .monospaced))
-                        .foregroundStyle(AppColors.secondary)
-                        .lineLimit(1)
-                        .truncationMode(.middle)
-                }
-                brutalField {
-                    TextField("https://…instructure.com/feeds/calendars/user_….ics",
-                              text: url)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled(true)
-                        .keyboardType(.URL)
-                        .font(.system(size: 11, design: .monospaced))
-                        .foregroundStyle(AppColors.primary)
-                }
-                if !url.wrappedValue.isEmpty {
-                    Button { url.wrappedValue = "" } label: {
-                        Text("CLEAR FEED")
-                            .font(.system(size: 10, weight: .heavy, design: .monospaced))
-                            .kerning(1.1)
-                            .foregroundStyle(AppColors.accent)
-                            .padding(.horizontal, 8).padding(.vertical, 4)
-                            .overlay(Rectangle().strokeBorder(AppColors.accent, lineWidth: 1.5))
-                    }
-                    .buttonStyle(.plain)
-                    .padding(.top, 2)
-                }
+            brutalField {
+                TextField("https://…instructure.com/feeds/calendars/user_….ics",
+                          text: url)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled(true)
+                    .keyboardType(.URL)
+                    .font(.system(size: 11, design: .monospaced))
+                    .foregroundStyle(AppColors.primary)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
             }
         } footer: {
             "Canvas → Calendar → sidebar → Calendar Feed → copy URL."
         }
-    }
-
-    private func shortenCanvas(_ s: String) -> String {
-        guard let url = URL(string: s), let host = url.host else { return s }
-        return "\(host)\(url.path)"
     }
 
     private var athleticsSection: some View {
