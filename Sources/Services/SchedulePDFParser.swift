@@ -1,4 +1,6 @@
 import PDFKit
+import Vision
+import UIKit
 
 struct ParsedCourse {
     let periodLetter: String
@@ -16,6 +18,26 @@ enum SchedulePDFParser {
             fullText += text + "\n"
         }
         return parseText(fullText)
+    }
+
+    static func parseFromImage(_ image: UIImage) async -> [ParsedCourse] {
+        guard let cgImage = image.cgImage else { return [] }
+        let text = await ocrText(from: cgImage)
+        return parseText(text)
+    }
+
+    private static func ocrText(from cgImage: CGImage) async -> String {
+        await withCheckedContinuation { continuation in
+            let request = VNRecognizeTextRequest { request, _ in
+                let observations = request.results as? [VNRecognizedTextObservation] ?? []
+                let lines = observations.compactMap { $0.topCandidates(1).first?.string }
+                continuation.resume(returning: lines.joined(separator: "\n"))
+            }
+            request.recognitionLevel = .accurate
+            request.usesLanguageCorrection = true
+            let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+            try? handler.perform([request])
+        }
     }
 
     static func parseText(_ text: String) -> [ParsedCourse] {

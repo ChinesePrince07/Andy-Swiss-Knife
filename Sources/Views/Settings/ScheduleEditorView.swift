@@ -1,13 +1,14 @@
 import SwiftUI
 import SwiftData
-import UniformTypeIdentifiers
+import PhotosUI
 
 struct ScheduleEditorView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \ScheduleClass.sortKey) private var allClasses: [ScheduleClass]
     @State private var confirmReseed = false
-    @State private var showingImporter = false
+    @State private var photoItem: PhotosPickerItem?
     @State private var importResult: String?
+    @State private var isImporting = false
 
     var body: some View {
         ScrollView {
@@ -22,11 +23,11 @@ struct ScheduleEditorView: View {
                     .fixedSize(horizontal: false, vertical: true)
 
                 HStack(spacing: 12) {
-                    Button { showingImporter = true } label: {
+                    PhotosPicker(selection: $photoItem, matching: .images) {
                         HStack(spacing: 6) {
-                            Image(systemName: "doc.text")
+                            Image(systemName: "camera.viewfinder")
                                 .font(.system(size: 13))
-                            Text("IMPORT PDF")
+                            Text(isImporting ? "SCANNING…" : "IMPORT PHOTO")
                                 .font(.system(size: 10, weight: .heavy, design: .monospaced))
                                 .kerning(1.1)
                         }
@@ -35,12 +36,17 @@ struct ScheduleEditorView: View {
                         .overlay(Rectangle().strokeBorder(AppColors.primary, lineWidth: 2))
                     }
                     .buttonStyle(.plain)
+                    .disabled(isImporting)
 
                     if let result = importResult {
                         Text(result)
                             .font(.system(size: 10, design: .monospaced))
                             .foregroundStyle(result.contains("Error") ? AppColors.accent : AppColors.secondary)
                     }
+                }
+                .onChange(of: photoItem) { _, item in
+                    guard let item else { return }
+                    Task { await handlePhotoImport(item) }
                 }
 
                 ForEach(SuffieldTemplate.periods) { period in
@@ -75,31 +81,27 @@ struct ScheduleEditorView: View {
         } message: {
             Text("This clears every course name and restores the blank A–G period grid.")
         }
-        .fileImporter(isPresented: $showingImporter, allowedContentTypes: [UTType.pdf]) { result in
-            handlePDFImport(result)
-        }
     }
 
-    private func handlePDFImport(_ result: Result<URL, Error>) {
-        switch result {
-        case .failure:
-            importResult = "Error: couldn't open file"
-        case .success(let url):
-            guard url.startAccessingSecurityScopedResource() else {
-                importResult = "Error: no access"
-                return
-            }
-            defer { url.stopAccessingSecurityScopedResource() }
-            guard let courses = SchedulePDFParser.parse(url: url), !courses.isEmpty else {
-                importResult = "Error: no courses found"
-                return
-            }
-            for course in courses {
-                guard let period = SuffieldTemplate.periods.first(where: { $0.letter == course.periodLetter }) else { continue }
-                upsert(period: period, name: course.name, room: course.room, teacher: course.teacher)
-            }
-            importResult = "\(courses.count) courses imported"
+    private func handlePhotoImport(_ item: PhotosPickerItem) async {
+        isImporting = true
+        importResult = nil
+        defer { isImporting = false; photoItem = nil }
+        guard let data = try? await item.loadTransferable(type: Data.self),
+              let image = UIImage(data: data) else {
+            importResult = "Error: couldn't load image"
+            return
         }
+        let courses = await SchedulePDFParser.parseFromImage(image)
+        guard !courses.isEmpty else {
+            importResult = "Error: no courses found"
+            return
+        }
+        for course in courses {
+            guard let period = SuffieldTemplate.periods.first(where: { $0.letter == course.periodLetter }) else { continue }
+            upsert(period: period, name: course.name, room: course.room, teacher: course.teacher)
+        }
+        importResult = "\(courses.count) courses imported"
     }
 
     private func classes(for periodKey: String) -> [ScheduleClass] {
