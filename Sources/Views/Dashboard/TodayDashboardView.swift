@@ -438,7 +438,7 @@ struct TodayDashboardView: View {
             .transaction { t in
                 if isDragging { t.animation = nil }
             }
-            .highPriorityGesture(
+            .simultaneousGesture(
                 LongPressGesture(minimumDuration: 0.35)
                     .sequenced(before: DragGesture(coordinateSpace: .named("dashGrid")))
                     .onChanged { value in
