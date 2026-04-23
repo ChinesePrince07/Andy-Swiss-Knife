@@ -79,7 +79,9 @@ final class AthleticsService {
             predicate: #Predicate { $0.source == sourceKey }
         )
         let existing = (try? context.fetch(descriptor)) ?? []
-        // Key by raw UID for lookup; stored id carries source prefix.
+        // Accept both storage shapes: legacy rows keyed by raw UID, new rows
+        // keyed by "<source>:<uid>". Look up by raw UID; do not mutate the
+        // unique primary key on legacy rows — SwiftData rejects PK mutation.
         var existingByUID: [String: CachedEvent] = [:]
         for row in existing {
             let uid = row.id.hasPrefix(sourceKey + ":") ? String(row.id.dropFirst(sourceKey.count + 1)) : row.id
@@ -90,15 +92,14 @@ final class AthleticsService {
         var added = 0
         for e in expanded {
             keep.insert(e.uid)
-            let storedID = "\(sourceKey):\(e.uid)"
             if let row = existingByUID[e.uid] {
-                row.id = storedID  // normalize legacy rows
                 row.title = e.summary
                 row.start = e.start
                 row.end = e.end
                 row.location = e.location
                 row.calendarTitle = team.displayName
             } else {
+                let storedID = "\(sourceKey):\(e.uid)"
                 context.insert(CachedEvent(
                     id: storedID,
                     title: e.summary,
@@ -114,7 +115,11 @@ final class AthleticsService {
         for (uid, row) in existingByUID where !keep.contains(uid) || row.end < windowStart {
             context.delete(row)
         }
-        try? context.save()
+        do {
+            try context.save()
+        } catch {
+            print("[AthleticsService] save failed for \(team.id): \(error)")
+        }
         return added
     }
 

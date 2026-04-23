@@ -5,13 +5,7 @@ struct AthleticsView: View {
     let services: Services
     @Environment(\.modelContext) private var modelContext
 
-    @Query(sort: \CachedEvent.start)
-    private var allEvents: [CachedEvent]
-
-    private var games: [CachedEvent] {
-        allEvents.filter { ($0.source ?? "").hasPrefix(AthleticSubscriptions.sourcePrefix) }
-    }
-
+    @State private var games: [CachedEvent] = []
     @State private var didLoad = false
 
     var body: some View {
@@ -42,7 +36,19 @@ struct AthleticsView: View {
         .navigationTitle("Athletics")
         .navigationBarTitleDisplayMode(.inline)
         .refreshable { await sync(force: true) }
-        .task { await sync(force: false) }
+        .onAppear {
+            reload()
+            Task { await sync(force: true) }
+        }
+    }
+
+    private func reload() {
+        let prefix = AthleticSubscriptions.sourcePrefix
+        let descriptor = FetchDescriptor<CachedEvent>(
+            sortBy: [SortDescriptor(\CachedEvent.start)]
+        )
+        let all = (try? modelContext.fetch(descriptor)) ?? []
+        games = all.filter { ($0.source ?? "").hasPrefix(prefix) }
     }
 
     private var header: some View {
@@ -142,5 +148,6 @@ struct AthleticsView: View {
     private func sync(force: Bool) async {
         await services.athletics.syncAllEnabled(forceRefresh: force)
         didLoad = true
+        reload()
     }
 }
