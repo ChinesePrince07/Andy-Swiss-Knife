@@ -538,6 +538,8 @@ struct TodayDashboardView: View {
             GlanceCard(label: "Events", primary: nextEventPrimary, secondary: nextEventSecondary)
         case .athletics:
             GlanceCard(label: "Athletics", primary: athleticsPrimary, secondary: athleticsSecondary)
+        case .apExams:
+            GlanceCard(label: "AP Exams", primary: apExamsPrimary, secondary: apExamsSecondary)
         }
     }
 
@@ -550,7 +552,27 @@ struct TodayDashboardView: View {
         case .pomodoro:  PomodoroView(services: services)
         case .events:    EventsView(services: services)
         case .athletics: AthleticsView(services: services)
+        case .apExams:   APExamsView()
         }
+    }
+
+    private var apExamsPrimary: String {
+        guard let next = APExamSubscriptions.nextUpcoming() else {
+            return APExamSubscriptions.enabledIDs.isEmpty ? "Tap to pick" : "All done"
+        }
+        return next.name
+    }
+
+    private var apExamsSecondary: String {
+        guard let next = APExamSubscriptions.nextUpcoming() else {
+            return APExamSubscriptions.enabledIDs.isEmpty ? "2026 schedule" : "—"
+        }
+        let cal = Calendar.current
+        let days = cal.dateComponents([.day], from: cal.startOfDay(for: .now), to: cal.startOfDay(for: next.date)).day ?? 0
+        let df = DateFormatter(); df.dateFormat = "MMM d"
+        if days <= 0 { return "Today · \(next.session.label)" }
+        if days == 1 { return "Tmrw · \(next.session.label)" }
+        return "\(df.string(from: next.date)) · in \(days)d"
     }
 
     private var athleticsPrimary: String {
