@@ -434,7 +434,7 @@ struct TodayDashboardView: View {
                     )
                 }
             )
-            .gesture(
+            .highPriorityGesture(
                 LongPressGesture(minimumDuration: 0.35)
                     .sequenced(before: DragGesture(coordinateSpace: .named("dashGrid")))
                     .onChanged { value in

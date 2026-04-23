@@ -4,6 +4,10 @@ import UIKit
 
 /// Things3-style reorderable list. Long-press a row to lift; drag to reorder.
 /// Siblings spring-animate into place as the dragged row passes over them.
+///
+/// Reorder is kept local (in-memory) while the finger is down. Only on drop
+/// does the new order get written to SwiftData. This prevents the @Query
+/// refresh storm that otherwise re-enters the view mid-drag and causes jitter.
 struct ReorderableTodoList: View {
     let items: [Todo]
     let services: Services
@@ -14,17 +18,23 @@ struct ReorderableTodoList: View {
     @State private var liveFrames: [UUID: CGRect] = [:]
     @State private var dragFrames: [UUID: CGRect] = [:]
     @State private var lastSwappedID: UUID?
+    @State private var workingOrder: [Todo] = []
 
     private let coordSpace = "todoReorder"
 
+    private var displayItems: [Todo] {
+        draggingID == nil ? items : workingOrder
+    }
+
     var body: some View {
         VStack(spacing: 0) {
-            ForEach(items) { todo in
+            ForEach(displayItems) { todo in
                 rowCell(todo)
             }
         }
         .coordinateSpace(name: coordSpace)
         .onPreferenceChange(TodoRowFramesKey.self) { liveFrames = $0 }
+        .animation(.spring(response: 0.28, dampingFraction: 0.78), value: displayItems.map(\.id))
     }
 
     @ViewBuilder
@@ -52,8 +62,6 @@ struct ReorderableTodoList: View {
         .offset(x: isDragging ? dragOffset.width : 0,
                 y: isDragging ? dragOffset.height : 0)
         .zIndex(isDragging ? 10 : 0)
-        .opacity(draggingID != nil && !isDragging ? 0.92 : 1.0)
-        .animation(isDragging ? nil : .spring(response: 0.32, dampingFraction: 0.76), value: draggingID)
         .gesture(dragGesture(for: todo))
     }
 
@@ -65,8 +73,7 @@ struct ReorderableTodoList: View {
                 case .second(true, let drag):
                     if draggingID == nil {
                         draggingID = todo.id
-                        // Freeze the frame snapshot at lift time so the hit-
-                        // test doesn't chase a moving target during reorder.
+                        workingOrder = items
                         dragFrames = liveFrames
                         lastSwappedID = nil
                         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
@@ -80,12 +87,14 @@ struct ReorderableTodoList: View {
                 }
             }
             .onEnded { _ in
+                commitWorkingOrder()
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.78)) {
                     draggingID = nil
                     dragOffset = .zero
                 }
                 lastSwappedID = nil
                 dragFrames = [:]
+                workingOrder = []
             }
     }
 
@@ -93,33 +102,24 @@ struct ReorderableTodoList: View {
         guard let hit = dragFrames.first(where: { entry in
             entry.key != dragged.id && entry.value.contains(location)
         }) else { return }
-        // Debounce: don't re-swap with the same neighbour until finger has
-        // moved to a different row. Prevents oscillation on boundaries.
         if hit.key == lastSwappedID { return }
 
-        guard let fromIdx = items.firstIndex(where: { $0.id == dragged.id }),
-              let toIdx = items.firstIndex(where: { $0.id == hit.key }),
+        guard let fromIdx = workingOrder.firstIndex(where: { $0.id == dragged.id }),
+              let toIdx = workingOrder.firstIndex(where: { $0.id == hit.key }),
               let oldDraggedFrame = dragFrames[dragged.id]
         else { return }
         let oldTargetFrame = hit.value
 
-        // Swap entries in the snapshot so subsequent hit tests and offset
-        // rebases use the new logical layout.
+        // Swap frame entries in the snapshot — keeps hit-test and the offset
+        // rebase consistent with the new logical layout.
         dragFrames[dragged.id] = oldTargetFrame
         dragFrames[hit.key] = oldDraggedFrame
 
-        var arr = items
-        arr.remove(at: fromIdx)
-        arr.insert(dragged, at: toIdx)
-        let total = arr.count
-        for (i, t) in arr.enumerated() {
-            t.sortOrder = Double(total - i)
-        }
-        try? modelContext.save()
-        SnapshotStore.publishTodos(from: modelContext)
-        WidgetReloader.reloadTodoWidgets()
+        workingOrder.remove(at: fromIdx)
+        workingOrder.insert(dragged, at: toIdx)
 
-        // Rebase offset so the card stays under the finger after layout shift.
+        // Shift offset so the card stays visually glued to the finger once
+        // the slot moves.
         let delta = CGSize(
             width: oldDraggedFrame.midX - oldTargetFrame.midX,
             height: oldDraggedFrame.midY - oldTargetFrame.midY
@@ -130,6 +130,17 @@ struct ReorderableTodoList: View {
         )
 
         lastSwappedID = hit.key
+    }
+
+    private func commitWorkingOrder() {
+        guard !workingOrder.isEmpty else { return }
+        let total = workingOrder.count
+        for (i, t) in workingOrder.enumerated() {
+            t.sortOrder = Double(total - i)
+        }
+        try? modelContext.save()
+        SnapshotStore.publishTodos(from: modelContext)
+        WidgetReloader.reloadTodoWidgets()
     }
 }
 
