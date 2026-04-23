@@ -150,15 +150,10 @@ struct TodayDashboardView: View {
                     .foregroundStyle(AppColors.secondary)
                     .padding(.vertical, 12)
             } else {
-                ForEach(todoBuckets, id: \.0) { bucket, todos in
-                    DueGroupSection(
-                        title: bucket.title,
-                        subtitle: bucket.subtitle,
-                        isUrgent: bucket.isUrgent,
-                        items: todos,
-                        services: services,
-                        allowReorder: bucket != .done
-                    )
+                HairlineDivider()
+                ReorderableTodoList(items: openManualTodos, services: services)
+                if !doneManualTodos.isEmpty {
+                    doneSection
                 }
             }
             HStack(spacing: 10) {
@@ -202,6 +197,33 @@ struct TodayDashboardView: View {
 
     private var doneManualCount: Int {
         allTodos.filter { $0.isDone }.count
+    }
+
+    private var openManualTodos: [Todo] {
+        allTodos.filter { !$0.isDone }.sorted { lhs, rhs in
+            let l = lhs.sortOrder ?? lhs.createdAt.timeIntervalSince1970
+            let r = rhs.sortOrder ?? rhs.createdAt.timeIntervalSince1970
+            return l > r
+        }
+    }
+
+    private var doneManualTodos: [Todo] {
+        allTodos.filter { $0.isDone }.sorted { $0.createdAt > $1.createdAt }
+    }
+
+    private var doneSection: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("DONE")
+                .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                .kerning(1.3)
+                .foregroundStyle(AppColors.tertiary)
+                .padding(.top, 10)
+            Rectangle().fill(AppColors.tertiary).frame(height: 1)
+            ForEach(doneManualTodos) { todo in
+                TodoRow(todo: todo, services: services)
+                HairlineDivider()
+            }
+        }
     }
 
     private func clearDone() {
@@ -368,28 +390,6 @@ struct TodayDashboardView: View {
         return true
     }
 
-    private var sortedTodos: [Todo] {
-        let open = allTodos.filter { !$0.isDone }.sorted { lhs, rhs in
-            switch (lhs.dueDate, rhs.dueDate) {
-            case let (.some(l), .some(r)): return l < r
-            case (.some, .none): return true
-            case (.none, .some): return false
-            case (.none, .none): return lhs.createdAt > rhs.createdAt
-            }
-        }
-        let done = allTodos.filter { $0.isDone }.sorted { $0.createdAt > $1.createdAt }
-        return open + done
-    }
-
-    private var todoBuckets: [(DueBucket, [Todo])] {
-        let open = allTodos.filter { !$0.isDone }
-        var groups = DueBucket.group(todos: open)
-        let done = allTodos.filter { $0.isDone }
-        if !done.isEmpty {
-            groups.append((DueBucket.done, done.sorted { $0.createdAt > $1.createdAt }))
-        }
-        return groups
-    }
 
     private var glanceGrid: some View {
         let layout = DashboardLayout.shared

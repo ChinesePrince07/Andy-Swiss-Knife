@@ -77,6 +77,7 @@
 		BB4D670A88C4A4C458DC53B1 /* DeepLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35C596E06DEBEE3C8755EE6 /* DeepLinks.swift */; };
 		BEA805C3CCC8CB2B182AE83D /* MealView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A106A618866B97560536365 /* MealView.swift */; };
 		C4C2C05CE3E736696204AAF6 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB90B7ED16E641F907E43170 /* Theme.swift */; };
+		C6BE84B03E3728AEB396D4DB /* ReorderableTodoList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761E7C7A5276036790460B18 /* ReorderableTodoList.swift */; };
 		C7C8FE0BE830A1201AEF0AEC /* EventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 136DCB9AE73DA4324A3F14DF /* EventsView.swift */; };
 		CB7663856201DAC527E545C9 /* PersonalCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7914539FD8CC3CFC11001E19 /* PersonalCalendarView.swift */; };
 		CCF7AFE7DBB40BE619BD40C0 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE29B303DD49919976371BC /* HTTPClient.swift */; };
@@ -163,6 +164,7 @@
 		6F6DED12FF93B8A00E879914 /* DashboardLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardLayout.swift; sourceTree = "<group>"; };
 		700361F6356B9A0A54B91DBD /* DiningParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningParserTests.swift; sourceTree = "<group>"; };
 		74DE5711E91ED38B80461908 /* ics-canvas.ics */ = {isa = PBXFileReference; path = "ics-canvas.ics"; sourceTree = "<group>"; };
+		761E7C7A5276036790460B18 /* ReorderableTodoList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReorderableTodoList.swift; sourceTree = "<group>"; };
 		7914539FD8CC3CFC11001E19 /* PersonalCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalCalendarView.swift; sourceTree = "<group>"; };
 		7ACF293B7A1272759389FBE9 /* SwissKnifeWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwissKnifeWidgets.entitlements; sourceTree = "<group>"; };
 		7B7D1DD1592E151C2F873A7C /* dining-broken.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "dining-broken.html"; sourceTree = "<group>"; };
@@ -309,6 +311,7 @@
 			isa = PBXGroup;
 			children = (
 				7CBE18788CF98EDE503602E4 /* DueGroupSection.swift */,
+				761E7C7A5276036790460B18 /* ReorderableTodoList.swift */,
 				B81CE12C09B1455EB90BA07F /* TodoEditSheet.swift */,
 				8CA4ED3E8FB6B70780EECF42 /* TodoRow.swift */,
 			);
@@ -644,6 +647,7 @@
 				A78E163702C3538167B6CF2F /* PomodoroView.swift in Sources */,
 				46939DF60D01F028D2032318 /* RRuleExpander.swift in Sources */,
 				512FB25DEB74CBBCFC79C31B /* ReminderRow.swift in Sources */,
+				C6BE84B03E3728AEB396D4DB /* ReorderableTodoList.swift in Sources */,
 				F1BD2818783E7EBBEEFB2BFF /* Schedule.swift in Sources */,
 				90ABD8DDB355C7E4105F4B85 /* ScheduleClass.swift in Sources */,
 				0F08FDEC5D8915290F9A1E85 /* ScheduleEditorView.swift in Sources */,

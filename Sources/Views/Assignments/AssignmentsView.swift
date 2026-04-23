@@ -91,7 +91,8 @@ struct AssignmentsView: View {
                     subtitle: bucket.subtitle,
                     isUrgent: bucket.isUrgent,
                     items: todos,
-                    services: services
+                    services: services,
+                    allowReorder: bucket != .done
                 )
             }
         }

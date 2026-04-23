@@ -112,8 +112,6 @@ struct DueGroupSection: View {
     let services: Services
     var allowReorder: Bool = false
 
-    @Environment(\.modelContext) private var modelContext
-
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
@@ -135,38 +133,14 @@ struct DueGroupSection: View {
                 .fill(isUrgent ? AppColors.accent : AppColors.primary)
                 .frame(height: isUrgent ? 2 : 1)
                 .padding(.bottom, 2)
-            ForEach(items) { todo in
-                Group {
-                    if allowReorder {
-                        TodoRow(todo: todo, services: services)
-                            .draggable(todo.id.uuidString)
-                            .dropDestination(for: String.self) { dropped, _ in
-                                handleDrop(droppedIDs: dropped, target: todo)
-                            }
-                    } else {
-                        TodoRow(todo: todo, services: services)
-                    }
+            if allowReorder {
+                ReorderableTodoList(items: items, services: services)
+            } else {
+                ForEach(items) { todo in
+                    TodoRow(todo: todo, services: services)
+                    HairlineDivider()
                 }
-                HairlineDivider()
             }
         }
-    }
-
-    private func handleDrop(droppedIDs: [String], target: Todo) -> Bool {
-        guard let raw = droppedIDs.first, let droppedUUID = UUID(uuidString: raw) else { return false }
-        guard let dropped = items.first(where: { $0.id == droppedUUID }), dropped.id != target.id else { return false }
-        var arr = items
-        arr.removeAll { $0.id == dropped.id }
-        guard let idx = arr.firstIndex(where: { $0.id == target.id }) else { return false }
-        arr.insert(dropped, at: idx)
-        // Newest on top: assign descending sortOrder by new position.
-        let total = arr.count
-        for (i, t) in arr.enumerated() {
-            t.sortOrder = Double(total - i)
-        }
-        try? modelContext.save()
-        SnapshotStore.publishTodos(from: modelContext)
-        WidgetReloader.reloadTodoWidgets()
-        return true
     }
 }

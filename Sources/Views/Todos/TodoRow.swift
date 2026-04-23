@@ -71,15 +71,6 @@ struct TodoRow: View {
                         .foregroundStyle(status.isOverdue ? AppColors.accent : AppColors.secondary)
                 }
                 .buttonStyle(.plain)
-            } else if todo.source == .manual {
-                Button {
-                    showingEdit = true
-                } label: {
-                    Image(systemName: "calendar.badge.plus")
-                        .font(.system(size: 13))
-                        .foregroundStyle(AppColors.tertiary)
-                }
-                .buttonStyle(.plain)
             }
 
             if todo.source == .manual {
