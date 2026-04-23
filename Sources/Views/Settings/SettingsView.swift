@@ -31,6 +31,7 @@ struct SettingsView: View {
                     layoutSection
                     canvasSection(url: $userSettings.canvasFeedURL)
                     athleticsSection
+                    apExamsSection
                     eventsSection
                     syncSection
                     permissionsSection
@@ -125,6 +126,16 @@ struct SettingsView: View {
             }
         } footer: {
             "Pick which Suffield teams sync into the Athletics card."
+        }
+    }
+
+    private var apExamsSection: some View {
+        settingsBlock(title: "AP Exams") {
+            NavigationLink { APExamsPickerView() } label: {
+                brutalRow("Pick your APs", value: "\(APExamSubscriptions.enabledIDs.count) on")
+            }
+        } footer: {
+            "2026 exam schedule. Selected exams show up on the AP Exams card."
         }
     }
 

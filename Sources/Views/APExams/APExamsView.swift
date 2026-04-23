@@ -1,18 +1,8 @@
 import SwiftUI
 
+/// Read-only list of AP exams the user is taking. Picker lives in Settings.
 struct APExamsView: View {
-    @State private var subscribed: Set<String> = APExamSubscriptions.enabledIDs
-
-    private var grouped: [(Date, [APExam])] {
-        let cal = Calendar.current
-        let map = Dictionary(grouping: APExamCatalog.exams) { cal.startOfDay(for: $0.date) }
-        return map.keys.sorted().map { key in
-            (key, (map[key] ?? []).sorted { lhs, rhs in
-                if lhs.date != rhs.date { return lhs.date < rhs.date }
-                return lhs.name < rhs.name
-            })
-        }
-    }
+    private var subscribed: [APExam] { APExamSubscriptions.subscribedExams }
 
     var body: some View {
         ZStack {
@@ -20,8 +10,13 @@ struct APExamsView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
                     header
-                    ForEach(grouped, id: \.0) { day, exams in
-                        daySection(day: day, exams: exams)
+                    if subscribed.isEmpty {
+                        emptyState
+                    } else {
+                        ForEach(subscribed) { exam in
+                            examRow(exam)
+                            HairlineDivider()
+                        }
                     }
                 }
                 .padding(.horizontal, 20)
@@ -35,100 +30,76 @@ struct APExamsView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("AP EXAMS · 2026")
+            Text("YOUR AP EXAMS")
                 .font(.system(size: 22, weight: .heavy, design: .monospaced))
                 .kerning(1.5)
                 .foregroundStyle(AppColors.primary)
-            Text("Tick the exams you're taking.")
+            Text("Edit selection in Settings → AP Exams.")
                 .font(AppType.caption)
                 .foregroundStyle(AppColors.tertiary)
-            if !subscribed.isEmpty {
-                Rectangle().fill(AppColors.primary).frame(height: 2).padding(.top, 4)
-                subscribedSummary
-            }
+            Rectangle().fill(AppColors.primary).frame(height: 2).padding(.top, 4)
         }
     }
 
-    private var subscribedSummary: some View {
-        HStack {
-            Text("\(subscribed.count) SELECTED")
-                .font(.system(size: 11, weight: .heavy, design: .monospaced))
-                .kerning(1.3)
-                .foregroundStyle(AppColors.primary)
-            Spacer()
-            Button { clearAll() } label: {
-                Text("CLEAR")
-                    .font(.system(size: 10, weight: .heavy, design: .monospaced))
-                    .kerning(1.1)
-                    .foregroundStyle(AppColors.accent)
-                    .padding(.horizontal, 8).padding(.vertical, 4)
-                    .overlay(Rectangle().strokeBorder(AppColors.accent, lineWidth: 1.5))
-            }
-            .buttonStyle(.plain)
+    private var emptyState: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("No exams selected.")
+                .font(AppType.body)
+                .foregroundStyle(AppColors.secondary)
+            Text("Pick yours in Settings → AP Exams.")
+                .font(AppType.caption)
+                .foregroundStyle(AppColors.tertiary)
         }
-    }
-
-    private func daySection(day: Date, exams: [APExam]) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(dayHeader(day).uppercased())
-                .font(.system(size: 12, weight: .heavy, design: .monospaced))
-                .kerning(1.3)
-                .foregroundStyle(AppColors.primary)
-            Rectangle().fill(AppColors.primary).frame(height: 1)
-            ForEach(exams) { exam in
-                examRow(exam)
-                HairlineDivider()
-            }
-        }
+        .padding(.top, 20)
     }
 
     private func examRow(_ exam: APExam) -> some View {
-        let on = subscribed.contains(exam.id)
-        return Button {
-            toggle(exam, on: !on)
-        } label: {
-            HStack(spacing: 12) {
-                ZStack {
-                    Rectangle()
-                        .strokeBorder(AppColors.primary, lineWidth: 2)
-                        .frame(width: 22, height: 22)
-                    if on {
-                        Rectangle()
-                            .fill(AppColors.primary)
-                            .frame(width: 14, height: 14)
-                    }
-                }
-                VStack(alignment: .leading, spacing: 1) {
-                    Text(exam.name)
-                        .font(AppType.body)
-                        .foregroundStyle(AppColors.primary)
-                        .multilineTextAlignment(.leading)
+        HStack(alignment: .firstTextBaseline, spacing: 12) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(exam.name)
+                    .font(AppType.bodyMedium)
+                    .foregroundStyle(AppColors.primary)
+                HStack(spacing: 6) {
+                    Text(dayLabel(exam.date))
+                        .font(.system(size: 11, design: .monospaced))
+                        .foregroundStyle(AppColors.secondary)
+                    Text("·")
+                        .foregroundStyle(AppColors.tertiary)
                     Text(exam.session.label)
                         .font(.system(size: 10, weight: .heavy, design: .monospaced))
                         .kerning(1.1)
                         .foregroundStyle(AppColors.tertiary)
                 }
-                Spacer()
             }
-            .padding(.vertical, 8)
-            .contentShape(Rectangle())
+            Spacer()
+            Text(countdown(exam.date).uppercased())
+                .font(.system(size: 10, weight: .heavy, design: .monospaced))
+                .kerning(1.1)
+                .foregroundStyle(countdownColor(exam.date))
         }
-        .buttonStyle(.plain)
+        .padding(.vertical, 8)
     }
 
-    private func dayHeader(_ d: Date) -> String {
+    private func dayLabel(_ d: Date) -> String {
         let df = DateFormatter()
         df.dateFormat = "EEE MMM d"
         return df.string(from: d)
     }
 
-    private func toggle(_ exam: APExam, on: Bool) {
-        if on { subscribed.insert(exam.id) } else { subscribed.remove(exam.id) }
-        APExamSubscriptions.set(exam.id, enabled: on)
+    private func countdown(_ d: Date) -> String {
+        let cal = Calendar.current
+        let days = cal.dateComponents([.day], from: cal.startOfDay(for: .now), to: cal.startOfDay(for: d)).day ?? 0
+        if days < 0 { return "Past" }
+        if days == 0 { return "Today" }
+        if days == 1 { return "Tomorrow" }
+        return "In \(days)d"
     }
 
-    private func clearAll() {
-        for id in subscribed { APExamSubscriptions.set(id, enabled: false) }
-        subscribed.removeAll()
+    private func countdownColor(_ d: Date) -> Color {
+        let cal = Calendar.current
+        let days = cal.dateComponents([.day], from: cal.startOfDay(for: .now), to: cal.startOfDay(for: d)).day ?? 0
+        if days < 0 { return AppColors.tertiary }
+        if days <= 7 { return AppColors.accent }
+        return AppColors.secondary
     }
 }

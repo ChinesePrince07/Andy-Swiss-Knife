@@ -17,6 +17,7 @@
 		0F85E6C82DD5059C5099F8F0 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E486C027EFB8572A128000A /* Todo.swift */; };
 		150E552F1886255256FE86DA /* PomodoroTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC26334910ED03B763FD900 /* PomodoroTimer.swift */; };
 		19F46B57038614191321347A /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6F0ACE8F87DDCC97438137 /* AppModelContainer.swift */; };
+		1A76E23F2528D67F6043D105 /* APExamsPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4EB5DFBDA09ADDEBB886A0 /* APExamsPickerView.swift */; };
 		1C831A5BE4D2FD88A34FADBA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A4C5BA3B543E15F98EB3514 /* Assets.xcassets */; };
 		1F6A060549E64A8426D5C4F2 /* dining-normal.html in Resources */ = {isa = PBXBuildFile; fileRef = CB7D2D6E1D577D8FEF8CD8DA /* dining-normal.html */; };
 		20D162DDF5FAD5F0E6F02789 /* CachedMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9714F48D41526FB4B96674D /* CachedMenu.swift */; };
@@ -184,6 +185,7 @@
 		8CA4ED3E8FB6B70780EECF42 /* TodoRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoRow.swift; sourceTree = "<group>"; };
 		972D7E648764DEFAD68BBF71 /* AndySwissKnifeTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = AndySwissKnifeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A377EBC72BD04D506FF4E8D /* DTOs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTOs.swift; sourceTree = "<group>"; };
+		9D4EB5DFBDA09ADDEBB886A0 /* APExamsPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APExamsPickerView.swift; sourceTree = "<group>"; };
 		9DE29B303DD49919976371BC /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 		A3D320E06F4810FBD48A3F23 /* WeatherService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherService.swift; sourceTree = "<group>"; };
 		A88ED0CE044EE770247D3373 /* SwissKnifeWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwissKnifeWidgets.swift; sourceTree = "<group>"; };
@@ -450,6 +452,7 @@
 		D31AE3AB0610EC8CD4FF0B1D /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				9D4EB5DFBDA09ADDEBB886A0 /* APExamsPickerView.swift */,
 				20ACB5F59009C12DE97FEE87 /* AthleticsPickerView.swift */,
 				62067695A52BA871E230D768 /* CalendarImportView.swift */,
 				EDFA3F8E82E3CDE5CCD03611 /* DashboardLayoutEditor.swift */,
@@ -627,6 +630,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FE8EF93EACE5353602921849 /* APExams.swift in Sources */,
+				1A76E23F2528D67F6043D105 /* APExamsPickerView.swift in Sources */,
 				5F4070DF6619FB2C8C288153 /* APExamsView.swift in Sources */,
 				19F46B57038614191321347A /* AppModelContainer.swift in Sources */,
 				328FA42CAE93A0C4E3E3D304 /* AssignmentsSyncService.swift in Sources */,
