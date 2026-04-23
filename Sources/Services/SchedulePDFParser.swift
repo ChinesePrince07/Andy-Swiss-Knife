@@ -30,8 +30,11 @@ enum SchedulePDFParser {
         await withCheckedContinuation { continuation in
             let request = VNRecognizeTextRequest { request, _ in
                 let observations = request.results as? [VNRecognizedTextObservation] ?? []
-                let lines = observations.compactMap { $0.topCandidates(1).first?.string }
-                continuation.resume(returning: lines.joined(separator: "\n"))
+                let rows = groupIntoRows(observations)
+                let text = rows.map { row in
+                    row.compactMap { $0.topCandidates(1).first?.string }.joined(separator: " ")
+                }.joined(separator: "\n")
+                continuation.resume(returning: text)
             }
             request.recognitionLevel = .accurate
             request.usesLanguageCorrection = true
@@ -40,41 +43,72 @@ enum SchedulePDFParser {
         }
     }
 
+    private static func groupIntoRows(_ observations: [VNRecognizedTextObservation]) -> [[VNRecognizedTextObservation]] {
+        guard !observations.isEmpty else { return [] }
+        let avgHeight = observations.map { $0.boundingBox.height }.reduce(0, +) / CGFloat(observations.count)
+        let threshold = avgHeight * 0.6
+        // Vision y-axis: 0 = bottom, 1 = top. Sort descending = top-of-page first.
+        let sorted = observations.sorted { $0.boundingBox.midY > $1.boundingBox.midY }
+        var rows: [[VNRecognizedTextObservation]] = []
+        var currentRow: [VNRecognizedTextObservation] = [sorted[0]]
+        var anchorY = sorted[0].boundingBox.midY
+        for i in 1..<sorted.count {
+            let midY = sorted[i].boundingBox.midY
+            if abs(midY - anchorY) < threshold {
+                currentRow.append(sorted[i])
+            } else {
+                rows.append(currentRow.sorted { $0.boundingBox.minX < $1.boundingBox.minX })
+                currentRow = [sorted[i]]
+                anchorY = midY
+            }
+        }
+        rows.append(currentRow.sorted { $0.boundingBox.minX < $1.boundingBox.minX })
+        return rows
+    }
+
     static func parseText(_ text: String) -> [ParsedCourse] {
         let lines = text.components(separatedBy: "\n").map { $0.trimmingCharacters(in: .whitespaces) }
-        guard let headerIdx = lines.firstIndex(where: {
-            $0.contains("Period") && $0.contains("Course") && $0.contains("Teacher")
-        }) else { return [] }
-
+        let orderedPeriods = ["A","B","C","D","E","F","G"]
+        let validPeriods = Set(orderedPeriods)
         var results: [ParsedCourse] = []
-        let validPeriods: Set<String> = ["A","B","C","D","E","F","G"]
-        let termLetters: Set<Character> = ["F","W","S"]
+        var nextPeriodIdx = 0
 
-        for i in (headerIdx + 1)..<lines.count {
-            let line = lines[i]
-            guard let first = line.first, validPeriods.contains(String(first)) else {
-                if !results.isEmpty { break }
-                continue
-            }
+        for line in lines {
             let words = line.split(separator: " ").map(String.init)
             guard words.count >= 4 else { continue }
+            guard nextPeriodIdx < orderedPeriods.count else { break }
 
-            let period = words[0]
-            guard validPeriods.contains(period) else { continue }
+            var period: String
+            var codeIdx: Int
 
-            // Parse from the right: teacher (last 2 words), then terms (F/W/S), then name + room.
+            if words[0].count == 1, validPeriods.contains(words[0]) {
+                period = words[0]
+                codeIdx = 1
+            } else if words[0].count >= 3, words[0].allSatisfy({ $0.isLetter || $0.isNumber }) {
+                period = orderedPeriods[nextPeriodIdx]
+                codeIdx = 0
+            } else {
+                continue
+            }
+
+            guard codeIdx < words.count else { continue }
+            let code = words[codeIdx]
+            guard code.count >= 3, code.allSatisfy({ $0.isLetter || $0.isNumber }) else { continue }
+
+            // From right: teacher (last 2 words) → terms (FWS/F/W/S combos) → name [+ room].
             var idx = words.count - 1
+            guard idx >= codeIdx + 2 else { continue }
             let teacherLast = words[idx]; idx -= 1
             let teacherFirst = words[idx]; idx -= 1
             let teacher = "\(teacherFirst) \(teacherLast)"
 
-            // Scan backwards past term indicators (F, W, S)
-            while idx >= 2 && words[idx].count == 1 && termLetters.contains(words[idx].first!) {
+            while idx >= codeIdx + 1 && words[idx].allSatisfy({ "FWS".contains($0) }) && !words[idx].isEmpty {
                 idx -= 1
             }
 
-            // words[1] = course code. words[2...idx] = course name [+ room]
-            let bodyWords = Array(words[2...idx])
+            let startBody = codeIdx + 1
+            guard idx >= startBody else { continue }
+            let bodyWords = Array(words[startBody...idx])
             guard !bodyWords.isEmpty else { continue }
 
             var room: String? = nil
@@ -91,12 +125,13 @@ enum SchedulePDFParser {
             let name = nameWords.joined(separator: " ")
             guard !name.isEmpty else { continue }
 
-            results.append(ParsedCourse(
-                periodLetter: period,
-                name: name,
-                room: room,
-                teacher: teacher
-            ))
+            if let pIdx = orderedPeriods.firstIndex(of: period), pIdx >= nextPeriodIdx {
+                nextPeriodIdx = pIdx + 1
+            } else {
+                nextPeriodIdx += 1
+            }
+
+            results.append(ParsedCourse(periodLetter: period, name: name, room: room, teacher: teacher))
         }
         return results
     }
