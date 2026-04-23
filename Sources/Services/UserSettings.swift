@@ -18,7 +18,19 @@ final class UserSettings {
 
     private init() {
         self.displayName = UserDefaults.standard.string(forKey: Self.nameKey) ?? "Andy"
-        self.canvasFeedURL = UserDefaults.standard.string(forKey: Self.canvasKey) ?? ""
+        let stored = UserDefaults.standard.string(forKey: Self.canvasKey)
+        let seededKey = "user.canvasFeedURL.seeded"
+        let didSeed = UserDefaults.standard.bool(forKey: seededKey)
+        if let stored, !stored.isEmpty {
+            self.canvasFeedURL = stored
+        } else if !didSeed {
+            let seed = Secrets.canvasFeedURL.trimmingCharacters(in: .whitespacesAndNewlines)
+            self.canvasFeedURL = seed
+            UserDefaults.standard.set(seed, forKey: Self.canvasKey)
+            UserDefaults.standard.set(true, forKey: seededKey)
+        } else {
+            self.canvasFeedURL = ""
+        }
     }
 
     func greeting(for date: Date = .now) -> String {
