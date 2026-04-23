@@ -3,6 +3,8 @@ import SwiftData
 
 @Model
 final class CachedEvent {
+    // Stored as "<source>:<uid>" to keep globally unique across overlapping
+    // feeds (e.g., two athletic teams sharing a joint event).
     @Attribute(.unique) var id: String
     var title: String
     var start: Date

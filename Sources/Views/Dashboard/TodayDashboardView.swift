@@ -157,7 +157,7 @@ struct TodayDashboardView: View {
                         isUrgent: bucket.isUrgent,
                         items: todos,
                         services: services,
-                        allowReorder: bucket == .someday
+                        allowReorder: bucket != .done
                     )
                 }
             }

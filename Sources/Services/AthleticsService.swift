@@ -79,13 +79,20 @@ final class AthleticsService {
             predicate: #Predicate { $0.source == sourceKey }
         )
         let existing = (try? context.fetch(descriptor)) ?? []
-        let existingByID = Dictionary(uniqueKeysWithValues: existing.map { ($0.id, $0) })
+        // Key by raw UID for lookup; stored id carries source prefix.
+        var existingByUID: [String: CachedEvent] = [:]
+        for row in existing {
+            let uid = row.id.hasPrefix(sourceKey + ":") ? String(row.id.dropFirst(sourceKey.count + 1)) : row.id
+            existingByUID[uid] = row
+        }
 
         var keep = Set<String>()
         var added = 0
         for e in expanded {
             keep.insert(e.uid)
-            if let row = existingByID[e.uid] {
+            let storedID = "\(sourceKey):\(e.uid)"
+            if let row = existingByUID[e.uid] {
+                row.id = storedID  // normalize legacy rows
                 row.title = e.summary
                 row.start = e.start
                 row.end = e.end
@@ -93,7 +100,7 @@ final class AthleticsService {
                 row.calendarTitle = team.displayName
             } else {
                 context.insert(CachedEvent(
-                    id: e.uid,
+                    id: storedID,
                     title: e.summary,
                     start: e.start,
                     end: e.end,
@@ -104,7 +111,7 @@ final class AthleticsService {
                 added += 1
             }
         }
-        for (id, row) in existingByID where !keep.contains(id) || row.end < windowStart {
+        for (uid, row) in existingByUID where !keep.contains(uid) || row.end < windowStart {
             context.delete(row)
         }
         try? context.save()

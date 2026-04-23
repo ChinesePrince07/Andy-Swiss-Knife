@@ -86,22 +86,17 @@ enum DueBucket: Hashable {
         }
         let sortedKeys = map.keys.sorted { $0.order < $1.order }
         return sortedKeys.map { key in
-            let raw = map[key] ?? []
-            let items: [Todo]
-            if case .someday = key {
-                items = raw.sorted { lhs, rhs in
-                    let l = lhs.sortOrder ?? lhs.createdAt.timeIntervalSince1970
-                    let r = rhs.sortOrder ?? rhs.createdAt.timeIntervalSince1970
-                    return l > r
+            // Within each bucket: user-set sortOrder wins (higher = top).
+            // Fallback to due-date ascending then createdAt descending.
+            let items = (map[key] ?? []).sorted { lhs, rhs in
+                let lOrder = lhs.sortOrder
+                let rOrder = rhs.sortOrder
+                if lOrder != nil || rOrder != nil {
+                    return (lOrder ?? -.infinity) > (rOrder ?? -.infinity)
                 }
-            } else {
-                items = raw.sorted { lhs, rhs in
-                    switch (lhs.dueDate, rhs.dueDate) {
-                    case let (.some(l), .some(r)): return l < r
-                    case (.some, .none): return true
-                    case (.none, .some): return false
-                    default: return lhs.createdAt > rhs.createdAt
-                    }
+                switch (lhs.dueDate, rhs.dueDate) {
+                case let (.some(l), .some(r)) where l != r: return l < r
+                default: return lhs.createdAt > rhs.createdAt
                 }
             }
             return (key, items)
