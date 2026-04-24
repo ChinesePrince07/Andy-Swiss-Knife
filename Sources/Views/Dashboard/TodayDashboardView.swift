@@ -430,7 +430,7 @@ struct TodayDashboardView: View {
 
     private var glanceGrid: some View {
         let active = draggingCard == nil ? DashboardLayout.shared.active : workingActive
-        return VStack(spacing: 4) {
+        return LazyVGrid(columns: [GridItem(.flexible(), spacing: 6), GridItem(.flexible(), spacing: 6)], spacing: 6) {
             ForEach(active, id: \.self) { card in
                 gridCell(for: card)
             }
@@ -869,27 +869,29 @@ struct GlanceCard: View {
 
     var body: some View {
         _ = themeManager.current
-        return HStack(spacing: 10) {
+        return VStack(alignment: .leading, spacing: 2) {
             Text(label.uppercased())
                 .font(.system(size: 9, weight: .heavy, design: .monospaced))
                 .kerning(1.1)
                 .foregroundStyle(AppColors.tertiary)
-                .frame(width: 80, alignment: .leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
             Text(primary)
                 .font(.system(size: 14, weight: .medium, design: .monospaced))
                 .foregroundStyle(error ? AppColors.accent : AppColors.primary)
-                .lineLimit(1)
+                .lineLimit(2)
                 .truncationMode(.tail)
-            Spacer()
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
             Text(secondary)
                 .font(.system(size: 10, design: .monospaced))
                 .foregroundStyle(AppColors.secondary)
                 .lineLimit(1)
                 .truncationMode(.tail)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .frame(maxWidth: .infinity)
-        .padding(.horizontal, 10)
-        .padding(.vertical, 10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(9)
         .overlay(
             Rectangle()
                 .strokeBorder(AppColors.primary, lineWidth: 1.5)
