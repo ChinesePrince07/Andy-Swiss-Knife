@@ -9,6 +9,7 @@ struct ScheduleEditorView: View {
     @State private var photoItem: PhotosPickerItem?
     @State private var importResult: String?
     @State private var isImporting = false
+    @State private var refreshKey = 0
 
     var body: some View {
         ScrollView {
@@ -57,6 +58,7 @@ struct ScheduleEditorView: View {
                             upsert(period: period, name: name, room: room, teacher: teacher)
                         }
                     )
+                    .id("\(period.letter)-\(refreshKey)")
                 }
 
                 Button {
@@ -102,6 +104,7 @@ struct ScheduleEditorView: View {
             upsert(period: period, name: course.name, room: course.room, teacher: course.teacher)
         }
         importResult = "\(courses.count) courses imported"
+        refreshKey += 1
     }
 
     private func classes(for periodKey: String) -> [ScheduleClass] {
@@ -144,6 +147,7 @@ struct ScheduleEditorView: View {
             }
         }
         try? modelContext.save()
+        refreshKey += 1
     }
 
     /// For non-reset seed, reuse any existing name/room/teacher from defaultSchedule
