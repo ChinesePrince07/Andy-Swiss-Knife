@@ -32,6 +32,7 @@ struct SettingsView: View {
                     canvasSection(url: $userSettings.canvasFeedURL)
                     athleticsSection
                     apExamsSection
+                    countdownSection
                     eventsSection
                     syncSection
                     permissionsSection
@@ -124,6 +125,16 @@ struct SettingsView: View {
             }
         } footer: {
             "Pick which Suffield teams sync into the Athletics card."
+        }
+    }
+
+    private var countdownSection: some View {
+        settingsBlock(title: "Countdown") {
+            NavigationLink { CountdownPickerView() } label: {
+                brutalRow("Pick events", value: "\(CountdownSubscriptions.selectedIDs.count) on")
+            }
+        } footer: {
+            "Count down to school events like Prom, Graduation, etc."
         }
     }
 

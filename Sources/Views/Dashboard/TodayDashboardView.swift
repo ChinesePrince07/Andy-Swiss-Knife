@@ -574,6 +574,8 @@ struct TodayDashboardView: View {
             GlanceCard(label: "Athletics", primary: athleticsPrimary, secondary: athleticsSecondary)
         case .apExams:
             GlanceCard(label: "AP Exams", primary: apExamsPrimary, secondary: apExamsSecondary)
+        case .countdown:
+            GlanceCard(label: "Countdown", primary: countdownPrimary, secondary: countdownSecondary)
         }
     }
 
@@ -587,7 +589,24 @@ struct TodayDashboardView: View {
         case .events:    EventsView(services: services)
         case .athletics: AthleticsView(services: services)
         case .apExams:   APExamsView()
+        case .countdown: CountdownView()
         }
+    }
+
+    private var countdownPrimary: String {
+        guard let next = CountdownSubscriptions.nextUpcoming(from: modelContext) else {
+            return CountdownSubscriptions.selectedIDs.isEmpty ? "Tap to pick" : "All past"
+        }
+        return next.title
+    }
+
+    private var countdownSecondary: String {
+        guard let next = CountdownSubscriptions.nextUpcoming(from: modelContext) else { return "—" }
+        let cal = Calendar.current
+        let days = cal.dateComponents([.day], from: cal.startOfDay(for: .now), to: cal.startOfDay(for: next.start)).day ?? 0
+        if days == 0 { return "Today" }
+        if days == 1 { return "Tomorrow" }
+        return "\(days) days"
     }
 
     private var apExamsPrimary: String {

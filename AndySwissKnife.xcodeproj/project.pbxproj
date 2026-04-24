@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		016F716E22191914C6DB98DC /* CachedMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9714F48D41526FB4B96674D /* CachedMenu.swift */; };
 		0282CD4C71E8D25589883461 /* SharedStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 019E33B5FB0E2689102AA4AB /* SharedStorage.swift */; };
+		05155057F0738AC3350C304F /* CountdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 697124B77982B191DD489906 /* CountdownView.swift */; };
 		07F399E92345871AAC1232E8 /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3D6B91A2E210F4B3FD23E0 /* Style.swift */; };
 		09A3DE475699BF9A005ABB06 /* PersonalEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330E9BB2B8C13CDA343D7295 /* PersonalEvent.swift */; };
 		0C342BC05850A679EAAE1C9D /* ReminderWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BDE555AA06812977F66D5CF /* ReminderWidget.swift */; };
@@ -47,6 +48,7 @@
 		5C77A262615C2264337A8668 /* DashboardLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6DED12FF93B8A00E879914 /* DashboardLayout.swift */; };
 		5DB7B7495560BF255A0D44FF /* CalendarImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8914BC4C0FABA3E1577AEDB0 /* CalendarImporter.swift */; };
 		5F4070DF6619FB2C8C288153 /* APExamsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C558BAA9BE4F6C9ACD897743 /* APExamsView.swift */; };
+		5FBC21A3C10965B9C5F05AB0 /* CountdownPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DFC8FAF85B9228D992A4F0 /* CountdownPickerView.swift */; };
 		6138315DA6DE72E429B50E33 /* PersonalEventEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E5E6B2240DDDDD99C4D10E /* PersonalEventEditSheet.swift */; };
 		627AB891FC0FAF5E485605F5 /* SwissKnifeWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A88ED0CE044EE770247D3373 /* SwissKnifeWidgets.swift */; };
 		62FB711B5148CE44AF4ACE8A /* ICSParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC56A94C67FB83CEF05AD3DF /* ICSParser.swift */; };
@@ -70,6 +72,7 @@
 		95558A4BEC52FC6E042306AA /* EventsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05214FF5A0D20A717DC0B5F3 /* EventsService.swift */; };
 		9649F903A9FA482FD030BAD6 /* ics-canvas.ics in Resources */ = {isa = PBXBuildFile; fileRef = 74DE5711E91ED38B80461908 /* ics-canvas.ics */; };
 		9B87CB22ECC0839242385559 /* ClassesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB8978F63D082125B6793831 /* ClassesView.swift */; };
+		A69A9D7BDEEAC2AE2DF4F61A /* CountdownSubscriptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 747B2858036C136AEB31DDC6 /* CountdownSubscriptions.swift */; };
 		A78E163702C3538167B6CF2F /* PomodoroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E55C4BDF127A9C0CEF67ED /* PomodoroView.swift */; };
 		B020D56A7AB742D316572B94 /* DiningService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1573D420C3E8959C3983BAF0 /* DiningService.swift */; };
 		B152DA41E6F6927EB0624FFC /* CalendarImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62067695A52BA871E230D768 /* CalendarImportView.swift */; };
@@ -163,12 +166,14 @@
 		5E695050520C0B1AE0174397 /* AndySwissKnife.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AndySwissKnife.entitlements; sourceTree = "<group>"; };
 		5EE826936B7B41BFA75FBF71 /* TodayDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayDashboardView.swift; sourceTree = "<group>"; };
 		62067695A52BA871E230D768 /* CalendarImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarImportView.swift; sourceTree = "<group>"; };
+		697124B77982B191DD489906 /* CountdownView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownView.swift; sourceTree = "<group>"; };
 		6A4C5BA3B543E15F98EB3514 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6AAAACD8E32DE6F1D723E4C7 /* SchedulePDFParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulePDFParser.swift; sourceTree = "<group>"; };
 		6BDE555AA06812977F66D5CF /* ReminderWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderWidget.swift; sourceTree = "<group>"; };
 		6C72A38932D974ACFFE72627 /* TodoSweeper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoSweeper.swift; sourceTree = "<group>"; };
 		6F6DED12FF93B8A00E879914 /* DashboardLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardLayout.swift; sourceTree = "<group>"; };
 		700361F6356B9A0A54B91DBD /* DiningParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningParserTests.swift; sourceTree = "<group>"; };
+		747B2858036C136AEB31DDC6 /* CountdownSubscriptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownSubscriptions.swift; sourceTree = "<group>"; };
 		74DE5711E91ED38B80461908 /* ics-canvas.ics */ = {isa = PBXFileReference; path = "ics-canvas.ics"; sourceTree = "<group>"; };
 		761E7C7A5276036790460B18 /* ReorderableTodoList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReorderableTodoList.swift; sourceTree = "<group>"; };
 		7914539FD8CC3CFC11001E19 /* PersonalCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalCalendarView.swift; sourceTree = "<group>"; };
@@ -221,6 +226,7 @@
 		EDFA3F8E82E3CDE5CCD03611 /* DashboardLayoutEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardLayoutEditor.swift; sourceTree = "<group>"; };
 		EEFF8210D8128B55B70DE84F /* CachedEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedEvent.swift; sourceTree = "<group>"; };
 		EF46299132CD55E2AE1B3204 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
+		F3DFC8FAF85B9228D992A4F0 /* CountdownPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownPickerView.swift; sourceTree = "<group>"; };
 		FC56A94C67FB83CEF05AD3DF /* ICSParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICSParser.swift; sourceTree = "<group>"; };
 		FCAF5A288944379AC9A965BC /* AssignmentsSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsSyncService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -244,6 +250,7 @@
 				6E6D2E0857486F374ECE0C8D /* Athletics */,
 				EF242A95A435DAF62BB2717E /* Calendar */,
 				6EAF4C86391B2C81C0595B62 /* Classes */,
+				4F21159ECFAD1D8A81AA57ED /* Countdown */,
 				05D0AAD2A688DB9864EBB0CB /* Dashboard */,
 				C1EB1D48B4BAF7AD7270197A /* Events */,
 				49CA173B660F28656F7BA3DA /* Meal */,
@@ -315,6 +322,14 @@
 				0A106A618866B97560536365 /* MealView.swift */,
 			);
 			path = Meal;
+			sourceTree = "<group>";
+		};
+		4F21159ECFAD1D8A81AA57ED /* Countdown */ = {
+			isa = PBXGroup;
+			children = (
+				697124B77982B191DD489906 /* CountdownView.swift */,
+			);
+			path = Countdown;
 			sourceTree = "<group>";
 		};
 		534C259B3418B0E0A2DB1C26 /* Todos */ = {
@@ -413,6 +428,7 @@
 				EEFF8210D8128B55B70DE84F /* CachedEvent.swift */,
 				B9714F48D41526FB4B96674D /* CachedMenu.swift */,
 				45D0EFCF6D41836BAEF58433 /* ClassPeriod.swift */,
+				747B2858036C136AEB31DDC6 /* CountdownSubscriptions.swift */,
 				9A377EBC72BD04D506FF4E8D /* DTOs.swift */,
 				330E9BB2B8C13CDA343D7295 /* PersonalEvent.swift */,
 				E2F1368DFE43C2F590808B3A /* ScheduleClass.swift */,
@@ -458,6 +474,7 @@
 				9D4EB5DFBDA09ADDEBB886A0 /* APExamsPickerView.swift */,
 				20ACB5F59009C12DE97FEE87 /* AthleticsPickerView.swift */,
 				62067695A52BA871E230D768 /* CalendarImportView.swift */,
+				F3DFC8FAF85B9228D992A4F0 /* CountdownPickerView.swift */,
 				EDFA3F8E82E3CDE5CCD03611 /* DashboardLayoutEditor.swift */,
 				7DE3F4200F1459F90DAD33F1 /* ScheduleEditorView.swift */,
 				8C4F36C6B48E2FB444CF3DE0 /* SettingsView.swift */,
@@ -648,6 +665,9 @@
 				F2763BDE5CFAE679FA1E99B6 /* ClassPeriod.swift in Sources */,
 				9B87CB22ECC0839242385559 /* ClassesView.swift in Sources */,
 				F68FBB533C1E845412A32FDC /* Config.swift in Sources */,
+				5FBC21A3C10965B9C5F05AB0 /* CountdownPickerView.swift in Sources */,
+				A69A9D7BDEEAC2AE2DF4F61A /* CountdownSubscriptions.swift in Sources */,
+				05155057F0738AC3350C304F /* CountdownView.swift in Sources */,
 				DC8F742DC5FE8163BAE9AFBF /* DTOs.swift in Sources */,
 				5C77A262615C2264337A8668 /* DashboardLayout.swift in Sources */,
 				723E4E283E614F0AFFE5DC89 /* DashboardLayoutEditor.swift in Sources */,
