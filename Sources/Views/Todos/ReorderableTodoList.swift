@@ -32,6 +32,7 @@ struct ReorderableTodoList: View {
                 rowCell(todo)
             }
         }
+        .frame(maxWidth: .infinity)
         .coordinateSpace(name: coordSpace)
         .onPreferenceChange(TodoRowFramesKey.self) { liveFrames = $0 }
         .animation(.spring(response: 0.28, dampingFraction: 0.78), value: displayItems.map(\.id))
@@ -42,8 +43,10 @@ struct ReorderableTodoList: View {
         let isDragging = draggingID == todo.id
         VStack(spacing: 0) {
             TodoRow(todo: todo, services: services)
+                .frame(maxWidth: .infinity, alignment: .leading)
             HairlineDivider()
         }
+        .frame(maxWidth: .infinity)
         .background(
             GeometryReader { geo in
                 Color.clear.preference(
