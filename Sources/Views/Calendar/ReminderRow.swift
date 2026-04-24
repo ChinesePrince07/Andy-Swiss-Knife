@@ -10,42 +10,37 @@ struct ReminderRow: View {
 
     @Environment(\.modelContext) private var modelContext
     @State private var titleDraft: String = ""
-    @State private var notesDraft: String = ""
     @State private var datePickerShown = false
     @FocusState private var titleFocused: Bool
-    @FocusState private var notesFocused: Bool
 
     var body: some View {
-        HStack(alignment: .firstTextBaseline, spacing: 10) {
-            Text(dateLabel)
-                .font(.system(size: 11, design: .monospaced))
-                .foregroundStyle(AppColors.secondary)
-                .frame(width: 96, alignment: .leading)
-                .onTapGesture { onOpen() }
-
-            VStack(alignment: .leading, spacing: 2) {
-                TextField("", text: $titleDraft)
-                    .font(AppType.bodyMedium)
-                    .foregroundStyle(AppColors.primary)
-                    .focused($titleFocused)
-                    .submitLabel(.done)
-                    .onSubmit {
-                        commitTitle()
-                        titleFocused = false
-                    }
-                    .onChange(of: titleFocused) { _, focused in
-                        if !focused { commitTitle() }
-                    }
-                TextField("", text: $notesDraft, prompt: Text("Add note…").foregroundColor(AppColors.tertiary), axis: .vertical)
-                    .font(AppType.caption)
+        HStack(alignment: .top, spacing: 10) {
+            VStack(alignment: .leading, spacing: 1) {
+                Text(dateLabel)
+                    .font(.system(size: 11, design: .monospaced))
                     .foregroundStyle(AppColors.secondary)
-                    .focused($notesFocused)
-                    .lineLimit(1...3)
-                    .submitLabel(.done)
-                    .onChange(of: notesFocused) { _, focused in
-                        if !focused { commitNotes() }
-                    }
+                if !event.isAllDay {
+                    Text(timeLabel)
+                        .font(.system(size: 10, weight: .heavy, design: .monospaced))
+                        .kerning(0.8)
+                        .foregroundStyle(AppColors.tertiary)
+                }
             }
+            .frame(width: 80, alignment: .leading)
+            .onTapGesture { onOpen() }
+
+            TextField("", text: $titleDraft)
+                .font(AppType.bodyMedium)
+                .foregroundStyle(AppColors.primary)
+                .focused($titleFocused)
+                .submitLabel(.done)
+                .onSubmit {
+                    commitTitle()
+                    titleFocused = false
+                }
+                .onChange(of: titleFocused) { _, focused in
+                    if !focused { commitTitle() }
+                }
 
             Button { datePickerShown = true } label: {
                 Image(systemName: "calendar")
@@ -53,26 +48,8 @@ struct ReminderRow: View {
                     .foregroundStyle(AppColors.tertiary)
             }
             .buttonStyle(.plain)
-            .popover(isPresented: $datePickerShown) {
-                VStack(alignment: .leading, spacing: 8) {
-                    DatePicker(
-                        "Due",
-                        selection: Binding(
-                            get: { event.date },
-                            set: { newVal in
-                                event.date = Calendar.current.startOfDay(for: newVal)
-                                try? modelContext.save()
-                                SnapshotStore.publishReminders(from: modelContext)
-                                WidgetReloader.reloadReminderWidgets()
-                            }
-                        ),
-                        displayedComponents: [.date]
-                    )
-                    .datePickerStyle(.graphical)
-                }
-                .padding()
-                .frame(minWidth: 320)
-                .presentationCompactAdaptation(.popover)
+            .sheet(isPresented: $datePickerShown) {
+                reminderDateSheet
             }
 
             Button { onDelete() } label: {
@@ -83,16 +60,67 @@ struct ReminderRow: View {
             .buttonStyle(.plain)
         }
         .padding(.vertical, 6)
-        .onAppear {
-            titleDraft = event.title
-            notesDraft = event.notes ?? ""
-        }
+        .onAppear { titleDraft = event.title }
         .onChange(of: event.title) { _, new in
             if !titleFocused { titleDraft = new }
         }
-        .onChange(of: event.notes) { _, new in
-            if !notesFocused { notesDraft = new ?? "" }
+    }
+
+    private var timeLabel: String {
+        let df = DateFormatter()
+        df.dateFormat = "h:mm a"
+        return df.string(from: event.date)
+    }
+
+    private var reminderDateSheet: some View {
+        VStack(spacing: 12) {
+            HStack {
+                Spacer()
+                Button("Done") { datePickerShown = false }
+                    .font(.system(size: 14, weight: .bold, design: .monospaced))
+                    .foregroundStyle(AppColors.primary)
+            }
+            .padding(.horizontal).padding(.top, 12)
+            DatePicker(
+                "Date",
+                selection: Binding(
+                    get: { event.date },
+                    set: { newVal in
+                        event.date = event.isAllDay ? Calendar.current.startOfDay(for: newVal) : newVal
+                        try? modelContext.save()
+                        SnapshotStore.publishReminders(from: modelContext)
+                        WidgetReloader.reloadReminderWidgets()
+                    }
+                ),
+                displayedComponents: event.isAllDay ? [.date] : [.date, .hourAndMinute]
+            )
+            .datePickerStyle(.graphical)
+            .padding(.horizontal)
+
+            Toggle("Include time", isOn: Binding(
+                get: { !event.isAllDay },
+                set: { hasTime in
+                    event.isAllDay = !hasTime
+                    if hasTime {
+                        let cal = Calendar.current
+                        var comps = cal.dateComponents([.year, .month, .day], from: event.date)
+                        comps.hour = 9; comps.minute = 0
+                        event.date = cal.date(from: comps) ?? event.date
+                    } else {
+                        event.date = Calendar.current.startOfDay(for: event.date)
+                    }
+                    try? modelContext.save()
+                    SnapshotStore.publishReminders(from: modelContext)
+                    WidgetReloader.reloadReminderWidgets()
+                }
+            ))
+            .font(AppType.body)
+            .tint(AppColors.accent)
+            .padding(.horizontal)
+            .padding(.bottom, 16)
         }
+        .presentationDetents([.medium])
+        .presentationDragIndicator(.visible)
     }
 
     private func commitTitle() {
@@ -103,17 +131,6 @@ struct ReminderRow: View {
         }
         if trimmed != event.title {
             onCommitTitle(trimmed)
-        }
-    }
-
-    private func commitNotes() {
-        let trimmed = notesDraft.trimmingCharacters(in: .whitespacesAndNewlines)
-        let newVal: String? = trimmed.isEmpty ? nil : trimmed
-        if newVal != event.notes {
-            event.notes = newVal
-            try? modelContext.save()
-            SnapshotStore.publishReminders(from: modelContext)
-            WidgetReloader.reloadReminderWidgets()
         }
     }
 }

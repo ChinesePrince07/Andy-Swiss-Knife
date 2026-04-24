@@ -242,6 +242,7 @@ struct TodayDashboardView: View {
 
     @State private var newReminderTitle: String = ""
     @State private var newReminderDate: Date = Calendar.current.startOfDay(for: .now)
+    @State private var newReminderHasTime = false
     @State private var showingReminderDatePicker = false
     @FocusState private var reminderFieldFocused: Bool
 
@@ -251,23 +252,6 @@ struct TodayDashboardView: View {
         return personalEvents
             .filter { $0.date >= cutoff }
             .sorted { $0.date < $1.date }
-    }
-
-    private var reminderBuckets: [(DueBucket, [PersonalEvent])] {
-        var map: [DueBucket: [PersonalEvent]] = [:]
-        for e in upcomingReminders {
-            let b = DueBucket.bucket(for: e.date)
-            map[b, default: []].append(e)
-        }
-        return map.keys.sorted { $0.order < $1.order }.map { key in
-            let items = (map[key] ?? []).sorted { lhs, rhs in
-                if lhs.date != rhs.date { return lhs.date < rhs.date }
-                let l = lhs.sortOrder ?? 0
-                let r = rhs.sortOrder ?? 0
-                return l > r
-            }
-            return (key, items)
-        }
     }
 
     private var remindersSection: some View {
@@ -292,8 +276,23 @@ struct TodayDashboardView: View {
                     .foregroundStyle(AppColors.secondary)
                     .padding(.vertical, 10)
             } else {
-                ForEach(reminderBuckets.prefix(3), id: \.0) { bucket, items in
-                    reminderBucketSection(bucket: bucket, items: items)
+                HairlineDivider()
+                ForEach(upcomingReminders.prefix(8)) { e in
+                    ReminderRow(
+                        event: e,
+                        dateLabel: reminderRowLabel(e),
+                        onOpen: {},
+                        onDelete: { deleteReminder(e) },
+                        onCommitTitle: { newVal in
+                            let trimmed = newVal.trimmingCharacters(in: .whitespaces)
+                            guard !trimmed.isEmpty, trimmed != e.title else { return }
+                            e.title = trimmed
+                            try? modelContext.save()
+                            SnapshotStore.publishReminders(from: modelContext)
+                            WidgetReloader.reloadReminderWidgets()
+                        }
+                    )
+                    HairlineDivider()
                 }
             }
 
@@ -327,60 +326,28 @@ struct TodayDashboardView: View {
                         }
                         .padding(.horizontal).padding(.top, 12)
                         DatePicker(
-                            "Due",
-                            selection: Binding(
-                                get: { newReminderDate },
-                                set: { newReminderDate = Calendar.current.startOfDay(for: $0) }
-                            ),
-                            displayedComponents: [.date]
+                            "Date",
+                            selection: $newReminderDate,
+                            displayedComponents: newReminderHasTime ? [.date, .hourAndMinute] : [.date]
                         )
                         .datePickerStyle(.graphical)
                         .padding(.horizontal)
+                        Toggle("Include time", isOn: $newReminderHasTime)
+                            .font(AppType.body)
+                            .tint(AppColors.accent)
+                            .padding(.horizontal)
+                            .padding(.bottom, 16)
+                            .onChange(of: newReminderHasTime) { _, hasTime in
+                                if !hasTime {
+                                    newReminderDate = Calendar.current.startOfDay(for: newReminderDate)
+                                }
+                            }
                     }
                     .presentationDetents([.medium])
                     .presentationDragIndicator(.visible)
                 }
             }
             .padding(.vertical, 8)
-        }
-    }
-
-    private func reminderBucketSection(bucket: DueBucket, items: [PersonalEvent]) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack(alignment: .firstTextBaseline, spacing: 8) {
-                Text(bucket.title.uppercased())
-                    .font(.system(size: 11, weight: .heavy, design: .monospaced))
-                    .kerning(1.3)
-                    .foregroundStyle(bucket.isUrgent ? AppColors.accent : AppColors.primary)
-                Spacer()
-                Text("\(items.count)")
-                    .font(.system(size: 10, design: .monospaced))
-                    .foregroundStyle(AppColors.tertiary)
-            }
-            Rectangle()
-                .fill(bucket.isUrgent ? AppColors.accent : AppColors.primary)
-                .frame(height: bucket.isUrgent ? 1.5 : 0.8)
-            ForEach(items.prefix(4)) { e in
-                ReminderRow(
-                    event: e,
-                    dateLabel: reminderRowLabel(e),
-                    onOpen: {},
-                    onDelete: { deleteReminder(e) },
-                    onCommitTitle: { newVal in
-                        let trimmed = newVal.trimmingCharacters(in: .whitespaces)
-                        guard !trimmed.isEmpty, trimmed != e.title else { return }
-                        e.title = trimmed
-                        try? modelContext.save()
-                        SnapshotStore.publishReminders(from: modelContext)
-                        WidgetReloader.reloadReminderWidgets()
-                    }
-                )
-                .draggable(e.id.uuidString)
-                .dropDestination(for: String.self) { dropped, _ in
-                    reorderReminder(droppedIDs: dropped, target: e, within: Array(items.prefix(4)))
-                }
-                HairlineDivider()
-            }
         }
     }
 
@@ -395,22 +362,29 @@ struct TodayDashboardView: View {
 
     private var shortReminderDate: String {
         let cal = Calendar.current
-        if cal.isDateInToday(newReminderDate) { return "Today" }
-        if cal.isDateInTomorrow(newReminderDate) { return "Tmrw" }
-        let df = DateFormatter(); df.dateFormat = "MMM d"
-        return df.string(from: newReminderDate)
+        var label: String
+        if cal.isDateInToday(newReminderDate) { label = "Today" }
+        else if cal.isDateInTomorrow(newReminderDate) { label = "Tmrw" }
+        else { let df = DateFormatter(); df.dateFormat = "MMM d"; label = df.string(from: newReminderDate) }
+        if newReminderHasTime {
+            let tf = DateFormatter(); tf.dateFormat = "h:mm a"
+            label += " \(tf.string(from: newReminderDate))"
+        }
+        return label
     }
 
     private func commitNewReminder() {
         let trimmed = newReminderTitle.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return }
-        let event = PersonalEvent(title: trimmed, date: newReminderDate, isAllDay: true)
+        let date = newReminderHasTime ? newReminderDate : Calendar.current.startOfDay(for: newReminderDate)
+        let event = PersonalEvent(title: trimmed, date: date, isAllDay: !newReminderHasTime)
         modelContext.insert(event)
         try? modelContext.save()
         SnapshotStore.publishReminders(from: modelContext)
         WidgetReloader.reloadReminderWidgets()
         newReminderTitle = ""
         newReminderDate = Calendar.current.startOfDay(for: .now)
+        newReminderHasTime = false
         reminderFieldFocused = true
     }
 
@@ -421,24 +395,6 @@ struct TodayDashboardView: View {
         SnapshotStore.publishReminders(from: modelContext)
         WidgetReloader.reloadReminderWidgets()
     }
-
-    private func reorderReminder(droppedIDs: [String], target: PersonalEvent, within bucket: [PersonalEvent]) -> Bool {
-        guard let raw = droppedIDs.first, let id = UUID(uuidString: raw),
-              let dropped = bucket.first(where: { $0.id == id }), dropped.id != target.id else { return false }
-        var arr = bucket
-        arr.removeAll { $0.id == dropped.id }
-        guard let idx = arr.firstIndex(where: { $0.id == target.id }) else { return false }
-        arr.insert(dropped, at: idx)
-        let total = arr.count
-        for (i, r) in arr.enumerated() {
-            r.sortOrder = Double(total - i)
-        }
-        try? modelContext.save()
-        SnapshotStore.publishReminders(from: modelContext)
-        WidgetReloader.reloadReminderWidgets()
-        return true
-    }
-
 
     private var glanceGrid: some View {
         let active = draggingCard == nil ? DashboardLayout.shared.active : workingActive
