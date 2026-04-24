@@ -154,8 +154,10 @@ struct TodayDashboardView: View {
                     .foregroundStyle(AppColors.secondary)
                     .padding(.vertical, 12)
             } else {
-                HairlineDivider()
-                ReorderableTodoList(items: openManualTodos, services: services)
+                VStack(spacing: 0) {
+                    HairlineDivider()
+                    ReorderableTodoList(items: openManualTodos, services: services)
+                }
                 if !doneManualTodos.isEmpty {
                     doneSection
                 }
