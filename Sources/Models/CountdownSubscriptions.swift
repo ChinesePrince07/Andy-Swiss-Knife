@@ -4,6 +4,7 @@ import SwiftData
 @MainActor
 enum CountdownSubscriptions {
     private static let key = "countdown.selectedEventIDs.v1"
+    private static let namesKey = "countdown.customNames.v1"
 
     static var selectedIDs: Set<String> {
         get { Set(UserDefaults.standard.stringArray(forKey: key) ?? []) }
@@ -16,6 +17,22 @@ enum CountdownSubscriptions {
         var ids = selectedIDs
         if selected { ids.insert(id) } else { ids.remove(id) }
         selectedIDs = ids
+    }
+
+    static func customName(for id: String) -> String? {
+        let map = UserDefaults.standard.dictionary(forKey: namesKey) as? [String: String] ?? [:]
+        let val = map[id]
+        return (val?.isEmpty ?? true) ? nil : val
+    }
+
+    static func setCustomName(_ name: String?, for id: String) {
+        var map = UserDefaults.standard.dictionary(forKey: namesKey) as? [String: String] ?? [:]
+        map[id] = name
+        UserDefaults.standard.set(map, forKey: namesKey)
+    }
+
+    static func displayName(for event: CachedEvent) -> String {
+        customName(for: event.id) ?? event.title
     }
 
     static func nextUpcoming(from context: ModelContext, now: Date = .now) -> CachedEvent? {

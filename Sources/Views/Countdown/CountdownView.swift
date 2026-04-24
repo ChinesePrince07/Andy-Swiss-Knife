@@ -70,9 +70,7 @@ struct CountdownView: View {
                         .kerning(1.1)
                         .foregroundStyle(AppColors.tertiary)
                 }
-                Text(event.title)
-                    .font(AppType.bodyMedium)
-                    .foregroundStyle(past ? AppColors.tertiary : AppColors.primary)
+                CountdownNameField(event: event, past: past)
                 Text(dateLabel(event.start))
                     .font(.system(size: 11, design: .monospaced))
                     .foregroundStyle(AppColors.secondary)
@@ -95,5 +93,34 @@ struct CountdownView: View {
 
     private func reload() {
         events = CountdownSubscriptions.allSelected(from: modelContext)
+    }
+}
+
+private struct CountdownNameField: View {
+    let event: CachedEvent
+    let past: Bool
+
+    @State private var draft: String = ""
+    @FocusState private var focused: Bool
+
+    var body: some View {
+        TextField("", text: $draft)
+            .font(AppType.bodyMedium)
+            .foregroundStyle(past ? AppColors.tertiary : AppColors.primary)
+            .focused($focused)
+            .submitLabel(.done)
+            .onSubmit { commit() }
+            .onChange(of: focused) { _, f in if !f { commit() } }
+            .onAppear { draft = CountdownSubscriptions.displayName(for: event) }
+    }
+
+    private func commit() {
+        let trimmed = draft.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else { draft = event.title; return }
+        if trimmed == event.title {
+            CountdownSubscriptions.setCustomName(nil, for: event.id)
+        } else {
+            CountdownSubscriptions.setCustomName(trimmed, for: event.id)
+        }
     }
 }

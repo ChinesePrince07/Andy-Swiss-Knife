@@ -597,7 +597,7 @@ struct TodayDashboardView: View {
         guard let next = CountdownSubscriptions.nextUpcoming(from: modelContext) else {
             return CountdownSubscriptions.selectedIDs.isEmpty ? "Tap to pick" : "All past"
         }
-        return next.title
+        return CountdownSubscriptions.displayName(for: next)
     }
 
     private var countdownSecondary: String {
@@ -890,7 +890,7 @@ struct GlanceCard: View {
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, minHeight: 70, alignment: .topLeading)
         .padding(9)
         .overlay(
             Rectangle()
