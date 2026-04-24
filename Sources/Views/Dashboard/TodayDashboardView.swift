@@ -154,7 +154,6 @@ struct TodayDashboardView: View {
                     .foregroundStyle(AppColors.secondary)
                     .padding(.vertical, 12)
             } else {
-                HairlineDivider()
                 ReorderableTodoList(items: openManualTodos, services: services)
                 if !doneManualTodos.isEmpty {
                     doneSection
@@ -315,18 +314,28 @@ struct TodayDashboardView: View {
                     .foregroundStyle(AppColors.secondary)
                 }
                 .buttonStyle(.plain)
-                .popover(isPresented: $showingReminderDatePicker) {
-                    DatePicker(
-                        "Due",
-                        selection: Binding(
-                            get: { newReminderDate },
-                            set: { newReminderDate = Calendar.current.startOfDay(for: $0) }
-                        ),
-                        displayedComponents: [.date]
-                    )
-                    .datePickerStyle(.graphical)
-                    .padding()
-                    .presentationCompactAdaptation(.popover)
+                .sheet(isPresented: $showingReminderDatePicker) {
+                    VStack(spacing: 12) {
+                        HStack {
+                            Spacer()
+                            Button("Done") { showingReminderDatePicker = false }
+                                .font(.system(size: 14, weight: .bold, design: .monospaced))
+                                .foregroundStyle(AppColors.primary)
+                        }
+                        .padding(.horizontal).padding(.top, 12)
+                        DatePicker(
+                            "Due",
+                            selection: Binding(
+                                get: { newReminderDate },
+                                set: { newReminderDate = Calendar.current.startOfDay(for: $0) }
+                            ),
+                            displayedComponents: [.date]
+                        )
+                        .datePickerStyle(.graphical)
+                        .padding(.horizontal)
+                    }
+                    .presentationDetents([.medium])
+                    .presentationDragIndicator(.visible)
                 }
             }
             .padding(.vertical, 8)

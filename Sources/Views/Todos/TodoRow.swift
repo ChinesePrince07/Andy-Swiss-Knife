@@ -84,6 +84,7 @@ struct TodoRow: View {
             }
         }
         .padding(.vertical, 6)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .onAppear {
             titleDraft = todo.title
         }
