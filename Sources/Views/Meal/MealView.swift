@@ -7,13 +7,21 @@ struct MealView: View {
     @State private var error = false
     @State private var didLoad = false
 
+    private var showTomorrow: Bool {
+        Calendar.current.component(.hour, from: .now) >= 19
+    }
+
+    private var displayDate: Date {
+        showTomorrow ? Calendar.current.date(byAdding: .day, value: 1, to: .now) ?? .now : .now
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("\(Self.weekdayName(.now))'s menu")
+                    Text("\(Self.weekdayName(displayDate))'s menu")
                         .font(AppType.displayTitle)
-                    Text(Self.dateLabel(.now).uppercased())
+                    Text(Self.dateLabel(displayDate).uppercased())
                         .font(AppType.sectionLabel)
                         .kerning(1.2)
                         .foregroundStyle(AppColors.secondary)
@@ -33,7 +41,7 @@ struct MealView: View {
                             .padding(.top, 10)
                     }
                 } else {
-                    Text(error ? "Menu unavailable." : "No menu found for today.")
+                    Text(error ? "Menu unavailable." : "No menu found.")
                         .font(AppType.body)
                         .foregroundStyle(error ? AppColors.accent : AppColors.secondary)
                 }
@@ -86,10 +94,10 @@ struct MealView: View {
 
     private func load() async {
         do {
-            meal = try await services.dining.todaysMeal()
+            meal = try await services.dining.todaysMeal(now: displayDate)
             error = false
         } catch {
-            meal = services.dining.cachedTodaysMeal()
+            meal = services.dining.cachedTodaysMeal(now: displayDate)
             self.error = meal == nil
         }
         didLoad = true

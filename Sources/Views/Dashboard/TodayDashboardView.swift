@@ -697,10 +697,16 @@ struct TodayDashboardView: View {
     }
 
     private var mealCardLabel: String {
+        let df = DateFormatter()
+        df.dateFormat = "EEE"
         switch activeMealSlot {
-        case .lunch: return "Lunch"
-        case .dinner: return "Dinner"
-        case .tomorrowLunch: return "Tmrw Lunch"
+        case .lunch:
+            return "\(df.string(from: .now)) · Lunch"
+        case .dinner:
+            return "\(df.string(from: .now)) · Dinner"
+        case .tomorrowLunch:
+            let tmrw = Calendar.current.date(byAdding: .day, value: 1, to: .now) ?? .now
+            return "\(df.string(from: tmrw)) · Lunch"
         }
     }
 
