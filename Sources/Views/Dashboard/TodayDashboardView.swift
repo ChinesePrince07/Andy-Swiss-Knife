@@ -573,9 +573,9 @@ struct TodayDashboardView: View {
         case .athletics:
             GlanceCard(label: "Athletics", primary: athleticsPrimary, secondary: athleticsSecondary)
         case .apExams:
-            GlanceCard(label: "AP Exams", primary: apExamsPrimary, secondary: apExamsSecondary)
+            CountdownGlanceCard(label: "AP Exams", days: apExamsDays, name: apExamsPrimary, detail: apExamsSecondary)
         case .countdown:
-            GlanceCard(label: "Countdown", primary: countdownPrimary, secondary: countdownSecondary)
+            CountdownGlanceCard(label: "Countdown", days: countdownDays, name: countdownPrimary, detail: countdownSecondary)
         }
     }
 
@@ -593,6 +593,11 @@ struct TodayDashboardView: View {
         }
     }
 
+    private var countdownDays: Int? {
+        guard let next = CountdownSubscriptions.nextUpcoming(from: modelContext) else { return nil }
+        return Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: .now), to: Calendar.current.startOfDay(for: next.start)).day
+    }
+
     private var countdownPrimary: String {
         guard let next = CountdownSubscriptions.nextUpcoming(from: modelContext) else {
             return CountdownSubscriptions.selectedIDs.isEmpty ? "Tap to pick" : "All past"
@@ -602,11 +607,13 @@ struct TodayDashboardView: View {
 
     private var countdownSecondary: String {
         guard let next = CountdownSubscriptions.nextUpcoming(from: modelContext) else { return "—" }
-        let cal = Calendar.current
-        let days = cal.dateComponents([.day], from: cal.startOfDay(for: .now), to: cal.startOfDay(for: next.start)).day ?? 0
-        if days == 0 { return "Today" }
-        if days == 1 { return "Tomorrow" }
-        return "\(days) days"
+        let df = DateFormatter(); df.dateFormat = "MMM d"
+        return df.string(from: next.start)
+    }
+
+    private var apExamsDays: Int? {
+        guard let next = APExamSubscriptions.nextUpcoming() else { return nil }
+        return Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: .now), to: Calendar.current.startOfDay(for: next.date)).day
     }
 
     private var apExamsPrimary: String {
@@ -620,12 +627,8 @@ struct TodayDashboardView: View {
         guard let next = APExamSubscriptions.nextUpcoming() else {
             return APExamSubscriptions.enabledIDs.isEmpty ? "2026 schedule" : "—"
         }
-        let cal = Calendar.current
-        let days = cal.dateComponents([.day], from: cal.startOfDay(for: .now), to: cal.startOfDay(for: next.date)).day ?? 0
         let df = DateFormatter(); df.dateFormat = "MMM d"
-        if days <= 0 { return "Today · \(next.session.label)" }
-        if days == 1 { return "Tmrw · \(next.session.label)" }
-        return "\(df.string(from: next.date)) · in \(days)d"
+        return "\(df.string(from: next.date)) · \(next.session.label)"
     }
 
     private var athleticsPrimary: String {
@@ -856,6 +859,59 @@ struct CardDropDelegate: DropDelegate {
 
     func dropUpdated(info: DropInfo) -> DropProposal? {
         DropProposal(operation: .move)
+    }
+}
+
+struct CountdownGlanceCard: View {
+    let label: String
+    let days: Int?
+    let name: String
+    let detail: String
+
+    @Environment(ThemeManager.self) private var themeManager
+
+    var body: some View {
+        _ = themeManager.current
+        return HStack(alignment: .center, spacing: 8) {
+            if let days {
+                Text("\(days)")
+                    .font(.system(size: 28, weight: .heavy, design: .monospaced))
+                    .foregroundStyle(days <= 7 ? AppColors.accent : AppColors.primary)
+                    .frame(minWidth: 36, alignment: .trailing)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(days == 0 ? "TODAY" : (days == 1 ? "DAY" : "DAYS"))
+                        .font(.system(size: 8, weight: .heavy, design: .monospaced))
+                        .kerning(1.0)
+                        .foregroundStyle(AppColors.tertiary)
+                    Text(name)
+                        .font(.system(size: 12, weight: .medium, design: .monospaced))
+                        .foregroundStyle(AppColors.primary)
+                        .lineLimit(2)
+                        .truncationMode(.tail)
+                    Text(detail)
+                        .font(.system(size: 9, design: .monospaced))
+                        .foregroundStyle(AppColors.secondary)
+                        .lineLimit(1)
+                }
+            } else {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(label.uppercased())
+                        .font(.system(size: 9, weight: .heavy, design: .monospaced))
+                        .kerning(1.1)
+                        .foregroundStyle(AppColors.tertiary)
+                    Text(name)
+                        .font(.system(size: 14, weight: .medium, design: .monospaced))
+                        .foregroundStyle(AppColors.primary)
+                }
+            }
+            Spacer(minLength: 0)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(9)
+        .overlay(
+            Rectangle()
+                .strokeBorder(AppColors.primary, lineWidth: 1.5)
+        )
     }
 }
 
