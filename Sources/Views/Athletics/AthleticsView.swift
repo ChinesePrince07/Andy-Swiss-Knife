@@ -137,15 +137,25 @@ struct AthleticsView: View {
     }
 
     private func gameRow(_ g: CachedEvent) -> some View {
-        HStack(alignment: .firstTextBaseline, spacing: 12) {
-            Text(timeLabel(g))
-                .font(.system(size: 11, design: .monospaced))
-                .foregroundStyle(AppColors.secondary)
-                .frame(width: 78, alignment: .leading)
+        let parsed = parseTitle(g.title)
+        return HStack(alignment: .firstTextBaseline, spacing: 10) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(timeLabel(g))
+                    .font(.system(size: 11, design: .monospaced))
+                    .foregroundStyle(AppColors.secondary)
+                if let tag = parsed.tag {
+                    Text(tag.uppercased())
+                        .font(.system(size: 9, weight: .heavy, design: .monospaced))
+                        .kerning(1.1)
+                        .foregroundStyle(tag == "Home" ? AppColors.primary : AppColors.accent)
+                }
+            }
+            .frame(width: 62, alignment: .leading)
             VStack(alignment: .leading, spacing: 1) {
-                Text(g.title)
+                Text(parsed.opponent)
                     .font(AppType.bodyMedium)
                     .foregroundStyle(AppColors.primary)
+                    .lineLimit(2)
                 HStack(spacing: 6) {
                     if let team = g.calendarTitle {
                         Text(team)
@@ -163,7 +173,28 @@ struct AthleticsView: View {
             }
             Spacer()
         }
-        .padding(.vertical, 6)
+        .padding(.vertical, 5)
+    }
+
+    private struct ParsedTitle {
+        let opponent: String
+        let tag: String?
+    }
+
+    private func parseTitle(_ raw: String) -> ParsedTitle {
+        var s = raw
+        var tag: String?
+        if let range = s.range(of: #"\((Home|Away|TBD)\)"#, options: .regularExpression) {
+            let matched = String(s[range]).replacingOccurrences(of: "(", with: "").replacingOccurrences(of: ")", with: "")
+            tag = matched
+            s.removeSubrange(range)
+        }
+        if let vsRange = s.range(of: " vs. ") {
+            s = String(s[vsRange.upperBound...])
+        } else if let vsRange = s.range(of: " vs ") {
+            s = String(s[vsRange.upperBound...])
+        }
+        return ParsedTitle(opponent: s.trimmingCharacters(in: .whitespaces), tag: tag)
     }
 
     private func dayHeader(_ d: Date) -> String {

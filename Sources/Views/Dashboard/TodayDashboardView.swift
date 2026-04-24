@@ -15,6 +15,7 @@ struct TodayDashboardView: View {
     @Query(sort: \ScheduleClass.sortKey) private var scheduleClasses: [ScheduleClass]
 
     @State private var todaysMeal: Meal?
+    @State private var tomorrowMeal: Meal?
     @State private var nextEvent: Event?
     @State private var isRefreshing = false
     @State private var mealError: Bool = false
@@ -33,15 +34,15 @@ struct TodayDashboardView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
+            VStack(alignment: .leading, spacing: 12) {
                 headerWithSettings
                 todoSection
                 remindersSection
                 glanceGrid
             }
-            .padding(.horizontal, 16)
+            .padding(.horizontal, 14)
             .padding(.top, 0)
-            .padding(.bottom, 40)
+            .padding(.bottom, 30)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .contentShape(Rectangle())
             .onTapGesture { dismissKeyboard() }
@@ -136,7 +137,7 @@ struct TodayDashboardView: View {
     }
 
     private var todoSection: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 10) {
             HStack {
                 SectionLabel(text: "To do")
                 Spacer()
@@ -268,7 +269,7 @@ struct TodayDashboardView: View {
     }
 
     private var remindersSection: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 10) {
             NavigationLink {
                 PersonalCalendarView(services: services)
             } label: {
@@ -691,19 +692,34 @@ struct TodayDashboardView: View {
 
     private var activeMealSlot: MealSlot {
         let hour = Calendar.current.component(.hour, from: .now)
-        // Lunch windows roughly end 1pm, dinner opens 5:30pm. Show dinner
-        // once lunch is past so the card rolls over automatically.
+        if hour >= 19 { return .tomorrowLunch }
         return hour >= 13 ? .dinner : .lunch
     }
 
     private var mealCardLabel: String {
-        activeMealSlot == .dinner ? "Dinner" : "Lunch"
+        switch activeMealSlot {
+        case .lunch: return "Lunch"
+        case .dinner: return "Dinner"
+        case .tomorrowLunch: return "Tmrw Lunch"
+        }
     }
 
     private var mealPrimary: String {
         if mealError { return "Unavailable" }
-        guard let meal = todaysMeal else { return "Loading…" }
-        let text = activeMealSlot == .dinner ? meal.dinner : meal.lunch
+        let source: Meal?
+        let text: String
+        switch activeMealSlot {
+        case .lunch:
+            source = todaysMeal
+            text = source?.lunch ?? ""
+        case .dinner:
+            source = todaysMeal
+            text = source?.dinner ?? ""
+        case .tomorrowLunch:
+            source = tomorrowMeal ?? todaysMeal
+            text = source?.lunch ?? ""
+        }
+        guard source != nil else { return "Loading…" }
         guard !text.isEmpty else { return "—" }
         return text
             .replacingOccurrences(of: "\n", with: ", ")
@@ -712,12 +728,13 @@ struct TodayDashboardView: View {
 
     private var mealSecondary: String {
         if mealError { return "Tap for Safari" }
-        guard let meal = todaysMeal else { return "—" }
+        let meal = activeMealSlot == .tomorrowLunch ? (tomorrowMeal ?? todaysMeal) : todaysMeal
+        guard let meal else { return "—" }
         let age = Int(Date.now.timeIntervalSince(meal.fetchedAt) / 3600)
         return age >= 4 ? "as of \(age)h ago" : "Tap for full menu"
     }
 
-    private enum MealSlot { case lunch, dinner }
+    private enum MealSlot { case lunch, dinner, tomorrowLunch }
 
     private var nextEventPrimary: String {
         guard let next = nextEvent else { return "None" }
@@ -753,6 +770,9 @@ struct TodayDashboardView: View {
         do {
             todaysMeal = try await services.dining.todaysMeal()
             mealError = false
+            if let tmrw = Calendar.current.date(byAdding: .day, value: 1, to: .now) {
+                tomorrowMeal = try? await services.dining.todaysMeal(now: tmrw)
+            }
         } catch {
             todaysMeal = services.dining.cachedTodaysMeal()
             mealError = todaysMeal == nil
