@@ -430,7 +430,7 @@ struct TodayDashboardView: View {
 
     private var glanceGrid: some View {
         let active = draggingCard == nil ? DashboardLayout.shared.active : workingActive
-        return LazyVGrid(columns: [GridItem(.flexible(), spacing: 6), GridItem(.flexible(), spacing: 6)], spacing: 6) {
+        return VStack(spacing: 4) {
             ForEach(active, id: \.self) { card in
                 gridCell(for: card)
             }
@@ -868,30 +868,28 @@ struct GlanceCard: View {
     @Environment(ThemeManager.self) private var themeManager
 
     var body: some View {
-        _ = themeManager.current  // ensure observation
-        return VStack(alignment: .leading, spacing: 2) {
+        _ = themeManager.current
+        return HStack(spacing: 10) {
             Text(label.uppercased())
                 .font(.system(size: 9, weight: .heavy, design: .monospaced))
                 .kerning(1.1)
                 .foregroundStyle(AppColors.tertiary)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(width: 80, alignment: .leading)
             Text(primary)
                 .font(.system(size: 14, weight: .medium, design: .monospaced))
                 .foregroundStyle(error ? AppColors.accent : AppColors.primary)
-                .lineLimit(2)
+                .lineLimit(1)
                 .truncationMode(.tail)
-                .multilineTextAlignment(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            Spacer()
             Text(secondary)
                 .font(.system(size: 10, design: .monospaced))
                 .foregroundStyle(AppColors.secondary)
                 .lineLimit(1)
                 .truncationMode(.tail)
-                .multilineTextAlignment(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .frame(maxWidth: .infinity, minHeight: 70, alignment: .topLeading)
-        .padding(9)
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 10)
         .overlay(
             Rectangle()
                 .strokeBorder(AppColors.primary, lineWidth: 1.5)
