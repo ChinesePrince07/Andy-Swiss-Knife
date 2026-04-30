@@ -68,19 +68,19 @@ struct SettingsView: View {
 
     private var themeSection: some View {
         settingsBlock(title: "Theme") {
-            HStack(spacing: 14) {
+            LazyVGrid(columns: [GridItem(.flexible(), spacing: 6), GridItem(.flexible(), spacing: 6), GridItem(.flexible(), spacing: 6)], spacing: 6) {
                 ForEach(Theme.all) { theme in
                     Button {
                         withAnimation(.easeInOut(duration: 0.2)) {
                             themeManager.select(theme)
                         }
                     } label: {
-                        themeDot(theme)
+                        themeCell(theme)
                     }
                     .buttonStyle(.plain)
                 }
-                Spacer()
             }
+            .padding(.top, 4)
         }
     }
 
@@ -168,14 +168,14 @@ struct SettingsView: View {
                 Button { Task { await forceRefresh() } } label: {
                     HStack {
                         Text("Force refresh")
-                            .font(AppType.body)
+                            .font(.system(size: 14, design: .monospaced))
                             .foregroundStyle(AppColors.primary)
                         Spacer()
                         if isRefreshing {
                             ProgressView().tint(AppColors.primary)
                         } else {
                             Image(systemName: "arrow.clockwise")
-                                .foregroundStyle(AppColors.primary)
+                                .foregroundStyle(AppColors.secondary)
                         }
                     }
                     .padding(.vertical, 10)
@@ -190,15 +190,21 @@ struct SettingsView: View {
         settingsBlock(title: "Notifications") {
             HStack {
                 Text("Permission")
-                    .font(AppType.body)
+                    .font(.system(size: 14, design: .monospaced))
                     .foregroundStyle(AppColors.primary)
                 Spacer()
                 Text(authLabel.uppercased())
-                    .font(.system(size: 10, weight: .heavy, design: .monospaced))
-                    .kerning(1.1)
-                    .foregroundStyle(AppColors.secondary)
+                    .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                    .kerning(0.6)
+                    .foregroundStyle(authStatus == .authorized ? AppColors.primary : AppColors.secondary)
+                if authStatus == .authorized {
+                    Text("◆")
+                        .font(.system(size: 10, weight: .heavy, design: .monospaced))
+                        .foregroundStyle(AppColors.primary)
+                }
             }
-            .padding(.vertical, 6)
+            .padding(.vertical, 12)
+            .overlay(HairlineDivider(), alignment: .bottom)
         }
     }
 
@@ -206,14 +212,22 @@ struct SettingsView: View {
         settingsBlock(title: "About") {
             HStack {
                 Text("Version")
-                    .font(AppType.body)
+                    .font(.system(size: 14, design: .monospaced))
                     .foregroundStyle(AppColors.primary)
                 Spacer()
                 Text(versionString)
                     .font(.system(size: 11, design: .monospaced))
                     .foregroundStyle(AppColors.secondary)
             }
-            .padding(.vertical, 6)
+            .padding(.vertical, 12)
+            .overlay(HairlineDivider(), alignment: .bottom)
+
+            Text("SWISS KNIFE · \(versionString)")
+                .font(.system(size: 9, design: .monospaced))
+                .kerning(1.3)
+                .foregroundStyle(AppColors.tertiary)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.top, 8)
         }
     }
 
@@ -226,37 +240,45 @@ struct SettingsView: View {
         footer: (() -> String)? = nil
     ) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            HStack(spacing: 8) {
-                Text(title.uppercased())
-                    .font(.system(size: 10, weight: .heavy, design: .monospaced))
-                    .kerning(1.2)
-                    .foregroundStyle(AppColors.primary)
-                Rectangle().fill(AppColors.primary).frame(height: 1.5)
-            }
+            Text(title.uppercased())
+                .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                .kerning(1.3)
+                .foregroundStyle(AppColors.tertiary)
+            HairlineDivider()
             content()
             if let footerText = footer?() {
                 Text(footerText)
                     .font(.system(size: 9, design: .monospaced))
                     .foregroundStyle(AppColors.tertiary)
+                    .padding(.top, 2)
             }
         }
     }
 
-    private func brutalRow(_ label: String, value: String) -> some View {
+    private func brutalRow(_ label: String, value: String, good: Bool = false) -> some View {
         HStack {
             Text(label)
-                .font(AppType.body)
+                .font(.system(size: 14, design: .monospaced))
                 .foregroundStyle(AppColors.primary)
             Spacer()
-            Text(value.uppercased())
-                .font(.system(size: 10, weight: .heavy, design: .monospaced))
-                .kerning(1.1)
-                .foregroundStyle(AppColors.secondary)
+            HStack(spacing: 4) {
+                if good {
+                    Text("◆")
+                        .font(.system(size: 10, weight: .heavy, design: .monospaced))
+                        .foregroundStyle(AppColors.primary)
+                }
+                Text(value)
+                    .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                    .kerning(0.6)
+                    .foregroundStyle(good ? AppColors.primary : AppColors.secondary)
+            }
             Image(systemName: "chevron.right")
                 .font(.system(size: 11, weight: .semibold))
                 .foregroundStyle(AppColors.tertiary)
+                .padding(.leading, 4)
         }
-        .padding(.vertical, 8)
+        .padding(.vertical, 12)
+        .overlay(HairlineDivider(), alignment: .bottom)
     }
 
     private func brutalField<Content: View>(@ViewBuilder content: () -> Content) -> some View {
@@ -265,34 +287,46 @@ struct SettingsView: View {
             .overlay(Rectangle().strokeBorder(AppColors.primary, lineWidth: 1.5))
     }
 
-    private func themeDot(_ theme: Theme) -> some View {
-        let selected = theme.id == themeManager.current.id
-        return ZStack {
-            Rectangle().fill(theme.background).frame(width: 30, height: 30)
-            Rectangle().fill(theme.accent).frame(width: 30, height: 30)
-                .mask(Rectangle().frame(width: 30, height: 15).offset(y: 7.5))
-            Rectangle().strokeBorder(theme.primary, lineWidth: selected ? 2.5 : 1)
-                .frame(width: 30, height: 30)
+    private func themeCell(_ theme: Theme) -> some View {
+        let active = theme.id == themeManager.current.id
+        return VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 3) {
+                Rectangle().fill(theme.primary).frame(width: 14, height: 14)
+                Rectangle().fill(theme.accent).frame(width: 14, height: 14)
+                ZStack {
+                    Rectangle().fill(theme.surface).frame(width: 14, height: 14)
+                    Rectangle().strokeBorder(theme.primary, lineWidth: 1).frame(width: 14, height: 14)
+                }
+            }
+            Text(theme.name.uppercased())
+                .font(.system(size: 10, weight: .heavy, design: .monospaced))
+                .kerning(0.8)
+                .foregroundStyle(theme.primary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
         }
+        .padding(8)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(theme.background)
         .overlay(
             Rectangle()
-                .strokeBorder(AppColors.accent, lineWidth: selected ? 2 : 0)
-                .frame(width: 36, height: 36)
+                .strokeBorder(theme.primary, lineWidth: active ? 2.5 : 1.5)
         )
-        .padding(3)
+        .shadow(color: active ? AppColors.accent : .clear, radius: 0, x: 4, y: 4)
     }
 
     private func syncRow(label: String, date: Date?) -> some View {
         HStack {
             Text(label)
-                .font(AppType.body)
+                .font(.system(size: 14, design: .monospaced))
                 .foregroundStyle(AppColors.primary)
             Spacer()
             Text(date.map(Self.syncFormatter.string) ?? "Never")
                 .font(.system(size: 11, design: .monospaced))
                 .foregroundStyle(AppColors.secondary)
         }
-        .padding(.vertical, 6)
+        .padding(.vertical, 10)
+        .overlay(HairlineDivider(), alignment: .bottom)
     }
 
     private var authLabel: String {
