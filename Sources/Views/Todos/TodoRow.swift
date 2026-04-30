@@ -15,9 +15,18 @@ struct TodoRow: View {
             Button {
                 toggle()
             } label: {
-                Image(systemName: todo.isDone ? "checkmark.circle.fill" : "circle")
-                    .font(.system(size: 20, weight: .regular))
-                    .foregroundStyle(todo.isDone ? AppColors.primary : AppColors.tertiary)
+                ZStack {
+                    Rectangle()
+                        .fill(todo.isDone ? AppColors.primary : Color.clear)
+                    Rectangle()
+                        .strokeBorder(todo.isDone ? AppColors.primary : AppColors.tertiary, lineWidth: 2)
+                    if todo.isDone {
+                        Image(systemName: "checkmark")
+                            .font(.system(size: 9, weight: .black))
+                            .foregroundStyle(AppColors.background)
+                    }
+                }
+                .frame(width: 18, height: 18)
             }
             .buttonStyle(.plain)
 
