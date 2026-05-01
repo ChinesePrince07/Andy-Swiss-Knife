@@ -416,19 +416,18 @@ struct TodayDashboardView: View {
         let isDragging = draggingCard == card
         let isOther = draggingCard != nil && !isDragging
         cardView(for: card)
-            .scaleEffect(isDragging ? 1.12 : (isOther ? 0.96 : 1.0))
-            .opacity(isOther ? 0.75 : 1.0)
-            .rotationEffect(.degrees(isDragging ? 2.0 : 0))
+            .scaleEffect(isDragging ? 1.06 : 1.0)
+            .opacity(isOther ? 0.7 : 1.0)
             .shadow(
-                color: isDragging ? AppColors.primary.opacity(0.45) : .clear,
-                radius: isDragging ? 26 : 0,
+                color: isDragging ? AppColors.primary.opacity(0.3) : .clear,
+                radius: isDragging ? 12 : 0,
                 x: 0,
-                y: isDragging ? 14 : 0
+                y: isDragging ? 6 : 0
             )
             .offset(x: isDragging ? dragOffset.width : 0,
                     y: isDragging ? dragOffset.height : 0)
             .zIndex(isDragging ? 10 : 0)
-            .animation(isDragging ? nil : .spring(response: 0.35, dampingFraction: 0.72), value: draggingCard)
+            .animation(isDragging ? nil : .spring(response: 0.28, dampingFraction: 0.82), value: draggingCard)
             .background(
                 GeometryReader { geo in
                     Color.clear.preference(
@@ -465,9 +464,9 @@ struct TodayDashboardView: View {
                         if !workingActive.isEmpty {
                             DashboardLayout.shared.active = workingActive
                         }
-                        withAnimation(.spring(response: 0.3, dampingFraction: 0.78)) {
-                            draggingCard = nil
+                        withAnimation(.spring(response: 0.25, dampingFraction: 0.85)) {
                             dragOffset = .zero
+                            draggingCard = nil
                         }
                         lastSwappedCard = nil
                         dragCardFrames = [:]
@@ -477,32 +476,19 @@ struct TodayDashboardView: View {
     }
 
     private func handleSwap(draggedCard: DashboardCard, location: CGPoint) {
+        // Use original slot frames (never mutated) as fixed landmarks.
         guard let hit = dragCardFrames.first(where: { entry in
             entry.key != draggedCard && entry.value.contains(location)
         }) else { return }
-        if hit.key == lastSwappedCard { return }
+        guard hit.key != lastSwappedCard else { return }
         guard let fromIdx = workingActive.firstIndex(of: draggedCard),
-              let toIdx = workingActive.firstIndex(of: hit.key),
-              let oldDraggedFrame = dragCardFrames[draggedCard]
+              let toIdx = workingActive.firstIndex(of: hit.key)
         else { return }
-        let oldTargetFrame = hit.value
-
-        dragCardFrames[draggedCard] = oldTargetFrame
-        dragCardFrames[hit.key] = oldDraggedFrame
 
         workingActive.remove(at: fromIdx)
         workingActive.insert(draggedCard, at: toIdx)
-
-        let delta = CGSize(
-            width: oldDraggedFrame.midX - oldTargetFrame.midX,
-            height: oldDraggedFrame.midY - oldTargetFrame.midY
-        )
-        dragOffset = CGSize(
-            width: dragOffset.width + delta.width,
-            height: dragOffset.height + delta.height
-        )
-
         lastSwappedCard = hit.key
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
     }
 
 
