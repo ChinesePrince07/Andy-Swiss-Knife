@@ -28,8 +28,10 @@ struct TodayDashboardView: View {
     @State private var dragOffset: CGSize = .zero
     @State private var cardFrames: [DashboardCard: CGRect] = [:]
     @State private var dragCardFrames: [DashboardCard: CGRect] = [:]
+    @State private var dragCardCenter: CGPoint = .zero
     @State private var lastSwappedCard: DashboardCard?
     @State private var workingActive: [DashboardCard] = []
+    @State private var suppressNavigation: Bool = false
     private let deepLinks = DeepLinks.shared
 
     var body: some View {
@@ -449,12 +451,20 @@ struct TodayDashboardView: View {
                                 draggingCard = card
                                 workingActive = DashboardLayout.shared.active
                                 dragCardFrames = cardFrames
+                                if let f = cardFrames[card] {
+                                    dragCardCenter = CGPoint(x: f.midX, y: f.midY)
+                                }
                                 lastSwappedCard = nil
                                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                             }
                             if let drag {
-                                dragOffset = drag.translation
-                                handleSwap(draggedCard: card, location: drag.location)
+                                if let newCenter = handleSwap(draggedCard: card, location: drag.location) {
+                                    dragCardCenter = newCenter
+                                }
+                                dragOffset = CGSize(
+                                    width: drag.location.x - dragCardCenter.x,
+                                    height: drag.location.y - dragCardCenter.y
+                                )
                             }
                         default:
                             break
@@ -464,37 +474,44 @@ struct TodayDashboardView: View {
                         if !workingActive.isEmpty {
                             DashboardLayout.shared.active = workingActive
                         }
+                        suppressNavigation = true
                         withAnimation(.spring(response: 0.25, dampingFraction: 0.85)) {
                             dragOffset = .zero
                             draggingCard = nil
                         }
                         lastSwappedCard = nil
                         dragCardFrames = [:]
+                        dragCardCenter = .zero
                         workingActive = []
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
+                            suppressNavigation = false
+                        }
                     }
             )
     }
 
-    private func handleSwap(draggedCard: DashboardCard, location: CGPoint) {
-        // Use original slot frames (never mutated) as fixed landmarks.
+    // Returns new slot center if a swap occurred (caller updates dragCardCenter).
+    @discardableResult
+    private func handleSwap(draggedCard: DashboardCard, location: CGPoint) -> CGPoint? {
         guard let hit = dragCardFrames.first(where: { entry in
             entry.key != draggedCard && entry.value.contains(location)
-        }) else { return }
-        guard hit.key != lastSwappedCard else { return }
+        }) else { return nil }
+        guard hit.key != lastSwappedCard else { return nil }
         guard let fromIdx = workingActive.firstIndex(of: draggedCard),
               let toIdx = workingActive.firstIndex(of: hit.key)
-        else { return }
+        else { return nil }
 
         workingActive.remove(at: fromIdx)
         workingActive.insert(draggedCard, at: toIdx)
         lastSwappedCard = hit.key
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        return CGPoint(x: hit.value.midX, y: hit.value.midY)
     }
 
 
     @ViewBuilder
     private func cardView(for card: DashboardCard) -> some View {
-        if draggingCard == card {
+        if draggingCard != nil || suppressNavigation {
             rawCardContent(for: card)
         } else {
             NavigationLink {
