@@ -77,8 +77,45 @@ final class Services {
     }
 }
 
-enum AppTab: Hashable {
-    case today, todos, classes, canvas, sports
+enum AppTab: String, Hashable, Codable, CaseIterable, Identifiable {
+    case today, todos, classes, canvas, sports, files
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .today:   return "TODAY"
+        case .todos:   return "TODOS"
+        case .classes: return "CLASS"
+        case .canvas:  return "CANVAS"
+        case .sports:  return "SPORTS"
+        case .files:   return "FILES"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .today:   return "house"
+        case .todos:   return "list.bullet"
+        case .classes: return "clock"
+        case .canvas:  return "book.closed"
+        case .sports:  return "trophy"
+        case .files:   return "folder"
+        }
+    }
+
+    var filledIcon: String {
+        switch self {
+        case .today:   return "house.fill"
+        case .todos:   return "list.bullet"
+        case .classes: return "clock.fill"
+        case .canvas:  return "book.closed.fill"
+        case .sports:  return "trophy.fill"
+        case .files:   return "folder.fill"
+        }
+    }
+
+    static let allDefault: [AppTab] = [.today, .files]
 }
 
 struct RootView: View {
@@ -94,7 +131,11 @@ struct RootView: View {
                     .safeAreaInset(edge: .bottom, spacing: 0) {
                         BrutalTabBar(selected: $selectedTab)
                     }
-                    .onAppear { services.sweeper.sweep() }
+                    .onAppear {
+                        services.sweeper.sweep()
+                        validateSelectedTab()
+                    }
+                    .onChange(of: UserSettings.shared.enabledTabs) { _, _ in validateSelectedTab() }
                     .onChange(of: scenePhase) { _, phase in
                         if phase == .active { services.sweeper.sweep() }
                     }
@@ -111,6 +152,13 @@ struct RootView: View {
         }
     }
 
+    private func validateSelectedTab() {
+        let enabled = UserSettings.shared.enabledTabs
+        if !enabled.contains(selectedTab) {
+            selectedTab = enabled.first ?? .today
+        }
+    }
+
     @ViewBuilder
     private func tabBody(services: Services) -> some View {
         switch selectedTab {
@@ -121,26 +169,65 @@ struct RootView: View {
         case .todos:
             NavigationStack {
                 TodosTabView(services: services)
+                    .withSettingsGear(services: services)
             }
         case .classes:
             NavigationStack {
                 ClassesView()
+                    .withSettingsGear(services: services)
             }
         case .canvas:
             NavigationStack {
                 AssignmentsView(services: services)
+                    .withSettingsGear(services: services)
             }
         case .sports:
             NavigationStack {
                 AthleticsView(services: services)
+                    .withSettingsGear(services: services)
+            }
+        case .files:
+            NavigationStack {
+                FilesView()
+                    .withSettingsGear(services: services)
             }
         }
+    }
+}
+
+// MARK: - Settings Gear Toolbar
+
+private struct SettingsGearModifier: ViewModifier {
+    let services: Services
+    @Environment(ThemeManager.self) private var themeManager
+
+    func body(content: Content) -> some View {
+        content
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        SettingsView(services: services)
+                    } label: {
+                        Image(systemName: "gearshape")
+                            .font(.system(size: 16))
+                            .foregroundStyle(AppColors.primary)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+    }
+}
+
+extension View {
+    func withSettingsGear(services: Services) -> some View {
+        modifier(SettingsGearModifier(services: services))
     }
 }
 
 struct BrutalTabBar: View {
     @Binding var selected: AppTab
     @Environment(ThemeManager.self) private var themeManager
+    private var tabs: [AppTab] { UserSettings.shared.enabledTabs }
 
     var body: some View {
         _ = themeManager.current
@@ -149,11 +236,9 @@ struct BrutalTabBar: View {
                 .fill(AppColors.primary)
                 .frame(height: 2)
             HStack(spacing: 0) {
-                tabItem(.today,   label: "TODAY",  icon: "house",        filledIcon: "house.fill")
-                tabItem(.todos,   label: "TODOS",  icon: "list.bullet",  filledIcon: "list.bullet")
-                tabItem(.classes, label: "CLASS",  icon: "clock",        filledIcon: "clock.fill")
-                tabItem(.canvas,  label: "CANVAS", icon: "book.closed",  filledIcon: "book.closed.fill")
-                tabItem(.sports,  label: "SPORTS", icon: "trophy",       filledIcon: "trophy.fill")
+                ForEach(tabs) { tab in
+                    tabItem(tab)
+                }
             }
             .padding(.top, 6)
             .padding(.bottom, 4)
@@ -162,14 +247,14 @@ struct BrutalTabBar: View {
     }
 
     @ViewBuilder
-    private func tabItem(_ tab: AppTab, label: String, icon: String, filledIcon: String) -> some View {
+    private func tabItem(_ tab: AppTab) -> some View {
         let active = selected == tab
         Button { selected = tab } label: {
             VStack(spacing: 3) {
-                Image(systemName: active ? filledIcon : icon)
+                Image(systemName: active ? tab.filledIcon : tab.icon)
                     .font(.system(size: 18, weight: active ? .bold : .regular))
                     .foregroundStyle(active ? AppColors.primary : AppColors.tertiary)
-                Text(label)
+                Text(tab.label)
                     .font(.system(size: 8, weight: .heavy, design: .monospaced))
                     .kerning(1.0)
                     .foregroundStyle(active ? AppColors.primary : AppColors.tertiary)

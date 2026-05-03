@@ -11,6 +11,7 @@ struct ClassPeriod: Identifiable, Hashable {
     let startTime: DateComponents
     let endTime: DateComponents
     let kind: ClassKind
+    let letter: String?
 
     init(
         id: UUID = UUID(),
@@ -20,7 +21,8 @@ struct ClassPeriod: Identifiable, Hashable {
         daysOfWeek: [Int],
         startTime: DateComponents,
         endTime: DateComponents,
-        kind: ClassKind = .academic
+        kind: ClassKind = .academic,
+        letter: String? = nil
     ) {
         self.id = id
         self.name = name
@@ -30,6 +32,7 @@ struct ClassPeriod: Identifiable, Hashable {
         self.startTime = startTime
         self.endTime = endTime
         self.kind = kind
+        self.letter = letter
     }
 
     func occursOn(weekday: Int) -> Bool {
