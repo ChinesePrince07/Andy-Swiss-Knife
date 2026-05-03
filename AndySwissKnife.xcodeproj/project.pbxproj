@@ -57,6 +57,7 @@
 		68FF4D7755ABB313A8692469 /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6F0ACE8F87DDCC97438137 /* AppModelContainer.swift */; };
 		6AFDDD1CDC8C66BD33FA5DBA /* ics-weekly.ics in Resources */ = {isa = PBXBuildFile; fileRef = B0598C29456DBF862E0E8699 /* ics-weekly.ics */; };
 		723E4E283E614F0AFFE5DC89 /* DashboardLayoutEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDFA3F8E82E3CDE5CCD03611 /* DashboardLayoutEditor.swift */; };
+		C4D2E5F6A7B8901234567890 /* TabBarEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5E3F6A7B8C9012345678901 /* TabBarEditorView.swift */; };
 		77ED75EF855F2ADADF890697 /* PomodoroLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90D09D8AFCE112A0B797759 /* PomodoroLiveActivity.swift */; };
 		7816210653243C57BCCD6517 /* AthleticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C35FB3564D92B6FEEC81D6 /* AthleticsView.swift */; };
 		78BFC806AB4136D3D9794E58 /* WidgetReloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8DA70372D27938DC8C9501 /* WidgetReloader.swift */; };
@@ -106,6 +107,12 @@
 		F8F4B82C4879AB6A90B9272E /* CachedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFF8210D8128B55B70DE84F /* CachedEvent.swift */; };
 		FC2162E5F84A795FF566EB47 /* PomodoroTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDD58B20274EFCFC29596675 /* PomodoroTimerTests.swift */; };
 		FE8EF93EACE5353602921849 /* APExams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 182AD802CBC3933B997D1514 /* APExams.swift */; };
+		91E400F6C12640428A5AF8FE /* DriveItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA7C2EFDC8B14F8DBC99F83C /* DriveItem.swift */; };
+		EB5AEE5665324B1C830DFA50 /* WebDAVService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37891A47AB1C446EA677CAF4 /* WebDAVService.swift */; };
+		B3C1A2D4E5F67890ABCD1234 /* DriveAdmin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6789012345678 /* DriveAdmin.swift */; };
+		A936A19CC2654ED58998BA3B /* FilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5410937CABFA4E7ABCD8E84C /* FilesView.swift */; };
+		C88D634F4A7D497BB58E3664 /* FilesComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BAB83E61044752A9D53A58 /* FilesComponents.swift */; };
+		8EAA30ECBB9B49B3B78EFC89 /* FilesSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4707CE1893804BB2AC7AA5D6 /* FilesSheets.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -152,6 +159,12 @@
 		182AD802CBC3933B997D1514 /* APExams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APExams.swift; sourceTree = "<group>"; };
 		18C35FB3564D92B6FEEC81D6 /* AthleticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthleticsView.swift; sourceTree = "<group>"; };
 		1C9228AB7BB53CF525E1AA35 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		CA7C2EFDC8B14F8DBC99F83C /* DriveItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveItem.swift; sourceTree = "<group>"; };
+		37891A47AB1C446EA677CAF4 /* WebDAVService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDAVService.swift; sourceTree = "<group>"; };
+		A1B2C3D4E5F6789012345678 /* DriveAdmin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveAdmin.swift; sourceTree = "<group>"; };
+		5410937CABFA4E7ABCD8E84C /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
+		53BAB83E61044752A9D53A58 /* FilesComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesComponents.swift; sourceTree = "<group>"; };
+		4707CE1893804BB2AC7AA5D6 /* FilesSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesSheets.swift; sourceTree = "<group>"; };
 		20ACB5F59009C12DE97FEE87 /* AthleticsPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthleticsPickerView.swift; sourceTree = "<group>"; };
 		2160A5C955F771E7E1EB7D4F /* Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule.swift; sourceTree = "<group>"; };
 		2CC26334910ED03B763FD900 /* PomodoroTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroTimer.swift; sourceTree = "<group>"; };
@@ -226,6 +239,7 @@
 		E6508432714136EC18A423DF /* AssignmentsSyncServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssignmentsSyncServiceTests.swift; sourceTree = "<group>"; };
 		EB8978F63D082125B6793831 /* ClassesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClassesView.swift; sourceTree = "<group>"; };
 		EDFA3F8E82E3CDE5CCD03611 /* DashboardLayoutEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardLayoutEditor.swift; sourceTree = "<group>"; };
+		D5E3F6A7B8C9012345678901 /* TabBarEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarEditorView.swift; sourceTree = "<group>"; };
 		EEFF8210D8128B55B70DE84F /* CachedEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedEvent.swift; sourceTree = "<group>"; };
 		EF46299132CD55E2AE1B3204 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		F3DFC8FAF85B9228D992A4F0 /* CountdownPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownPickerView.swift; sourceTree = "<group>"; };
@@ -259,6 +273,7 @@
 				2321A6DCB0593BCDB4B04D66 /* Pomodoro */,
 				D31AE3AB0610EC8CD4FF0B1D /* Settings */,
 				534C259B3418B0E0A2DB1C26 /* Todos */,
+				CBF9BB9B9C784C57A16D324A /* Files */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -298,6 +313,8 @@
 				EF46299132CD55E2AE1B3204 /* UserSettings.swift */,
 				A3D320E06F4810FBD48A3F23 /* WeatherService.swift */,
 				0C8DA70372D27938DC8C9501 /* WidgetReloader.swift */,
+				37891A47AB1C446EA677CAF4 /* WebDAVService.swift */,
+				A1B2C3D4E5F6789012345678 /* DriveAdmin.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -352,6 +369,16 @@
 				18C35FB3564D92B6FEEC81D6 /* AthleticsView.swift */,
 			);
 			path = Athletics;
+			sourceTree = "<group>";
+		};
+		CBF9BB9B9C784C57A16D324A /* Files */ = {
+			isa = PBXGroup;
+			children = (
+				5410937CABFA4E7ABCD8E84C /* FilesView.swift */,
+				53BAB83E61044752A9D53A58 /* FilesComponents.swift */,
+				4707CE1893804BB2AC7AA5D6 /* FilesSheets.swift */,
+			);
+			path = Files;
 			sourceTree = "<group>";
 		};
 		6EAF4C86391B2C81C0595B62 /* Classes */ = {
@@ -438,6 +465,7 @@
 				C9EB87794E7ACADEB2EC67F4 /* SuffieldAthletics.swift */,
 				7C62439ECC17B4BD42818BE4 /* SuffieldTemplate.swift */,
 				2E486C027EFB8572A128000A /* Todo.swift */,
+				CA7C2EFDC8B14F8DBC99F83C /* DriveItem.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -481,6 +509,7 @@
 				EDFA3F8E82E3CDE5CCD03611 /* DashboardLayoutEditor.swift */,
 				7DE3F4200F1459F90DAD33F1 /* ScheduleEditorView.swift */,
 				8C4F36C6B48E2FB444CF3DE0 /* SettingsView.swift */,
+				D5E3F6A7B8C9012345678901 /* TabBarEditorView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -671,6 +700,7 @@
 				DC8F742DC5FE8163BAE9AFBF /* DTOs.swift in Sources */,
 				5C77A262615C2264337A8668 /* DashboardLayout.swift in Sources */,
 				723E4E283E614F0AFFE5DC89 /* DashboardLayoutEditor.swift in Sources */,
+				C4D2E5F6A7B8901234567890 /* TabBarEditorView.swift in Sources */,
 				BB4D670A88C4A4C458DC53B1 /* DeepLinks.swift in Sources */,
 				F269CE4B5A777BAEB6A0D96D /* DiningParser.swift in Sources */,
 				B020D56A7AB742D316572B94 /* DiningService.swift in Sources */,
@@ -714,6 +744,12 @@
 				ED268B42E722D7C8AB16C79E /* UserSettings.swift in Sources */,
 				59A003904FDB11E0CB0E1F66 /* WeatherService.swift in Sources */,
 				2EBD198EACB8200A457317EA /* WidgetReloader.swift in Sources */,
+				91E400F6C12640428A5AF8FE /* DriveItem.swift in Sources */,
+				EB5AEE5665324B1C830DFA50 /* WebDAVService.swift in Sources */,
+				B3C1A2D4E5F67890ABCD1234 /* DriveAdmin.swift in Sources */,
+				A936A19CC2654ED58998BA3B /* FilesView.swift in Sources */,
+				C88D634F4A7D497BB58E3664 /* FilesComponents.swift in Sources */,
+				8EAA30ECBB9B49B3B78EFC89 /* FilesSheets.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

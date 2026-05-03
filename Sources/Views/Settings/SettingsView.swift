@@ -27,6 +27,7 @@ struct SettingsView: View {
 
                     youSection(name: $userSettings.displayName)
                     themeSection
+                    tabBarSection
                     scheduleSection
                     layoutSection
                     canvasSection(url: $userSettings.canvasFeedURL)
@@ -34,6 +35,7 @@ struct SettingsView: View {
                     apExamsSection
                     countdownSection
                     eventsSection
+                    filesAdminSection
                     syncSection
                     permissionsSection
                     aboutSection
@@ -81,6 +83,14 @@ struct SettingsView: View {
                 }
             }
             .padding(.top, 4)
+        }
+    }
+
+    private var tabBarSection: some View {
+        settingsBlock(title: "Tab Bar") {
+            NavigationLink { TabBarEditorView() } label: {
+                brutalRow("Customize tabs", value: "\(UserSettings.shared.enabledTabs.count) active")
+            }
         }
     }
 
@@ -157,6 +167,52 @@ struct SettingsView: View {
         } footer: {
             "Toggle which Apple Calendars show up in the Events tab."
         }
+    }
+
+    private var filesAdminSection: some View {
+        let admin = DriveAdmin.shared
+        return settingsBlock(title: "Files Admin") {
+            if admin.isAdmin {
+                HStack {
+                    Text("Status")
+                        .font(.system(size: 14, design: .monospaced))
+                        .foregroundStyle(AppColors.primary)
+                    Spacer()
+                    Text("ADMIN ◆")
+                        .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                        .foregroundStyle(AppColors.accent)
+                }
+                .padding(.vertical, 10)
+                .overlay(HairlineDivider(), alignment: .bottom)
+
+                Button {
+                    admin.logout()
+                } label: {
+                    HStack {
+                        Text("Log out of admin")
+                            .font(.system(size: 14, design: .monospaced))
+                            .foregroundStyle(Color.red)
+                        Spacer()
+                        Image(systemName: "lock")
+                            .foregroundStyle(Color.red)
+                    }
+                    .padding(.vertical, 10)
+                }
+                .buttonStyle(.plain)
+            } else {
+                NavigationLink {
+                    filesAdminLoginView
+                } label: {
+                    brutalRow("Admin login", value: "locked")
+                }
+            }
+        } footer: {
+            "Admin can upload, rename, move, and delete files."
+        }
+    }
+
+    private var filesAdminLoginView: some View {
+        FilesAdminLoginView()
     }
 
     private var syncSection: some View {
@@ -310,9 +366,8 @@ struct SettingsView: View {
         .background(theme.background)
         .overlay(
             Rectangle()
-                .strokeBorder(theme.primary, lineWidth: active ? 2.5 : 1.5)
+                .strokeBorder(active ? theme.accent : theme.primary, lineWidth: active ? 2.5 : 1)
         )
-        .shadow(color: active ? AppColors.accent : .clear, radius: 0, x: 4, y: 4)
     }
 
     private func syncRow(label: String, date: Date?) -> some View {
@@ -386,4 +441,132 @@ struct SettingsView: View {
         df.timeStyle = .short
         return df
     }()
+}
+
+// MARK: - Admin Login (Settings)
+
+struct FilesAdminLoginView: View {
+    @Environment(ThemeManager.self) private var themeManager
+    @Environment(\.dismiss) private var dismiss
+
+    @State private var password = ""
+    @State private var newPassword = ""
+    @State private var failed = false
+    @State private var showChangePassword = false
+
+    private var admin: DriveAdmin { DriveAdmin.shared }
+
+    var body: some View {
+        _ = themeManager.current
+        return ZStack {
+            ThemedBackground()
+            VStack(alignment: .leading, spacing: 14) {
+                Text("Files Admin")
+                    .font(.system(size: 20, weight: .heavy, design: .monospaced))
+                    .kerning(1.4)
+                    .foregroundStyle(AppColors.primary)
+                    .padding(.top, 4)
+
+                if admin.isAdmin {
+                    loggedInView
+                } else {
+                    loginForm
+                }
+            }
+            .padding(20)
+        }
+        .navigationTitle("Admin")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private var loginForm: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("PASSWORD")
+                .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                .kerning(1.2)
+                .foregroundStyle(AppColors.tertiary)
+            HairlineDivider()
+
+            if failed {
+                Text("Incorrect password")
+                    .font(.system(size: 11, design: .monospaced))
+                    .foregroundStyle(Color.red)
+            }
+
+            SecureField("Enter admin password", text: $password)
+                .font(.system(size: 14, design: .monospaced))
+                .foregroundStyle(AppColors.primary)
+                .padding(10)
+                .overlay(Rectangle().strokeBorder(AppColors.primary, lineWidth: 1.5))
+
+            Button {
+                if admin.login(password: password) {
+                    failed = false; dismiss()
+                } else {
+                    failed = true; password = ""
+                }
+            } label: {
+                Text("LOGIN")
+                    .font(.system(size: 13, weight: .heavy, design: .monospaced))
+                    .foregroundStyle(AppColors.surface)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(AppColors.primary)
+            }
+            .buttonStyle(.plain)
+            .disabled(password.isEmpty)
+
+            Text("Default password is \"admin\". Change it below.")
+                .font(.system(size: 10, design: .monospaced))
+                .foregroundStyle(AppColors.tertiary)
+        }
+    }
+
+    private var loggedInView: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Logged in as admin ◆")
+                .font(.system(size: 13, weight: .heavy, design: .monospaced))
+                .foregroundStyle(AppColors.accent)
+
+            Button {
+                admin.logout(); dismiss()
+            } label: {
+                Text("LOG OUT")
+                    .font(.system(size: 13, weight: .heavy, design: .monospaced))
+                    .foregroundStyle(Color.red)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .overlay(Rectangle().strokeBorder(Color.red, lineWidth: 1.5))
+            }
+            .buttonStyle(.plain)
+
+            HairlineDivider()
+            Text("CHANGE PASSWORD")
+                .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                .kerning(1.2)
+                .foregroundStyle(AppColors.tertiary)
+
+            SecureField("New password", text: $newPassword)
+                .font(.system(size: 14, design: .monospaced))
+                .foregroundStyle(AppColors.primary)
+                .padding(10)
+                .overlay(Rectangle().strokeBorder(AppColors.primary, lineWidth: 1.5))
+
+            Button {
+                let trimmed = newPassword.trimmingCharacters(in: .whitespaces)
+                guard !trimmed.isEmpty else { return }
+                admin.setPassword(trimmed)
+                newPassword = ""
+            } label: {
+                Text("UPDATE PASSWORD")
+                    .font(.system(size: 13, weight: .heavy, design: .monospaced))
+                    .foregroundStyle(AppColors.surface)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(newPassword.trimmingCharacters(in: .whitespaces).isEmpty ? AppColors.tertiary : AppColors.primary)
+            }
+            .buttonStyle(.plain)
+            .disabled(newPassword.trimmingCharacters(in: .whitespaces).isEmpty)
+        }
+    }
 }

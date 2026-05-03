@@ -7,6 +7,7 @@ final class UserSettings {
     static let shared = UserSettings()
     private static let nameKey = "user.displayName"
     private static let canvasKey = "user.canvasFeedURL"
+    private static let tabsKey = "user.enabledTabs"
 
     var displayName: String {
         didSet { UserDefaults.standard.set(displayName, forKey: Self.nameKey) }
@@ -14,6 +15,10 @@ final class UserSettings {
 
     var canvasFeedURL: String {
         didSet { UserDefaults.standard.set(canvasFeedURL, forKey: Self.canvasKey) }
+    }
+
+    var enabledTabs: [AppTab] {
+        didSet { saveTabs() }
     }
 
     private init() {
@@ -30,6 +35,22 @@ final class UserSettings {
             UserDefaults.standard.set(true, forKey: seededKey)
         } else {
             self.canvasFeedURL = ""
+        }
+        self.enabledTabs = Self.loadTabs()
+    }
+
+    private static func loadTabs() -> [AppTab] {
+        guard let data = UserDefaults.standard.data(forKey: tabsKey),
+              let tabs = try? JSONDecoder().decode([AppTab].self, from: data),
+              !tabs.isEmpty else {
+            return AppTab.allDefault
+        }
+        return tabs
+    }
+
+    private func saveTabs() {
+        if let data = try? JSONEncoder().encode(enabledTabs) {
+            UserDefaults.standard.set(data, forKey: Self.tabsKey)
         }
     }
 
