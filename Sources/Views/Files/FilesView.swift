@@ -190,24 +190,26 @@ struct FilesView: View {
 
     private var folderTitleBlock: some View {
         let title = pathSegments.last ?? "FILES"
-        return HStack(spacing: 0) {
-            Rectangle()
-                .fill(AppColors.primary)
-                .frame(width: 4)
-            Text(title.uppercased())
-                .font(.system(size: 22, weight: .heavy, design: .monospaced))
-                .kerning(1.4)
-                .foregroundStyle(AppColors.primary)
-                .lineLimit(2)
-                .minimumScaleFactor(0.7)
-                .multilineTextAlignment(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, 12)
-                .padding(.vertical, 14)
-        }
-        .padding(.horizontal, 16)
-        .background(AppColors.background)
-        .overlay(alignment: .bottom) { HairlineDivider() }
+        return Text(title.uppercased())
+            .font(.system(size: 22, weight: .heavy, design: .monospaced))
+            .kerning(1.4)
+            .foregroundStyle(AppColors.primary)
+            .lineLimit(2)
+            .minimumScaleFactor(0.7)
+            .multilineTextAlignment(.leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.leading, 24)
+            .padding(.trailing, 16)
+            .padding(.vertical, 12)
+            .background(AppColors.background)
+            .overlay(alignment: .leading) {
+                Rectangle()
+                    .fill(AppColors.primary)
+                    .frame(width: 4)
+                    .padding(.vertical, 8)
+                    .padding(.leading, 16)
+            }
+            .overlay(alignment: .bottom) { HairlineDivider() }
     }
 
     // MARK: - Content
