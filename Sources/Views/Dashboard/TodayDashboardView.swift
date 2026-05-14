@@ -35,29 +35,35 @@ struct TodayDashboardView: View {
     private let deepLinks = DeepLinks.shared
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 12) {
-                headerWithSettings
-                todoSection
-                remindersSection
+        ZStack(alignment: .bottom) {
+            ThemedBackground()
+
+            ScrollView {
+                VStack(alignment: .leading, spacing: 12) {
+                    headerWithSettings
+                    todoSection
+                    remindersSection
+                    Color.clear.frame(height: 220)
+                }
+                .padding(.horizontal, 14)
+                .padding(.top, 16)
+                .padding(.bottom, 12)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
+                .contentShape(Rectangle())
+                .onTapGesture { dismissKeyboard() }
             }
-            .padding(.horizontal, 14)
-            .padding(.top, 16)
-            .padding(.bottom, 12)
-            .frame(maxWidth: .infinity, alignment: .topLeading)
-            .contentShape(Rectangle())
-            .onTapGesture { dismissKeyboard() }
-        }
-        .scrollDismissesKeyboard(.interactively)
-        .safeAreaInset(edge: .bottom, spacing: 0) {
+            .scrollDismissesKeyboard(.interactively)
+
             glanceGrid
                 .padding(.horizontal, 14)
-                .padding(.top, 8)
-                .padding(.bottom, 10)
+                .padding(.top, 10)
+                .padding(.bottom, 8)
                 .background(AppColors.background)
+                .overlay(alignment: .top) {
+                    Rectangle().fill(AppColors.hairline).frame(height: 1)
+                }
         }
-        .background(ThemedBackground())
-        .navigationBarHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
         .refreshable {
             await refreshAll()
         }
