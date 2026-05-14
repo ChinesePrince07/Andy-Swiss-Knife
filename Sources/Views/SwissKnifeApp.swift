@@ -124,29 +124,30 @@ struct RootView: View {
     var body: some View {
         Group {
             if let services {
-                tabBody(services: services)
-                    .safeAreaInset(edge: .bottom, spacing: 0) {
-                        BrutalTabBar(selected: $selectedTab)
-                    }
-                    .onAppear {
-                        services.sweeper.sweep()
-                        validateSelectedTab()
-                    }
-                    .onChange(of: UserSettings.shared.enabledTabs) { _, _ in validateSelectedTab() }
-                    .onChange(of: scenePhase) { _, phase in
-                        if phase == .active { services.sweeper.sweep() }
-                    }
-                    .onOpenURL { url in
-                        DeepLinks.shared.handle(url)
-                        selectedTab = .today
-                    }
-                    .fullScreenCover(isPresented: $showOnboarding) {
-                        OnboardingView(
-                            onFinish: { showOnboarding = false },
-                            modelContext: container.mainContext
-                        )
-                        .environment(ThemeManager.shared)
-                    }
+                VStack(spacing: 0) {
+                    tabBody(services: services)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    BrutalTabBar(selected: $selectedTab)
+                }
+                .onAppear {
+                    services.sweeper.sweep()
+                    validateSelectedTab()
+                }
+                .onChange(of: UserSettings.shared.enabledTabs) { _, _ in validateSelectedTab() }
+                .onChange(of: scenePhase) { _, phase in
+                    if phase == .active { services.sweeper.sweep() }
+                }
+                .onOpenURL { url in
+                    DeepLinks.shared.handle(url)
+                    selectedTab = .today
+                }
+                .fullScreenCover(isPresented: $showOnboarding) {
+                    OnboardingView(
+                        onFinish: { showOnboarding = false },
+                        modelContext: container.mainContext
+                    )
+                    .environment(ThemeManager.shared)
+                }
             } else {
                 Color.clear
                     .onAppear {
