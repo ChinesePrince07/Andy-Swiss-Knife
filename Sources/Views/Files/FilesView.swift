@@ -34,6 +34,7 @@ struct FilesView: View {
     @State private var previewURL: URL? = nil
     @State private var shareURL: URL? = nil
     @State private var downloadingItemID: String? = nil
+    @State private var actionAfterDismiss: (() -> Void)? = nil
 
     private var admin: DriveAdmin { DriveAdmin.shared }
 
@@ -90,18 +91,22 @@ struct FilesView: View {
         .navigationTitle(pathSegments.isEmpty ? "FILES" : pathSegments.last?.uppercased() ?? "FILES")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { toolbarContent }
-        .sheet(isPresented: $showActionSheet) {
+        .sheet(isPresented: $showActionSheet, onDismiss: {
+            let pending = actionAfterDismiss
+            actionAfterDismiss = nil
+            pending?()
+        }) {
             if let item = actionItem {
                 FileActionSheet(
                     isPresented: $showActionSheet,
                     item: item,
                     isAdmin: admin.isAdmin,
-                    onOpen:     { openFile(item) },
-                    onRename:   { showRenameSheet = true },
-                    onMove:     { showMoveSheet = true },
-                    onShare:    { downloadForShare(item) },
-                    onDownload: { downloadForShare(item) },
-                    onDelete:   { deleteItem(item) }
+                    onOpen:     { actionAfterDismiss = { openFile(item) } },
+                    onRename:   { actionAfterDismiss = { showRenameSheet = true } },
+                    onMove:     { actionAfterDismiss = { showMoveSheet = true } },
+                    onShare:    { actionAfterDismiss = { downloadForShare(item) } },
+                    onDownload: { actionAfterDismiss = { downloadForShare(item) } },
+                    onDelete:   { actionAfterDismiss = { deleteItem(item) } }
                 )
                 .environment(themeManager)
             }
