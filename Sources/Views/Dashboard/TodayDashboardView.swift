@@ -35,26 +35,26 @@ struct TodayDashboardView: View {
     private let deepLinks = DeepLinks.shared
 
     var body: some View {
-        VStack(spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 12) {
-                    headerWithSettings
-                    todoSection
-                    remindersSection
-                }
-                .padding(.horizontal, 14)
-                .padding(.top, 16)
-                .padding(.bottom, 12)
-                .frame(maxWidth: .infinity, alignment: .topLeading)
-                .contentShape(Rectangle())
-                .onTapGesture { dismissKeyboard() }
+        ScrollView {
+            VStack(alignment: .leading, spacing: 12) {
+                headerWithSettings
+                todoSection
+                remindersSection
             }
-            .scrollDismissesKeyboard(.interactively)
-
+            .padding(.horizontal, 14)
+            .padding(.top, 16)
+            .padding(.bottom, 12)
+            .frame(maxWidth: .infinity, alignment: .topLeading)
+            .contentShape(Rectangle())
+            .onTapGesture { dismissKeyboard() }
+        }
+        .scrollDismissesKeyboard(.interactively)
+        .safeAreaInset(edge: .bottom, spacing: 0) {
             glanceGrid
                 .padding(.horizontal, 14)
                 .padding(.top, 8)
                 .padding(.bottom, 10)
+                .background(AppColors.background)
         }
         .background(ThemedBackground())
         .navigationBarHidden(true)
