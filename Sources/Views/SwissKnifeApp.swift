@@ -45,7 +45,6 @@ final class Services {
         self.sweeper = TodoSweeper(context: context)
         self.athletics = AthleticsService(http: http, context: context)
         self.weather = WeatherService(http: http)
-        Self.seedScheduleIfNeeded(context: context)
         SnapshotStore.publishTodos(from: context)
         SnapshotStore.publishReminders(from: context)
         let importer = CalendarImporter(context: context)
@@ -54,11 +53,9 @@ final class Services {
         WidgetReloader.reloadAll()
     }
 
-    static func seedScheduleIfNeeded(context: ModelContext) {
+    static func seedSuffieldSchedule(context: ModelContext) {
         let existing = (try? context.fetch(FetchDescriptor<ScheduleClass>())) ?? []
-        let didSeedKey = "schedule.didSeedDefaults"
-        let didSeed = UserDefaults.standard.bool(forKey: didSeedKey)
-        guard existing.isEmpty, !didSeed else { return }
+        guard existing.isEmpty else { return }
         for p in defaultSchedule {
             context.insert(ScheduleClass(
                 name: p.name,
@@ -73,7 +70,6 @@ final class Services {
             ))
         }
         try? context.save()
-        UserDefaults.standard.set(true, forKey: didSeedKey)
     }
 }
 
@@ -122,6 +118,7 @@ struct RootView: View {
     let container: ModelContainer
     @State private var services: Services?
     @State private var selectedTab: AppTab = .today
+    @State private var showOnboarding: Bool = !UserSettings.shared.hasCompletedOnboarding
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
@@ -142,6 +139,13 @@ struct RootView: View {
                     .onOpenURL { url in
                         DeepLinks.shared.handle(url)
                         selectedTab = .today
+                    }
+                    .fullScreenCover(isPresented: $showOnboarding) {
+                        OnboardingView(
+                            onFinish: { showOnboarding = false },
+                            modelContext: container.mainContext
+                        )
+                        .environment(ThemeManager.shared)
                     }
             } else {
                 Color.clear

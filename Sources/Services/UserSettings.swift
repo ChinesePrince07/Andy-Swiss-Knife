@@ -7,7 +7,9 @@ final class UserSettings {
     static let shared = UserSettings()
     private static let nameKey = "user.displayName"
     private static let canvasKey = "user.canvasFeedURL"
+    private static let eventsKey = "user.eventsICSURL"
     private static let tabsKey = "user.enabledTabs"
+    private static let onboardingKey = "user.hasCompletedOnboarding.v1"
 
     var displayName: String {
         didSet { UserDefaults.standard.set(displayName, forKey: Self.nameKey) }
@@ -17,26 +19,28 @@ final class UserSettings {
         didSet { UserDefaults.standard.set(canvasFeedURL, forKey: Self.canvasKey) }
     }
 
+    var eventsICSURL: String {
+        didSet { UserDefaults.standard.set(eventsICSURL, forKey: Self.eventsKey) }
+    }
+
     var enabledTabs: [AppTab] {
         didSet { saveTabs() }
     }
 
+    var hasCompletedOnboarding: Bool {
+        didSet { UserDefaults.standard.set(hasCompletedOnboarding, forKey: Self.onboardingKey) }
+    }
+
     private init() {
-        self.displayName = UserDefaults.standard.string(forKey: Self.nameKey) ?? "Andy"
-        let stored = UserDefaults.standard.string(forKey: Self.canvasKey)
-        let seededKey = "user.canvasFeedURL.seeded"
-        let didSeed = UserDefaults.standard.bool(forKey: seededKey)
-        if let stored, !stored.isEmpty {
-            self.canvasFeedURL = stored
-        } else if !didSeed {
-            let seed = Secrets.canvasFeedURL.trimmingCharacters(in: .whitespacesAndNewlines)
-            self.canvasFeedURL = seed
-            UserDefaults.standard.set(seed, forKey: Self.canvasKey)
-            UserDefaults.standard.set(true, forKey: seededKey)
-        } else {
-            self.canvasFeedURL = ""
-        }
+        self.displayName = UserDefaults.standard.string(forKey: Self.nameKey) ?? ""
+        self.canvasFeedURL = UserDefaults.standard.string(forKey: Self.canvasKey) ?? ""
+        self.eventsICSURL = UserDefaults.standard.string(forKey: Self.eventsKey) ?? ""
         self.enabledTabs = Self.loadTabs()
+        self.hasCompletedOnboarding = UserDefaults.standard.bool(forKey: Self.onboardingKey)
+    }
+
+    func resetOnboarding() {
+        hasCompletedOnboarding = false
     }
 
     private static func loadTabs() -> [AppTab] {

@@ -26,7 +26,8 @@ final class EventsService {
     }
 
     private func refresh(now: Date, days: Int) async throws {
-        let data = try await http.data(for: Config.eventsICSURL)
+        guard let url = Config.eventsICSURL else { return }
+        let data = try await http.data(for: url)
         let source = String(data: data, encoding: .utf8) ?? ""
         let raw = try ICSParser.parse(source)
 
