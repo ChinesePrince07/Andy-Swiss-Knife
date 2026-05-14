@@ -35,24 +35,27 @@ struct TodayDashboardView: View {
     private let deepLinks = DeepLinks.shared
 
     var body: some View {
-        GeometryReader { geo in
+        VStack(spacing: 0) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     headerWithSettings
                     todoSection
                     remindersSection
-                    Spacer(minLength: 12)
-                    glanceGrid
                 }
                 .padding(.horizontal, 14)
                 .padding(.top, 16)
                 .padding(.bottom, 12)
-                .frame(maxWidth: .infinity, minHeight: geo.size.height, alignment: .topLeading)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
                 .contentShape(Rectangle())
                 .onTapGesture { dismissKeyboard() }
             }
+            .scrollDismissesKeyboard(.interactively)
+
+            glanceGrid
+                .padding(.horizontal, 14)
+                .padding(.top, 8)
+                .padding(.bottom, 10)
         }
-        .scrollDismissesKeyboard(.interactively)
         .background(ThemedBackground())
         .navigationBarHidden(true)
         .refreshable {
