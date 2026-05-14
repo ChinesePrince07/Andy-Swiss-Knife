@@ -31,6 +31,7 @@ struct SettingsView: View {
                     scheduleSection
                     layoutSection
                     canvasSection(url: $userSettings.canvasFeedURL)
+                    schoolEventsSection(url: $userSettings.eventsICSURL)
                     athleticsSection
                     apExamsSection
                     countdownSection
@@ -125,6 +126,24 @@ struct SettingsView: View {
             }
         } footer: {
             "Canvas → Calendar → sidebar → Calendar Feed → copy URL."
+        }
+    }
+
+    private func schoolEventsSection(url: Binding<String>) -> some View {
+        settingsBlock(title: "School events feed") {
+            brutalField {
+                TextField("https://…/calendar.ics",
+                          text: url)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled(true)
+                    .keyboardType(.URL)
+                    .font(.system(size: 11, design: .monospaced))
+                    .foregroundStyle(AppColors.primary)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+            }
+        } footer: {
+            "Public ICS URL for your school's events calendar. Leave blank to disable."
         }
     }
 

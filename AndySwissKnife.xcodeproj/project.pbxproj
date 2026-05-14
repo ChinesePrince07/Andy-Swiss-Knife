@@ -110,6 +110,7 @@
 		91E400F6C12640428A5AF8FE /* DriveItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA7C2EFDC8B14F8DBC99F83C /* DriveItem.swift */; };
 		EB5AEE5665324B1C830DFA50 /* WebDAVService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37891A47AB1C446EA677CAF4 /* WebDAVService.swift */; };
 		B3C1A2D4E5F67890ABCD1234 /* DriveAdmin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6789012345678 /* DriveAdmin.swift */; };
+		D4E5F6789012345678ABCDEF /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3D4E5F67890ABCDEF123456 /* OnboardingView.swift */; };
 		A936A19CC2654ED58998BA3B /* FilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5410937CABFA4E7ABCD8E84C /* FilesView.swift */; };
 		C88D634F4A7D497BB58E3664 /* FilesComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53BAB83E61044752A9D53A58 /* FilesComponents.swift */; };
 		8EAA30ECBB9B49B3B78EFC89 /* FilesSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4707CE1893804BB2AC7AA5D6 /* FilesSheets.swift */; };
@@ -162,6 +163,7 @@
 		CA7C2EFDC8B14F8DBC99F83C /* DriveItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveItem.swift; sourceTree = "<group>"; };
 		37891A47AB1C446EA677CAF4 /* WebDAVService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDAVService.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F6789012345678 /* DriveAdmin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveAdmin.swift; sourceTree = "<group>"; };
+		C3D4E5F67890ABCDEF123456 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		5410937CABFA4E7ABCD8E84C /* FilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesView.swift; sourceTree = "<group>"; };
 		53BAB83E61044752A9D53A58 /* FilesComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesComponents.swift; sourceTree = "<group>"; };
 		4707CE1893804BB2AC7AA5D6 /* FilesSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesSheets.swift; sourceTree = "<group>"; };
@@ -274,6 +276,7 @@
 				D31AE3AB0610EC8CD4FF0B1D /* Settings */,
 				534C259B3418B0E0A2DB1C26 /* Todos */,
 				CBF9BB9B9C784C57A16D324A /* Files */,
+				E5F67890ABCDEF1234567890 /* Onboarding */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -379,6 +382,14 @@
 				4707CE1893804BB2AC7AA5D6 /* FilesSheets.swift */,
 			);
 			path = Files;
+			sourceTree = "<group>";
+		};
+		E5F67890ABCDEF1234567890 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				C3D4E5F67890ABCDEF123456 /* OnboardingView.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 		6EAF4C86391B2C81C0595B62 /* Classes */ = {
@@ -747,6 +758,7 @@
 				91E400F6C12640428A5AF8FE /* DriveItem.swift in Sources */,
 				EB5AEE5665324B1C830DFA50 /* WebDAVService.swift in Sources */,
 				B3C1A2D4E5F67890ABCD1234 /* DriveAdmin.swift in Sources */,
+				D4E5F6789012345678ABCDEF /* OnboardingView.swift in Sources */,
 				A936A19CC2654ED58998BA3B /* FilesView.swift in Sources */,
 				C88D634F4A7D497BB58E3664 /* FilesComponents.swift in Sources */,
 				8EAA30ECBB9B49B3B78EFC89 /* FilesSheets.swift in Sources */,
