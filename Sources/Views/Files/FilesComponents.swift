@@ -117,14 +117,14 @@ struct DriveFileRow: View {
         _ = themeManager.current
         let starred = UserDefaults.standard.isStarred(path: item.id)
         return Button(action: onTap) {
-            HStack(spacing: 12) {
-                DriveFileGlyph(item: item, size: 38)
-                    .frame(width: 38, height: 38)
+            HStack(spacing: 10) {
+                DriveFileGlyph(item: item, size: 26)
+                    .frame(width: 26, height: 26)
 
-                VStack(alignment: .leading, spacing: 2) {
+                VStack(alignment: .leading, spacing: 1) {
                     HStack(spacing: 4) {
                         Text(item.name)
-                            .font(AppType.bodyMedium)
+                            .font(.system(size: 13, weight: .medium, design: .monospaced))
                             .foregroundStyle(AppColors.primary)
                             .lineLimit(1)
                         if starred {
@@ -134,7 +134,7 @@ struct DriveFileRow: View {
                         }
                     }
                     Text(subtitle)
-                        .font(AppType.caption)
+                        .font(.system(size: 10, design: .monospaced))
                         .foregroundStyle(AppColors.tertiary)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -142,23 +142,23 @@ struct DriveFileRow: View {
                 if isDownloading {
                     ProgressView()
                         .tint(AppColors.primary)
-                        .frame(width: 32, height: 32)
+                        .frame(width: 26, height: 26)
                 } else if isSelected {
                     Image(systemName: "checkmark.square.fill")
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.system(size: 16, weight: .bold))
                         .foregroundStyle(AppColors.primary)
                 } else {
                     Button(action: onMore) {
                         Image(systemName: "ellipsis")
-                            .font(.system(size: 16, weight: .medium))
+                            .font(.system(size: 14, weight: .medium))
                             .foregroundStyle(AppColors.secondary)
-                            .frame(width: 32, height: 32)
+                            .frame(width: 28, height: 28)
                     }
                     .buttonStyle(.plain)
                 }
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 6)
             .background(isSelected ? AppColors.primary.opacity(0.08) : Color.clear)
             .contentShape(Rectangle())
         }
