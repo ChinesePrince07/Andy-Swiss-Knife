@@ -55,11 +55,8 @@ struct TodayDashboardView: View {
             glanceGrid
                 .padding(.horizontal, 14)
                 .padding(.top, 10)
-                .padding(.bottom, 8)
+                .padding(.bottom, 18)
                 .background(AppColors.background)
-                .overlay(alignment: .top) {
-                    Rectangle().fill(AppColors.hairline).frame(height: 1)
-                }
         }
         .background(AppColors.background)
         .toolbar(.hidden, for: .navigationBar)
