@@ -60,6 +60,7 @@ struct FilesView: View {
             VStack(spacing: 0) {
                 BreadcrumbBar(segments: pathSegments) { navigateTo(index: $0) }
                     .environment(themeManager)
+                folderTitleBlock
                 DriveSearchBar(text: $searchText)
                     .environment(themeManager)
                 sortBar
@@ -88,7 +89,7 @@ struct FilesView: View {
                     }
                 }
         )
-        .navigationTitle(pathSegments.isEmpty ? "FILES" : pathSegments.last?.uppercased() ?? "FILES")
+        .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { toolbarContent }
         .sheet(isPresented: $showActionSheet, onDismiss: {
@@ -183,6 +184,30 @@ struct FilesView: View {
             .font(.system(size: 11, weight: .heavy, design: .monospaced))
             .foregroundStyle(AppColors.primary)
         }
+    }
+
+    // MARK: - Folder Title
+
+    private var folderTitleBlock: some View {
+        let title = pathSegments.last ?? "FILES"
+        return HStack(spacing: 0) {
+            Rectangle()
+                .fill(AppColors.primary)
+                .frame(width: 4)
+            Text(title.uppercased())
+                .font(.system(size: 22, weight: .heavy, design: .monospaced))
+                .kerning(1.4)
+                .foregroundStyle(AppColors.primary)
+                .lineLimit(2)
+                .minimumScaleFactor(0.7)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading, 12)
+                .padding(.vertical, 14)
+        }
+        .padding(.horizontal, 16)
+        .background(AppColors.background)
+        .overlay(alignment: .bottom) { HairlineDivider() }
     }
 
     // MARK: - Content
