@@ -83,28 +83,41 @@ struct OnboardingView: View {
         HStack(spacing: 0) {
             if step > 0 {
                 Button { withAnimation { step -= 1 } } label: {
-                    Text("BACK")
+                    Text("← BACK")
                         .font(.system(size: 12, weight: .heavy, design: .monospaced))
                         .kerning(1.2)
                         .foregroundStyle(AppColors.primary)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 18)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 14)
                 }
                 .buttonStyle(.plain)
-                Rectangle().fill(AppColors.hairline).frame(width: 1)
             }
-
+            Spacer()
             Button { advance() } label: {
-                Text(step >= totalSteps ? "FINISH" : "NEXT")
+                Text(rightButtonLabel)
                     .font(.system(size: 12, weight: .heavy, design: .monospaced))
                     .kerning(1.2)
                     .foregroundStyle(AppColors.surface)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 18)
+                    .padding(.horizontal, 28)
+                    .padding(.vertical, 14)
                     .background(AppColors.primary)
             }
             .buttonStyle(.plain)
+            .padding(.trailing, 16)
         }
+        .padding(.vertical, 6)
+    }
+
+    private var rightButtonLabel: String {
+        if step >= totalSteps { return "FINISH" }
+        let trimmed: String
+        switch step {
+        case 1: trimmed = name.trimmingCharacters(in: .whitespaces)
+        case 3: trimmed = canvasURL.trimmingCharacters(in: .whitespaces)
+        case 4: trimmed = eventsURL.trimmingCharacters(in: .whitespaces)
+        default: return step == 2 ? "SKIP" : "NEXT"
+        }
+        return trimmed.isEmpty ? "SKIP" : "NEXT"
     }
 
     // MARK: - Steps
