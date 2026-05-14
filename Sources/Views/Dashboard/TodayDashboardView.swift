@@ -36,8 +36,6 @@ struct TodayDashboardView: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            ThemedBackground()
-
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     headerWithSettings
@@ -63,6 +61,7 @@ struct TodayDashboardView: View {
                     Rectangle().fill(AppColors.hairline).frame(height: 1)
                 }
         }
+        .background(AppColors.background)
         .toolbar(.hidden, for: .navigationBar)
         .refreshable {
             await refreshAll()
