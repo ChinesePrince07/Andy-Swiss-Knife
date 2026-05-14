@@ -43,7 +43,7 @@ struct TodayDashboardView: View {
                 glanceGrid
             }
             .padding(.horizontal, 14)
-            .padding(.top, 0)
+            .padding(.top, 16)
             .padding(.bottom, 30)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .contentShape(Rectangle())
