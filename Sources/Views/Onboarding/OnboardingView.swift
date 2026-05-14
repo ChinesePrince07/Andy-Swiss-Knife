@@ -123,11 +123,9 @@ struct OnboardingView: View {
     // MARK: - Steps
 
     private var welcomeStep: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Text("SWISS KNIFE")
-                .font(.system(size: 32, weight: .heavy, design: .monospaced))
-                .kerning(2.0)
-                .foregroundStyle(AppColors.primary)
+        VStack(alignment: .leading, spacing: 24) {
+            logoMark
+                .padding(.bottom, 4)
 
             Text("One app for school. Schedule, assignments, athletics, AP exams, study documents.")
                 .font(AppType.body)
@@ -136,8 +134,35 @@ struct OnboardingView: View {
             Text("This quick setup is optional — you can skip any step and fill it in later from Settings.")
                 .font(AppType.caption)
                 .foregroundStyle(AppColors.tertiary)
-                .padding(.top, 8)
         }
+    }
+
+    private var logoMark: some View {
+        HStack(spacing: 0) {
+            Rectangle()
+                .fill(AppColors.primary)
+                .frame(width: 14)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("SWISS")
+                    .font(.system(size: 26, weight: .heavy, design: .monospaced))
+                    .kerning(2.0)
+                    .foregroundStyle(AppColors.primary)
+                Text("KNIFE")
+                    .font(.system(size: 26, weight: .heavy, design: .monospaced))
+                    .kerning(2.0)
+                    .foregroundStyle(AppColors.primary)
+                Text("◆ FOR SCHOOL")
+                    .font(.system(size: 9, weight: .heavy, design: .monospaced))
+                    .kerning(1.4)
+                    .foregroundStyle(AppColors.accent)
+                    .padding(.top, 4)
+            }
+            .padding(.horizontal, 18)
+            .padding(.vertical, 16)
+        }
+        .background(AppColors.surface)
+        .overlay(Rectangle().strokeBorder(AppColors.primary, lineWidth: 2))
+        .fixedSize()
     }
 
     private var nameStep: some View {
