@@ -55,6 +55,7 @@
 		512FB25DEB74CBBCFC79C31B /* ReminderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE649F9598138060C7A34068 /* ReminderRow.swift */; };
 		541997E4DB1BDC2195C62FD9 /* DiningParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700361F6356B9A0A54B91DBD /* DiningParserTests.swift */; };
 		59A003904FDB11E0CB0E1F66 /* WeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D320E06F4810FBD48A3F23 /* WeatherService.swift */; };
+		5BDCF6E54E6BD801C5DCD672 /* PhotoMasonry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE60C7F10227C1540230F6A /* PhotoMasonry.swift */; };
 		5C77A262615C2264337A8668 /* DashboardLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6DED12FF93B8A00E879914 /* DashboardLayout.swift */; };
 		5DB7B7495560BF255A0D44FF /* CalendarImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8914BC4C0FABA3E1577AEDB0 /* CalendarImporter.swift */; };
 		5F4070DF6619FB2C8C288153 /* APExamsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C558BAA9BE4F6C9ACD897743 /* APExamsView.swift */; };
@@ -223,6 +224,7 @@
 		8CA84389C0AF69E01F288897 /* PhotoGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoGalleryView.swift; sourceTree = "<group>"; };
 		972D7E648764DEFAD68BBF71 /* AndySwissKnifeTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = AndySwissKnifeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A377EBC72BD04D506FF4E8D /* DTOs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTOs.swift; sourceTree = "<group>"; };
+		9BE60C7F10227C1540230F6A /* PhotoMasonry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoMasonry.swift; sourceTree = "<group>"; };
 		9D4EB5DFBDA09ADDEBB886A0 /* APExamsPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APExamsPickerView.swift; sourceTree = "<group>"; };
 		9DE29B303DD49919976371BC /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 		A3D320E06F4810FBD48A3F23 /* WeatherService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherService.swift; sourceTree = "<group>"; };
@@ -591,6 +593,7 @@
 			children = (
 				006906772ADEEA79A61989C6 /* PhotoDetailView.swift */,
 				8CA84389C0AF69E01F288897 /* PhotoGalleryView.swift */,
+				9BE60C7F10227C1540230F6A /* PhotoMasonry.swift */,
 				ABA847ABFFB599A73F680530 /* PhotoUploadView.swift */,
 			);
 			path = Photos;
@@ -788,6 +791,7 @@
 				6138315DA6DE72E429B50E33 /* PersonalEventEditSheet.swift in Sources */,
 				B532EF31AF9AA674BA27A6AC /* PhotoDetailView.swift in Sources */,
 				E33D65B69F1AC8D7BE44E3E9 /* PhotoGalleryView.swift in Sources */,
+				5BDCF6E54E6BD801C5DCD672 /* PhotoMasonry.swift in Sources */,
 				1AD73BD4CB9274FF67827D5A /* PhotoUploadCoordinator.swift in Sources */,
 				037D7B4C0429193A50EFDBDB /* PhotoUploadView.swift in Sources */,
 				F33C098955AFD7AE31F6501C /* PomodoroActivity.swift in Sources */,

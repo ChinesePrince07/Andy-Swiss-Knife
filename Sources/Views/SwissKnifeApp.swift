@@ -18,6 +18,7 @@ struct SwissKnifeApp: App {
             RootView(container: container)
                 .modelContainer(container)
                 .environment(ThemeManager.shared)
+                .environment(PhotoRatioCache.shared)
                 .tint(AppColors.primary)
                 .preferredColorScheme(ThemeManager.shared.current.prefersDarkMode ? .dark : .light)
         }

@@ -143,28 +143,23 @@ struct PhotoGalleryView: View {
     }
 
     private var grid: some View {
-        let columns: [GridItem] = Array(repeating: GridItem(.flexible(), spacing: 2), count: 3)
-        return ScrollView {
-            LazyVGrid(columns: columns, spacing: 2) {
-                ForEach(photos) { photo in
-                    photoCell(photo)
+        GeometryReader { geo in
+            ScrollView {
+                PhotoMasonry(photos: photos, containerWidth: geo.size.width, columns: 2, spacing: 2, horizontalPadding: 2) { photo, w, h in
+                    masonryCell(photo: photo, width: w, height: h)
                 }
             }
-            .padding(.horizontal, 2).padding(.vertical, 2)
+            .refreshable { await refresh() }
         }
-        .refreshable { await refresh() }
     }
 
     @ViewBuilder
-    private func photoCell(_ photo: R2Photo) -> some View {
+    private func masonryCell(photo: R2Photo, width: CGFloat, height: CGFloat) -> some View {
         let isSelected = selected.contains(photo.key)
         let cell = ZStack(alignment: .topTrailing) {
-            R2Thumbnail(photo: photo)
-                .aspectRatio(1, contentMode: .fill)
-                .clipped()
-                .overlay(
-                    Rectangle().strokeBorder(isSelected ? AppColors.accent : AppColors.hairline, lineWidth: isSelected ? 3 : 0.5)
-                )
+            PhotoMasonryTile(photo: photo, width: width, height: height)
+            Rectangle()
+                .strokeBorder(isSelected ? AppColors.accent : AppColors.hairline.opacity(0.5), lineWidth: isSelected ? 3 : 0.5)
             if selectionMode {
                 Image(systemName: isSelected ? "checkmark.square.fill" : "square")
                     .font(.system(size: 18, weight: .bold))
