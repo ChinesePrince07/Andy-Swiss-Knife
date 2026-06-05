@@ -104,9 +104,21 @@ actor SiteClient {
 
     private func url(path: String, query: [URLQueryItem] = []) async throws -> (URLRequest, String) {
         let (base, secret) = try await currentConfig()
-        var comps = URLComponents(url: base.appendingPathComponent(path), resolvingAgainstBaseURL: false)
-        if !query.isEmpty { comps?.queryItems = query }
-        guard let final = comps?.url else { throw SiteClientError.notConfigured }
+
+        // Next.js on andypandy.org is configured with trailingSlash: true. A request to
+        // /api/admin/posts gets a 308 to /api/admin/posts/. URLSession drops the
+        // Authorization header on cross-origin redirects, so hit the canonical
+        // trailing-slash path directly.
+        let normalizedPath = path.hasSuffix("/") ? path : path + "/"
+        let baseString = base.absoluteString.hasSuffix("/")
+            ? String(base.absoluteString.dropLast())
+            : base.absoluteString
+        guard var comps = URLComponents(string: baseString + normalizedPath) else {
+            throw SiteClientError.notConfigured
+        }
+        if !query.isEmpty { comps.queryItems = query }
+        guard let final = comps.url else { throw SiteClientError.notConfigured }
+
         var req = URLRequest(url: final)
         req.setValue("Bearer \(secret)", forHTTPHeaderField: "Authorization")
         req.setValue("AndySwissKnife/0.1 (iOS)", forHTTPHeaderField: "User-Agent")

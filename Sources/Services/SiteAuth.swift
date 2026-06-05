@@ -8,7 +8,7 @@ final class SiteAuth {
 
     private static let baseKey = "publishing.siteBaseURL"
     private static let secretKey = "publishing.publishSecret"
-    private static let defaultBase = "https://andypandy.org"
+    private static let defaultBase = "https://www.andypandy.org"
 
     var baseURL: String {
         didSet {
@@ -31,7 +31,14 @@ final class SiteAuth {
     private(set) var isAuthed: Bool = false
 
     private init() {
-        self.baseURL = UserDefaults.standard.string(forKey: Self.baseKey) ?? Self.defaultBase
+        let stored = UserDefaults.standard.string(forKey: Self.baseKey) ?? Self.defaultBase
+        // Migration: bare host redirected to www on andypandy.org and dropped the
+        // Authorization header on iOS. Bump anyone still on the old default.
+        let migrated = stored == "https://andypandy.org" ? Self.defaultBase : stored
+        self.baseURL = migrated
+        if migrated != stored {
+            UserDefaults.standard.set(migrated, forKey: Self.baseKey)
+        }
         self.secret = KeychainStore.get(Self.secretKey) ?? ""
         refreshIsAuthed()
     }
