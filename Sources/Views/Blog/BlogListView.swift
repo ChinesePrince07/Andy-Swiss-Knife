@@ -1,5 +1,29 @@
 import SwiftUI
 
+enum BlogSort: String, CaseIterable, Identifiable {
+    case newest, oldest, titleAsc, titleDesc
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .newest:    return "NEWEST"
+        case .oldest:    return "OLDEST"
+        case .titleAsc:  return "A → Z"
+        case .titleDesc: return "Z → A"
+        }
+    }
+
+    var next: BlogSort {
+        switch self {
+        case .newest:    return .oldest
+        case .oldest:    return .titleAsc
+        case .titleAsc:  return .titleDesc
+        case .titleDesc: return .newest
+        }
+    }
+}
+
 struct BlogListView: View {
     @Environment(ThemeManager.self) private var themeManager
     @State private var posts: [BlogPostSummary] = []
@@ -7,8 +31,11 @@ struct BlogListView: View {
     @State private var errorMessage: String?
     @State private var search = ""
     @State private var showingNew = false
+    @AppStorage("blog.sort.v1") private var sortRaw: String = BlogSort.newest.rawValue
+    @State private var pinnedFirst: Bool = UserDefaults.standard.object(forKey: "blog.pinnedFirst.v1") as? Bool ?? true
 
     private var auth = SiteAuth.shared
+    private var sort: BlogSort { BlogSort(rawValue: sortRaw) ?? .newest }
 
     var body: some View {
         _ = themeManager.current
@@ -41,8 +68,54 @@ struct BlogListView: View {
         VStack(spacing: 0) {
             header
             searchBar
+            sortBar
             content
         }
+    }
+
+    private var sortBar: some View {
+        HStack(spacing: 8) {
+            Text("SORT")
+                .font(.system(size: 9, weight: .heavy, design: .monospaced))
+                .kerning(1.2)
+                .foregroundStyle(AppColors.tertiary)
+
+            ForEach(BlogSort.allCases) { option in
+                Button {
+                    sortRaw = option.rawValue
+                } label: {
+                    Text(option.label)
+                        .font(.system(size: 9, weight: .heavy, design: .monospaced))
+                        .kerning(0.8)
+                        .foregroundStyle(option == sort ? AppColors.surface : AppColors.primary)
+                        .padding(.horizontal, 8).padding(.vertical, 4)
+                        .background(option == sort ? AppColors.primary : Color.clear)
+                        .overlay(Rectangle().strokeBorder(AppColors.primary, lineWidth: option == sort ? 0 : 1))
+                }
+                .buttonStyle(.plain)
+            }
+
+            Spacer(minLength: 4)
+
+            Button {
+                pinnedFirst.toggle()
+                UserDefaults.standard.set(pinnedFirst, forKey: "blog.pinnedFirst.v1")
+            } label: {
+                HStack(spacing: 3) {
+                    Image(systemName: pinnedFirst ? "pin.fill" : "pin")
+                        .font(.system(size: 9))
+                    Text("PIN TOP")
+                        .font(.system(size: 9, weight: .heavy, design: .monospaced))
+                        .kerning(0.8)
+                }
+                .foregroundStyle(pinnedFirst ? AppColors.accent : AppColors.tertiary)
+                .padding(.horizontal, 6).padding(.vertical, 4)
+                .overlay(Rectangle().strokeBorder(pinnedFirst ? AppColors.accent : AppColors.tertiary, lineWidth: 1))
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 16).padding(.vertical, 6)
+        .overlay(alignment: .bottom) { HairlineDivider() }
     }
 
     private var header: some View {
@@ -194,11 +267,32 @@ struct BlogListView: View {
 
     private var filtered: [BlogPostSummary] {
         let q = search.trimmingCharacters(in: .whitespaces).lowercased()
-        if q.isEmpty { return posts }
-        return posts.filter { p in
-            p.title.lowercased().contains(q) ||
-            p.description.lowercased().contains(q) ||
-            p.slug.lowercased().contains(q)
+        let matching: [BlogPostSummary]
+        if q.isEmpty {
+            matching = posts
+        } else {
+            matching = posts.filter { p in
+                p.title.lowercased().contains(q) ||
+                p.description.lowercased().contains(q) ||
+                p.slug.lowercased().contains(q)
+            }
+        }
+        return apply(sort: sort, pinnedFirst: pinnedFirst, to: matching)
+    }
+
+    private func apply(sort: BlogSort, pinnedFirst: Bool, to posts: [BlogPostSummary]) -> [BlogPostSummary] {
+        let sorted = posts.sorted { a, b in
+            switch sort {
+            case .newest:    return a.date > b.date
+            case .oldest:    return a.date < b.date
+            case .titleAsc:  return a.title.localizedCaseInsensitiveCompare(b.title) == .orderedAscending
+            case .titleDesc: return a.title.localizedCaseInsensitiveCompare(b.title) == .orderedDescending
+            }
+        }
+        guard pinnedFirst else { return sorted }
+        return sorted.sorted { a, b in
+            if a.pinned != b.pinned { return a.pinned && !b.pinned }
+            return false  // stable — keep current sorted order
         }
     }
 
