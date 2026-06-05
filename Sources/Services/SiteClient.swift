@@ -134,9 +134,25 @@ actor SiteClient {
         guard let http = response as? HTTPURLResponse else { throw SiteClientError.unknown }
         if http.statusCode == 401 { throw SiteClientError.unauthorized }
         if !(200...299).contains(http.statusCode) {
-            let msg = String(data: data, encoding: .utf8)
-            throw SiteClientError.http(http.statusCode, msg)
+            throw SiteClientError.http(http.statusCode, Self.sanitizeServerMessage(data: data))
         }
+    }
+
+    /// Trims server error bodies to a safe length and strips anything that looks like a Bearer token,
+    /// so a misbehaving 5xx body can't echo the secret back into the UI.
+    private static func sanitizeServerMessage(data: Data) -> String? {
+        guard var text = String(data: data, encoding: .utf8), !text.isEmpty else { return nil }
+        if text.count > 240 { text = String(text.prefix(240)) + "…" }
+        let stripped = text.replacingOccurrences(
+            of: #"Bearer\s+\S+"#,
+            with: "Bearer …",
+            options: .regularExpression
+        )
+        return stripped
+    }
+
+    private func encodedSlug(_ slug: String) -> String {
+        slug.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? slug
     }
 
     // MARK: - Auth ping
@@ -156,7 +172,7 @@ actor SiteClient {
     }
 
     func loadPost(slug: String) async throws -> BlogPostDetail {
-        var (req, _) = try await url(path: "/api/admin/posts/\(slug)")
+        var (req, _) = try await url(path: "/api/admin/posts/\(encodedSlug(slug))")
         req.httpMethod = "GET"
         return try await send(req, as: BlogPostDetail.self)
     }
@@ -180,7 +196,7 @@ actor SiteClient {
     }
 
     func savePost(slug: String, input: BlogPostInput) async throws {
-        var (req, _) = try await url(path: "/api/admin/posts/\(slug)")
+        var (req, _) = try await url(path: "/api/admin/posts/\(encodedSlug(slug))")
         req.httpMethod = "PUT"
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let body: [String: Any] = [
@@ -195,13 +211,13 @@ actor SiteClient {
     }
 
     func deletePost(slug: String) async throws {
-        var (req, _) = try await url(path: "/api/admin/posts/\(slug)")
+        var (req, _) = try await url(path: "/api/admin/posts/\(encodedSlug(slug))")
         req.httpMethod = "DELETE"
         _ = try await sendVoid(req)
     }
 
     func togglePin(slug: String, pinned: Bool) async throws {
-        var (req, _) = try await url(path: "/api/admin/posts/\(slug)")
+        var (req, _) = try await url(path: "/api/admin/posts/\(encodedSlug(slug))")
         req.httpMethod = "PATCH"
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
         req.httpBody = try JSONSerialization.data(withJSONObject: ["pinned": pinned])

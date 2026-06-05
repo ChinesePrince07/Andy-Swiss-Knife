@@ -10,7 +10,9 @@ struct PhotoUploadView: View {
 
     @State private var coordinator = PhotoUploadCoordinator()
     @State private var pickerItems: [PhotosPickerItem] = []
-    @State private var pendingData: [String: Data] = [:]
+    // Keep PhotosPickerItem refs only — Data is loaded lazily per file during upload
+    // so we don't pin every selected photo in memory at once.
+    @State private var pendingItems: [String: PhotosPickerItem] = [:]
     @State private var folderName: String = ""
 
     var body: some View {
@@ -175,26 +177,22 @@ struct PhotoUploadView: View {
         for item in items {
             let suggestedName = "image-\(Int(Date().timeIntervalSince1970))-\(UUID().uuidString.prefix(6)).jpg"
             let key = folder.isEmpty ? suggestedName : "\(folder)/\(suggestedName)"
-            do {
-                guard let data = try await item.loadTransferable(type: Data.self) else { continue }
-                pendingData[key] = data
-                coordinator.append(fileName: key, displayName: suggestedName, contentType: "image/jpeg")
-            } catch {
-                coordinator.message = error.localizedDescription
-            }
+            pendingItems[key] = item
+            coordinator.append(fileName: key, displayName: suggestedName, contentType: "image/jpeg")
         }
     }
 
     private func remove(_ item: PhotoUploadCoordinator.Item) {
-        pendingData.removeValue(forKey: item.fileName)
+        pendingItems.removeValue(forKey: item.fileName)
         coordinator.remove(item)
     }
 
     private func startUpload() async {
-        let snapshot = pendingData
+        let snapshot = pendingItems
         await coordinator.upload { item in
-            guard let data = snapshot[item.fileName] else {
-                throw SiteClientError.unknown
+            guard let pickerItem = snapshot[item.fileName] else { throw SiteClientError.unknown }
+            guard let data = try await pickerItem.loadTransferable(type: Data.self) else {
+                throw SiteClientError.decoding
             }
             return data
         }
