@@ -6,7 +6,7 @@ struct TabBarEditorView: View {
     @Environment(ThemeManager.self) private var themeManager
 
     private var disabledTabs: [AppTab] {
-        AppTab.allDefault.filter { !enabledTabs.contains($0) }
+        AppTab.allCases.filter { !enabledTabs.contains($0) }
     }
 
     var body: some View {

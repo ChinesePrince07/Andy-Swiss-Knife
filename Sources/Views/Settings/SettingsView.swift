@@ -37,6 +37,7 @@ struct SettingsView: View {
                     countdownSection
                     eventsSection
                     filesAdminSection
+                    publishingSection
                     syncSection
                     permissionsSection
                     aboutSection
@@ -232,6 +233,19 @@ struct SettingsView: View {
 
     private var filesAdminLoginView: some View {
         FilesAdminLoginView()
+    }
+
+    private var publishingSection: some View {
+        let auth = SiteAuth.shared
+        return settingsBlock(title: "Publishing") {
+            NavigationLink {
+                PublishingSettingsView()
+            } label: {
+                brutalRow("andypandy.org access", value: auth.isAuthed ? "linked" : "off")
+            }
+        } footer: {
+            "Sign in to edit blog posts and upload photos to your site from the BLOG and PICS tabs."
+        }
     }
 
     private var syncSection: some View {

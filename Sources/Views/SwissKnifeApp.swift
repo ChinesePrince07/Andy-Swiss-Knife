@@ -74,7 +74,7 @@ final class Services {
 }
 
 enum AppTab: String, Hashable, Codable, CaseIterable, Identifiable {
-    case today, todos, classes, canvas, sports, files
+    case today, todos, classes, canvas, sports, files, blog, photos
 
     var id: String { rawValue }
 
@@ -86,6 +86,8 @@ enum AppTab: String, Hashable, Codable, CaseIterable, Identifiable {
         case .canvas:  return "CANVAS"
         case .sports:  return "SPORTS"
         case .files:   return "FILES"
+        case .blog:    return "BLOG"
+        case .photos:  return "PICS"
         }
     }
 
@@ -97,6 +99,8 @@ enum AppTab: String, Hashable, Codable, CaseIterable, Identifiable {
         case .canvas:  return "book.closed"
         case .sports:  return "trophy"
         case .files:   return "folder"
+        case .blog:    return "square.and.pencil"
+        case .photos:  return "photo"
         }
     }
 
@@ -108,6 +112,8 @@ enum AppTab: String, Hashable, Codable, CaseIterable, Identifiable {
         case .canvas:  return "book.closed.fill"
         case .sports:  return "trophy.fill"
         case .files:   return "folder.fill"
+        case .blog:    return "square.and.pencil"
+        case .photos:  return "photo.fill"
         }
     }
 
@@ -194,6 +200,16 @@ struct RootView: View {
         case .files:
             NavigationStack {
                 FilesView()
+                    .withSettingsGear(services: services)
+            }
+        case .blog:
+            NavigationStack {
+                BlogListView()
+                    .withSettingsGear(services: services)
+            }
+        case .photos:
+            NavigationStack {
+                PhotoGalleryView()
                     .withSettingsGear(services: services)
             }
         }
