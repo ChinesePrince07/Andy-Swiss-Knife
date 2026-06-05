@@ -33,6 +33,7 @@ struct BlogListView: View {
     @State private var showingNew = false
     @AppStorage("blog.sort.v1") private var sortRaw: String = BlogSort.newest.rawValue
     @State private var pinnedFirst: Bool = UserDefaults.standard.object(forKey: "blog.pinnedFirst.v1") as? Bool ?? true
+    @State private var gridMode: Bool = UserDefaults.standard.object(forKey: "blog.gridMode.v1") as? Bool ?? false
 
     private var auth = SiteAuth.shared
     private var sort: BlogSort { BlogSort(rawValue: sortRaw) ?? .newest }
@@ -113,6 +114,18 @@ struct BlogListView: View {
                 .overlay(Rectangle().strokeBorder(pinnedFirst ? AppColors.accent : AppColors.tertiary, lineWidth: 1))
             }
             .buttonStyle(.plain)
+
+            Button {
+                gridMode.toggle()
+                UserDefaults.standard.set(gridMode, forKey: "blog.gridMode.v1")
+            } label: {
+                Image(systemName: gridMode ? "square.grid.2x2.fill" : "list.bullet")
+                    .font(.system(size: 11, weight: .heavy))
+                    .foregroundStyle(AppColors.primary)
+                    .frame(width: 28, height: 24)
+                    .overlay(Rectangle().strokeBorder(AppColors.primary, lineWidth: 1))
+            }
+            .buttonStyle(.plain)
         }
         .padding(.horizontal, 16).padding(.vertical, 6)
         .overlay(alignment: .bottom) { HairlineDivider() }
@@ -178,6 +191,8 @@ struct BlogListView: View {
                 errorView(errorMessage)
             } else if filtered.isEmpty {
                 emptyState
+            } else if gridMode {
+                postGrid
             } else {
                 postList
             }
@@ -196,6 +211,24 @@ struct BlogListView: View {
                     .buttonStyle(.plain)
                 }
             }
+        }
+        .refreshable { await refresh() }
+    }
+
+    private var postGrid: some View {
+        ScrollView {
+            LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
+                ForEach(filtered) { post in
+                    NavigationLink {
+                        BlogEditView(slug: post.slug, onSaved: { Task { await refresh() } }, onDeleted: { Task { await refresh() } })
+                    } label: {
+                        BlogPostCard(post: post)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
         }
         .refreshable { await refresh() }
     }
@@ -351,5 +384,54 @@ struct BlogPostRow: View {
         if !post.date.isEmpty { parts.append(post.date.prefix(10).description) }
         parts.append(post.slug)
         return parts.joined(separator: " · ")
+    }
+}
+
+struct BlogPostCard: View {
+    let post: BlogPostSummary
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 4) {
+                if post.pinned {
+                    Image(systemName: "pin.fill")
+                        .font(.system(size: 8))
+                        .foregroundStyle(AppColors.accent)
+                }
+                Text(post.title)
+                    .font(.system(size: 12, weight: .heavy, design: .monospaced))
+                    .foregroundStyle(AppColors.primary)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
+            }
+
+            if !post.date.isEmpty {
+                Text(post.date.prefix(10))
+                    .font(.system(size: 9, design: .monospaced))
+                    .foregroundStyle(AppColors.tertiary)
+            }
+
+            if !post.description.isEmpty {
+                Text(post.description)
+                    .font(.system(size: 10, design: .monospaced))
+                    .foregroundStyle(AppColors.secondary)
+                    .lineLimit(3)
+                    .multilineTextAlignment(.leading)
+            }
+
+            Spacer(minLength: 0)
+
+            HStack {
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 9, weight: .semibold))
+                    .foregroundStyle(AppColors.tertiary)
+            }
+        }
+        .padding(10)
+        .frame(maxWidth: .infinity, alignment: .topLeading)
+        .background(AppColors.surface)
+        .overlay(Rectangle().strokeBorder(AppColors.primary, lineWidth: 1))
+        .contentShape(Rectangle())
     }
 }
