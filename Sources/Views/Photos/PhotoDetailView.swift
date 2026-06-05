@@ -1,4 +1,5 @@
 import SwiftUI
+import MapKit
 
 struct PhotoDetailView: View {
     let photo: R2Photo
@@ -22,6 +23,7 @@ struct PhotoDetailView: View {
     @State private var exifLonText: String = ""
     @State private var exifSaving = false
     @State private var exifSaved = false
+    @State private var showMapPicker = false
 
     var body: some View {
         _ = themeManager.current
@@ -57,6 +59,15 @@ struct PhotoDetailView: View {
         }
         .sheet(isPresented: $showMove) {
             moveSheet
+        }
+        .sheet(isPresented: $showMapPicker) {
+            ExifMapPicker(
+                latitude: Double(exifLatText.trimmingCharacters(in: .whitespaces)),
+                longitude: Double(exifLonText.trimmingCharacters(in: .whitespaces))
+            ) { coord in
+                exifLatText = String(format: "%.6f", coord.latitude)
+                exifLonText = String(format: "%.6f", coord.longitude)
+            }
         }
     }
 
@@ -260,6 +271,20 @@ struct PhotoDetailView: View {
                     .padding(.horizontal, 8).padding(.vertical, 6)
                     .overlay(Rectangle().strokeBorder(AppColors.primary, lineWidth: 1))
             }
+            Button { showMapPicker = true } label: {
+                HStack(spacing: 6) {
+                    Image(systemName: "map")
+                        .font(.system(size: 11))
+                    Text("PICK ON MAP")
+                        .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                        .kerning(0.8)
+                }
+                .foregroundStyle(AppColors.primary)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+                .overlay(Rectangle().strokeBorder(AppColors.primary, lineWidth: 1.5))
+            }
+            .buttonStyle(.plain)
         }
     }
 
@@ -465,5 +490,131 @@ struct R2Thumbnail: View {
     private var placeholderTile: some View {
         Rectangle()
             .fill(AppColors.surface)
+    }
+}
+
+// MARK: - Map picker
+
+struct ExifMapPicker: View {
+    let initialLatitude: Double?
+    let initialLongitude: Double?
+    let onPick: (CLLocationCoordinate2D) -> Void
+
+    @Environment(\.dismiss) private var dismiss
+    @Environment(ThemeManager.self) private var themeManager
+
+    @State private var pinCoordinate: CLLocationCoordinate2D?
+    @State private var cameraPosition: MapCameraPosition
+
+    init(latitude: Double?, longitude: Double?, onPick: @escaping (CLLocationCoordinate2D) -> Void) {
+        self.initialLatitude = latitude
+        self.initialLongitude = longitude
+        self.onPick = onPick
+
+        if let lat = latitude, let lon = longitude,
+           (-90...90).contains(lat), (-180...180).contains(lon) {
+            let coord = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+            _pinCoordinate = State(initialValue: coord)
+            _cameraPosition = State(initialValue: .region(MKCoordinateRegion(
+                center: coord,
+                span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+            )))
+        } else {
+            _pinCoordinate = State(initialValue: nil)
+            // Default: world view
+            _cameraPosition = State(initialValue: .region(MKCoordinateRegion(
+                center: CLLocationCoordinate2D(latitude: 20, longitude: 0),
+                span: MKCoordinateSpan(latitudeDelta: 120, longitudeDelta: 120)
+            )))
+        }
+    }
+
+    var body: some View {
+        _ = themeManager.current
+        return ZStack {
+            ThemedBackground()
+            VStack(spacing: 0) {
+                // Header
+                HStack(spacing: 10) {
+                    Button { dismiss() } label: {
+                        Text("CANCEL")
+                            .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                            .foregroundStyle(AppColors.primary)
+                    }
+                    .buttonStyle(.plain)
+
+                    Spacer()
+
+                    Text("PICK LOCATION")
+                        .font(.system(size: 13, weight: .heavy, design: .monospaced))
+                        .kerning(1.2)
+                        .foregroundStyle(AppColors.primary)
+
+                    Spacer()
+
+                    Button {
+                        if let coord = pinCoordinate {
+                            onPick(coord)
+                        }
+                        dismiss()
+                    } label: {
+                        Text("DONE")
+                            .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                            .foregroundStyle(pinCoordinate != nil ? AppColors.accent : AppColors.tertiary)
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(pinCoordinate == nil)
+                }
+                .padding(.horizontal, 16).padding(.vertical, 10)
+                .overlay(alignment: .bottom) { HairlineDivider() }
+
+                // Coordinate readout
+                if let coord = pinCoordinate {
+                    HStack(spacing: 12) {
+                        Text(String(format: "%.6f, %.6f", coord.latitude, coord.longitude))
+                            .font(.system(size: 11, design: .monospaced))
+                            .foregroundStyle(AppColors.primary)
+                        Spacer()
+                        Button {
+                            pinCoordinate = nil
+                        } label: {
+                            Text("CLEAR")
+                                .font(.system(size: 9, weight: .heavy, design: .monospaced))
+                                .kerning(0.8)
+                                .foregroundStyle(Color.red)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .padding(.horizontal, 16).padding(.vertical, 6)
+                    .overlay(alignment: .bottom) { HairlineDivider() }
+                } else {
+                    Text("TAP MAP TO PLACE PIN")
+                        .font(.system(size: 10, weight: .heavy, design: .monospaced))
+                        .kerning(1.0)
+                        .foregroundStyle(AppColors.tertiary)
+                        .padding(.vertical, 6)
+                        .overlay(alignment: .bottom) { HairlineDivider() }
+                }
+
+                // Map
+                MapReader { proxy in
+                    Map(position: $cameraPosition) {
+                        if let coord = pinCoordinate {
+                            Annotation("", coordinate: coord) {
+                                Image(systemName: "mappin.circle.fill")
+                                    .font(.system(size: 30))
+                                    .foregroundStyle(AppColors.accent)
+                            }
+                        }
+                    }
+                    .mapStyle(.standard)
+                    .onTapGesture { screenPoint in
+                        if let coord = proxy.convert(screenPoint, from: .local) {
+                            pinCoordinate = coord
+                        }
+                    }
+                }
+            }
+        }
     }
 }
