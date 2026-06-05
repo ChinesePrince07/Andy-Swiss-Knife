@@ -1,6 +1,38 @@
 import SwiftUI
 import PhotosUI
 
+enum PhotoSort: String, CaseIterable, Identifiable {
+    case newest, oldest
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .newest: return "NEWEST"
+        case .oldest: return "OLDEST"
+        }
+    }
+}
+
+/// Masonry column count. `auto` resolves from the container width so the grid
+/// matches afilmory's column behavior; the numbered cases pin a fixed count.
+enum PhotoColumns: String, CaseIterable, Identifiable {
+    case auto, two = "2", three = "3", four = "4", five = "5"
+
+    var id: String { rawValue }
+    var label: String { self == .auto ? "AUTO" : rawValue }
+
+    func resolved(width: CGFloat) -> Int {
+        switch self {
+        case .auto:  return min(5, max(2, Int((width / 180).rounded())))
+        case .two:   return 2
+        case .three: return 3
+        case .four:  return 4
+        case .five:  return 5
+        }
+    }
+}
+
 struct PhotoGalleryView: View {
     @Environment(ThemeManager.self) private var themeManager
 
@@ -12,6 +44,11 @@ struct PhotoGalleryView: View {
     @State private var selectionMode = false
     @State private var selected = Set<String>()
     @State private var pendingDelete = false
+    @AppStorage("photos.sort.v1") private var sortRaw: String = PhotoSort.newest.rawValue
+    @AppStorage("photos.columns.v1") private var columnsRaw: String = PhotoColumns.auto.rawValue
+
+    private var sort: PhotoSort { PhotoSort(rawValue: sortRaw) ?? .newest }
+    private var columnChoice: PhotoColumns { PhotoColumns(rawValue: columnsRaw) ?? .auto }
 
     var body: some View {
         _ = themeManager.current
@@ -46,6 +83,7 @@ struct PhotoGalleryView: View {
         VStack(spacing: 0) {
             header
             toolbar
+            sortBar
             content
         }
     }
@@ -127,6 +165,61 @@ struct PhotoGalleryView: View {
         .overlay(alignment: .bottom) { HairlineDivider() }
     }
 
+    private var sortBar: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 6) {
+                groupLabel("SORT")
+                ForEach(PhotoSort.allCases) { option in
+                    chip(option.label, selected: option == sort) { sortRaw = option.rawValue }
+                }
+
+                Rectangle()
+                    .fill(AppColors.hairline)
+                    .frame(width: 1, height: 16)
+                    .padding(.horizontal, 4)
+
+                groupLabel("COLS")
+                ForEach(PhotoColumns.allCases) { option in
+                    chip(option.label, selected: option == columnChoice) { columnsRaw = option.rawValue }
+                }
+            }
+            .padding(.horizontal, 16)
+        }
+        .padding(.vertical, 6)
+        .overlay(alignment: .bottom) { HairlineDivider() }
+    }
+
+    private func groupLabel(_ text: String) -> some View {
+        Text(text)
+            .font(.system(size: 9, weight: .heavy, design: .monospaced))
+            .kerning(1.2)
+            .foregroundStyle(AppColors.tertiary)
+    }
+
+    private func chip(_ label: String, selected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(label)
+                .font(.system(size: 9, weight: .heavy, design: .monospaced))
+                .kerning(0.8)
+                .foregroundStyle(selected ? AppColors.surface : AppColors.primary)
+                .padding(.horizontal, 8).padding(.vertical, 4)
+                .background(selected ? AppColors.primary : Color.clear)
+                .overlay(Rectangle().strokeBorder(AppColors.primary, lineWidth: selected ? 0 : 1))
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var sortedPhotos: [R2Photo] {
+        photos.sorted { a, b in
+            switch sort {
+            case .newest:
+                return (a.lastModified ?? "") > (b.lastModified ?? "")
+            case .oldest:
+                return (a.lastModified ?? "") < (b.lastModified ?? "")
+            }
+        }
+    }
+
     private var content: some View {
         Group {
             if loading && photos.isEmpty {
@@ -145,7 +238,7 @@ struct PhotoGalleryView: View {
     private var grid: some View {
         GeometryReader { geo in
             ScrollView {
-                PhotoMasonry(photos: photos, containerWidth: geo.size.width, columns: 2, spacing: 2, horizontalPadding: 2) { photo, w, h in
+                PhotoMasonry(photos: sortedPhotos, containerWidth: geo.size.width, columns: columnChoice.resolved(width: geo.size.width), spacing: 2, horizontalPadding: 2) { photo, w, h in
                     masonryCell(photo: photo, width: w, height: h)
                 }
             }
