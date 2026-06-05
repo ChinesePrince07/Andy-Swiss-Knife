@@ -48,10 +48,24 @@ struct BlogPostInput: Codable, Sendable {
 
 struct R2Photo: Codable, Identifiable, Hashable, Sendable {
     let key: String
+    let thumbnailKey: String?
     let size: Int64
     let lastModified: String?
     let url: String
+    let thumbnailUrl: String
     var id: String { key }
+
+    var displayUrl: String { thumbnailUrl.isEmpty ? url : thumbnailUrl }
+}
+
+struct R2PhotoExif: Codable, Sendable {
+    let key: String
+    let date: String?
+    let latitude: Double?
+    let longitude: Double?
+    let make: String?
+    let model: String?
+    let lens: String?
 }
 
 struct R2PresignedURL: Codable, Sendable {
@@ -299,6 +313,35 @@ actor SiteClient {
         let body: [String: Any] = ["keys": keys, "triggerDeploy": triggerDeploy]
         req.httpBody = try JSONSerialization.data(withJSONObject: body)
         _ = try await sendVoid(req)
+    }
+
+    // MARK: - EXIF
+
+    func loadExif(key: String) async throws -> R2PhotoExif {
+        var (req, _) = try await url(
+            path: "/api/admin/r2-photos/exif",
+            query: [URLQueryItem(name: "key", value: key)]
+        )
+        req.httpMethod = "GET"
+        return try await send(req, as: R2PhotoExif.self)
+    }
+
+    func updateExif(
+        key: String,
+        date: String?,
+        latitude: Double?,
+        longitude: Double?,
+        triggerDeploy: Bool = true
+    ) async throws -> R2PhotoExif {
+        var (req, _) = try await url(path: "/api/admin/r2-photos/exif")
+        req.httpMethod = "PATCH"
+        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        var body: [String: Any] = ["key": key, "triggerDeploy": triggerDeploy]
+        if let date { body["date"] = date }
+        if let latitude { body["latitude"] = latitude }
+        if let longitude { body["longitude"] = longitude }
+        req.httpBody = try JSONSerialization.data(withJSONObject: body)
+        return try await send(req, as: R2PhotoExif.self)
     }
 
     func moveR2Photo(from: String, to: String, triggerDeploy: Bool = true) async throws {

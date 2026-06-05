@@ -13,6 +13,16 @@ struct PhotoDetailView: View {
     @State private var error: String?
     @State private var working = false
 
+    // EXIF state
+    @State private var exif: R2PhotoExif?
+    @State private var exifLoading = true
+    @State private var exifDate: Date = .now
+    @State private var exifHasDate = false
+    @State private var exifLatText: String = ""
+    @State private var exifLonText: String = ""
+    @State private var exifSaving = false
+    @State private var exifSaved = false
+
     var body: some View {
         _ = themeManager.current
         return ZStack {
@@ -23,6 +33,7 @@ struct PhotoDetailView: View {
                     VStack(alignment: .leading, spacing: 14) {
                         preview
                         metaBlock
+                        exifBlock
                         actions
                         if let error {
                             Text(error)
@@ -37,6 +48,7 @@ struct PhotoDetailView: View {
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.hidden, for: .navigationBar)
+        .task { await loadExif() }
         .alert("Delete photo?", isPresented: $showDelete) {
             Button("Cancel", role: .cancel) {}
             Button("Delete", role: .destructive) { Task { await deletePhoto() } }
@@ -72,11 +84,27 @@ struct PhotoDetailView: View {
     }
 
     private var preview: some View {
-        R2Thumbnail(photo: photo, large: true)
-            .aspectRatio(1, contentMode: .fit)
-            .frame(maxWidth: .infinity)
-            .background(AppColors.surface)
-            .overlay(Rectangle().strokeBorder(AppColors.primary, lineWidth: 1.5))
+        // Show the full original here — the user is inspecting a single photo
+        // and bandwidth is fine for one image.
+        AsyncImage(url: URL(string: photo.url)) { phase in
+            switch phase {
+            case .empty:
+                Rectangle().fill(AppColors.surface).overlay(ProgressView().tint(AppColors.primary))
+            case .success(let image):
+                image.resizable().scaledToFit()
+            case .failure:
+                Rectangle().fill(AppColors.surface).overlay(
+                    Image(systemName: "exclamationmark.triangle")
+                        .foregroundStyle(AppColors.tertiary)
+                )
+            @unknown default:
+                Rectangle().fill(AppColors.surface)
+            }
+        }
+        .aspectRatio(contentMode: .fit)
+        .frame(maxWidth: .infinity)
+        .background(AppColors.surface)
+        .overlay(Rectangle().strokeBorder(AppColors.primary, lineWidth: 1.5))
     }
 
     private var metaBlock: some View {
@@ -127,6 +155,128 @@ struct PhotoDetailView: View {
             }
             .buttonStyle(.plain)
         }
+    }
+
+    private var exifBlock: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("EXIF")
+                    .font(.system(size: 10, weight: .heavy, design: .monospaced))
+                    .kerning(1.2)
+                    .foregroundStyle(AppColors.tertiary)
+                Spacer()
+                if exifLoading {
+                    ProgressView().scaleEffect(0.6)
+                }
+                if exifSaved {
+                    Text("SAVED ◆")
+                        .font(.system(size: 9, weight: .heavy, design: .monospaced))
+                        .foregroundStyle(AppColors.accent)
+                }
+            }
+            HairlineDivider()
+
+            if !isJpegEditable {
+                Text("EXIF editing currently supports JPEG only.")
+                    .font(.system(size: 10, design: .monospaced))
+                    .foregroundStyle(AppColors.tertiary)
+            } else {
+                exifCameraReadout
+                exifDateRow
+                exifLocationRow
+                exifSaveButton
+            }
+        }
+    }
+
+    private var isJpegEditable: Bool {
+        photo.key.lowercased().hasSuffix(".jpg") || photo.key.lowercased().hasSuffix(".jpeg")
+    }
+
+    private var exifCameraReadout: some View {
+        let parts = [exif?.make, exif?.model, exif?.lens].compactMap { $0 }.filter { !$0.isEmpty }
+        let label = parts.isEmpty ? "—" : parts.joined(separator: " · ")
+        return HStack(alignment: .top, spacing: 8) {
+            Text("CAMERA")
+                .font(.system(size: 10, weight: .heavy, design: .monospaced))
+                .kerning(1.0)
+                .foregroundStyle(AppColors.tertiary)
+                .frame(width: 70, alignment: .leading)
+            Text(label)
+                .font(.system(size: 11, design: .monospaced))
+                .foregroundStyle(AppColors.secondary)
+                .lineLimit(2)
+            Spacer(minLength: 0)
+        }
+        .padding(.vertical, 4)
+    }
+
+    private var exifDateRow: some View {
+        HStack(alignment: .center, spacing: 8) {
+            Text("DATE")
+                .font(.system(size: 10, weight: .heavy, design: .monospaced))
+                .kerning(1.0)
+                .foregroundStyle(AppColors.tertiary)
+                .frame(width: 70, alignment: .leading)
+            Toggle("", isOn: $exifHasDate)
+                .labelsHidden()
+                .tint(AppColors.primary)
+            DatePicker("", selection: $exifDate, displayedComponents: [.date, .hourAndMinute])
+                .labelsHidden()
+                .disabled(!exifHasDate)
+        }
+        .padding(.vertical, 4)
+    }
+
+    private var exifLocationRow: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack {
+                Text("LATITUDE")
+                    .font(.system(size: 10, weight: .heavy, design: .monospaced))
+                    .kerning(1.0)
+                    .foregroundStyle(AppColors.tertiary)
+                    .frame(width: 70, alignment: .leading)
+                TextField("e.g. 41.987", text: $exifLatText)
+                    .font(.system(size: 12, design: .monospaced))
+                    .foregroundStyle(AppColors.primary)
+                    .keyboardType(.numbersAndPunctuation)
+                    .autocorrectionDisabled(true)
+                    .textInputAutocapitalization(.never)
+                    .padding(.horizontal, 8).padding(.vertical, 6)
+                    .overlay(Rectangle().strokeBorder(AppColors.primary, lineWidth: 1))
+            }
+            HStack {
+                Text("LONGITUDE")
+                    .font(.system(size: 10, weight: .heavy, design: .monospaced))
+                    .kerning(1.0)
+                    .foregroundStyle(AppColors.tertiary)
+                    .frame(width: 70, alignment: .leading)
+                TextField("e.g. -72.625", text: $exifLonText)
+                    .font(.system(size: 12, design: .monospaced))
+                    .foregroundStyle(AppColors.primary)
+                    .keyboardType(.numbersAndPunctuation)
+                    .autocorrectionDisabled(true)
+                    .textInputAutocapitalization(.never)
+                    .padding(.horizontal, 8).padding(.vertical, 6)
+                    .overlay(Rectangle().strokeBorder(AppColors.primary, lineWidth: 1))
+            }
+        }
+    }
+
+    private var exifSaveButton: some View {
+        Button {
+            Task { await saveExif() }
+        } label: {
+            Text(exifSaving ? "SAVING EXIF..." : "SAVE EXIF")
+                .font(.system(size: 12, weight: .heavy, design: .monospaced))
+                .foregroundStyle(AppColors.surface)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 10)
+                .background(exifSaving ? AppColors.tertiary : AppColors.primary)
+        }
+        .buttonStyle(.plain)
+        .disabled(exifSaving)
+        .padding(.top, 4)
     }
 
     private func actionLabel(_ text: String, filled: Bool, destructive: Bool = false) -> some View {
@@ -206,6 +356,57 @@ struct PhotoDetailView: View {
         }
         working = false
     }
+
+    private func loadExif() async {
+        exifLoading = true
+        defer { exifLoading = false }
+        guard isJpegEditable else { return }
+        do {
+            let result = try await SiteClient.shared.loadExif(key: photo.key)
+            exif = result
+            if let dateString = result.date, let parsed = Self.isoFormatter.date(from: dateString) {
+                exifDate = parsed
+                exifHasDate = true
+            } else {
+                exifHasDate = false
+            }
+            if let lat = result.latitude { exifLatText = String(lat) }
+            if let lon = result.longitude { exifLonText = String(lon) }
+        } catch {
+            // Don't surface — EXIF read is best-effort
+        }
+    }
+
+    private func saveExif() async {
+        exifSaving = true
+        exifSaved = false
+        defer { exifSaving = false }
+
+        let lat = Double(exifLatText.trimmingCharacters(in: .whitespaces))
+        let lon = Double(exifLonText.trimmingCharacters(in: .whitespaces))
+        let dateString = exifHasDate ? Self.isoFormatter.string(from: exifDate) : nil
+
+        do {
+            let updated = try await SiteClient.shared.updateExif(
+                key: photo.key,
+                date: dateString,
+                latitude: lat,
+                longitude: lon,
+                triggerDeploy: true
+            )
+            exif = updated
+            exifSaved = true
+            onMutated()
+        } catch {
+            self.error = error.localizedDescription
+        }
+    }
+
+    static let isoFormatter: ISO8601DateFormatter = {
+        let f = ISO8601DateFormatter()
+        f.formatOptions = [.withInternetDateTime]
+        return f
+    }()
 
     private func movePhoto() async {
         working = true

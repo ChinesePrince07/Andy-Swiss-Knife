@@ -173,10 +173,14 @@ struct PhotoUploadView: View {
 
     private func ingest(_ items: [PhotosPickerItem]) async {
         defer { pickerItems = [] }
+        // afilmory's builder watches `photos/original/` — uploads land there so
+        // it auto-generates thumbnails and includes the photo in the next build.
         let folder = folderName.trimmingCharacters(in: .whitespaces).trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+        let basePrefix = "photos/original"
+        let folderPath = folder.isEmpty ? basePrefix : "\(basePrefix)/\(folder)"
         for item in items {
             let suggestedName = "image-\(Int(Date().timeIntervalSince1970))-\(UUID().uuidString.prefix(6)).jpg"
-            let key = folder.isEmpty ? suggestedName : "\(folder)/\(suggestedName)"
+            let key = "\(folderPath)/\(suggestedName)"
             pendingItems[key] = item
             coordinator.append(fileName: key, displayName: suggestedName, contentType: "image/jpeg")
         }

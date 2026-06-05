@@ -94,7 +94,9 @@ struct PhotoMasonryTile: View {
 
     var body: some View {
         Group {
-            if let url = URL(string: photo.url) {
+            // Prefer the small thumbnail URL — afilmory webp thumbnails are
+            // ~200-600 KB vs multi-MB originals, so the grid scrolls smoothly.
+            if let url = URL(string: photo.displayUrl) {
                 AsyncImage(url: url, transaction: Transaction(animation: .easeInOut(duration: 0.15))) { phase in
                     tileContent(phase)
                 }
