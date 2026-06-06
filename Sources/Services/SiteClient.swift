@@ -53,9 +53,25 @@ struct R2Photo: Codable, Identifiable, Hashable, Sendable {
     let lastModified: String?
     let url: String
     let thumbnailUrl: String
+    // Enriched from afilmory's manifest. `dateTaken` is when the shot was
+    // captured (EXIF); `width`/`height` are the intrinsic pixel dimensions.
+    // Absent (nil/0) until a photo has been processed into the manifest.
+    let dateTaken: String?
+    let width: Int?
+    let height: Int?
     var id: String { key }
 
     var displayUrl: String { thumbnailUrl.isEmpty ? url : thumbnailUrl }
+
+    /// Sort key for capture-date ordering; falls back to upload time, matching
+    /// how the afilmory gallery orders photos.
+    var sortDate: String { dateTaken ?? lastModified ?? "" }
+
+    /// width / height when known from the manifest, else nil.
+    var aspectRatio: Double? {
+        guard let w = width, let h = height, w > 0, h > 0 else { return nil }
+        return Double(w) / Double(h)
+    }
 }
 
 struct R2PhotoExif: Codable, Sendable {

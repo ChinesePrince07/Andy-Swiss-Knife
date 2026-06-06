@@ -213,9 +213,9 @@ struct PhotoGalleryView: View {
         photos.sorted { a, b in
             switch sort {
             case .newest:
-                return (a.lastModified ?? "") > (b.lastModified ?? "")
+                return a.sortDate > b.sortDate
             case .oldest:
-                return (a.lastModified ?? "") < (b.lastModified ?? "")
+                return a.sortDate < b.sortDate
             }
         }
     }
@@ -348,6 +348,13 @@ struct PhotoGalleryView: View {
         do {
             let prefix = prefixFilter.trimmingCharacters(in: .whitespaces)
             photos = try await SiteClient.shared.listR2Photos(prefix: prefix.isEmpty ? nil : prefix)
+            // Seed aspect ratios from the manifest so the masonry lays out
+            // immediately instead of reflowing as each thumbnail loads.
+            for photo in photos {
+                if let ratio = photo.aspectRatio {
+                    PhotoRatioCache.shared.set(CGFloat(ratio), for: photo.key)
+                }
+            }
         } catch {
             errorMessage = error.localizedDescription
         }
