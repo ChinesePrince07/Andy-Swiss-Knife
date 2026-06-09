@@ -75,8 +75,13 @@ final class PhotoUploadCoordinator {
                 }
             }
 
-            if anyOK, triggerDeploy {
-                try? await SiteClient.shared.triggerAfilmoryRebuild()
+            if anyOK {
+                // Register the uploaded originals into afilmory's manifest so
+                // they appear on the live gallery. This replaces the old
+                // deploy-hook trigger, which redeployed the site but never
+                // processed the new files into the manifest.
+                let uploadedKeys = items.filter { $0.status == .done }.map { $0.fileName }
+                try? await SiteClient.shared.ingestR2Photos(keys: uploadedKeys)
             }
 
             message = summary(success: anyOK, failed: anyFailed)

@@ -322,6 +322,20 @@ actor SiteClient {
         _ = try await sendVoid(req)
     }
 
+    /// Register freshly-uploaded R2 originals into afilmory's manifest so they
+    /// appear on the live gallery (server generates thumbnail + EXIF + date).
+    @discardableResult
+    func ingestR2Photos(keys: [String]) async throws -> Int {
+        guard !keys.isEmpty else { return 0 }
+        var (req, _) = try await url(path: "/api/admin/r2-photos/ingest")
+        req.httpMethod = "POST"
+        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.httpBody = try JSONSerialization.data(withJSONObject: ["keys": keys])
+        struct R: Decodable { let ingested: Int }
+        let r = try await send(req, as: R.self)
+        return r.ingested
+    }
+
     func deleteR2Photos(keys: [String], triggerDeploy: Bool = true) async throws {
         var (req, _) = try await url(path: "/api/admin/r2-photos")
         req.httpMethod = "DELETE"
