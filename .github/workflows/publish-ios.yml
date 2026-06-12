@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   build-sign-publish:
-    runs-on: macos-14
+    runs-on: macos-15
     env:
       BUNDLE_ID: nsk-596.v-team.cn
       TEAM_ID: VCKAK49A49
@@ -26,6 +26,9 @@ jobs:
       SITE: https://www.andypandy.org
     steps:
       - uses: actions/checkout@v4
+
+      - name: Select latest Xcode (Swift 6 / project format 77 needs Xcode 16+)
+        run: sudo xcode-select -s "$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)"
 
       - name: Install tooling
         run: brew install xcodegen yq
