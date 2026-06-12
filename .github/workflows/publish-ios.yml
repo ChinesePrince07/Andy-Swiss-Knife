@@ -151,17 +151,37 @@ jobs:
           IOS_UPLOAD_TOKEN: ${{ secrets.IOS_UPLOAD_TOKEN }}
         run: |
           set -euo pipefail
-          PRESIGN_BODY="$(SLUG="$SLUG" python3 -c 'import json,os; print(json.dumps({"slug":os.environ["SLUG"],"ipaContentType":"application/octet-stream"}))')"
+
+          # App icon for the install prompt: largest PNG in any AppIcon.appiconset,
+          # downscaled to 512 px (sips ships with macOS). Optional — skip if absent.
+          ICON_SRC="$(find . -path '*AppIcon.appiconset/*.png' -type f -exec stat -f '%z %N' {} \; | sort -rn | head -1 | cut -d' ' -f2-)"
+          HAS_ICON=false
+          if [[ -n "$ICON_SRC" && -f "$ICON_SRC" ]]; then
+            sips -Z 512 "$ICON_SRC" --out "$RUNNER_TEMP/icon.png" >/dev/null && HAS_ICON=true
+            echo "Icon: $ICON_SRC -> 512px"
+          fi
+
+          PRESIGN_BODY="$(SLUG="$SLUG" HAS_ICON="$HAS_ICON" python3 -c '
+          import json, os
+          has = os.environ["HAS_ICON"] == "true"
+          print(json.dumps({"slug": os.environ["SLUG"], "ipaContentType": "application/octet-stream",
+                            "iconContentType": "image/png" if has else None}))')"
           PRESIGN="$(curl -fsSL -X POST "$SITE/api/admin/ios/upload" \
             -H "Authorization: Bearer $IOS_UPLOAD_TOKEN" -H 'Content-Type: application/json' \
             -d "$PRESIGN_BODY")"
           IPA_URL="$(echo "$PRESIGN" | python3 -c 'import sys,json; print(json.load(sys.stdin)["ipaUploadUrl"])')"
+          ICON_URL="$(echo "$PRESIGN" | python3 -c 'import sys,json; print(json.load(sys.stdin).get("iconUploadUrl") or "")')"
 
           echo "Uploading .ipa…"
           curl -fsS -X PUT "$IPA_URL" -H 'Content-Type: application/octet-stream' --data-binary @"$IPA" >/dev/null
 
+          if $HAS_ICON && [[ -n "$ICON_URL" ]]; then
+            echo "Uploading icon…"
+            curl -fsS -X PUT "$ICON_URL" -H 'Content-Type: image/png' --data-binary @"$RUNNER_TEMP/icon.png" >/dev/null
+          fi
+
           echo "Registering build…"
-          REGISTER_BODY="$(SLUG="$SLUG" APP_TITLE="$APP_TITLE" BUNDLE_ID="$BUNDLE_ID" APP_VERSION="$APP_VERSION" APP_BUILD="$APP_BUILD" IPA_SIZE="$IPA_SIZE" python3 -c '
+          REGISTER_BODY="$(SLUG="$SLUG" APP_TITLE="$APP_TITLE" BUNDLE_ID="$BUNDLE_ID" APP_VERSION="$APP_VERSION" APP_BUILD="$APP_BUILD" IPA_SIZE="$IPA_SIZE" HAS_ICON="$HAS_ICON" python3 -c '
           import json, os
           print(json.dumps({
               "slug": os.environ["SLUG"],
@@ -170,7 +190,7 @@ jobs:
               "version": os.environ["APP_VERSION"],
               "build": os.environ["APP_BUILD"],
               "sizeBytes": int(os.environ["IPA_SIZE"]),
-              "hasIcon": False,
+              "hasIcon": os.environ["HAS_ICON"] == "true",
           }))')"
           RESP="$(curl -fsSL -X POST "$SITE/api/admin/ios/register" \
             -H "Authorization: Bearer $IOS_UPLOAD_TOKEN" -H 'Content-Type: application/json' \
