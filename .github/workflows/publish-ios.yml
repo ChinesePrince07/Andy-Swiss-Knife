@@ -100,7 +100,10 @@ jobs:
           set -euo pipefail
           echo "$IOS_P12_BASE64" | base64 --decode > "$RUNNER_TEMP/cert.p12"
           echo "$IOS_MOBILEPROVISION_BASE64" | base64 --decode > "$RUNNER_TEMP/pp.mobileprovision"
-          "$ZSIGN" -k "$RUNNER_TEMP/cert.p12" -p "$IOS_P12_PASSWORD" \
+          # -E removes app extensions: an explicit (non-wildcard) profile can't
+          # provision the widget's own bundle id, and iOS rejects the whole
+          # install if any nested executable lacks a valid embedded profile.
+          "$ZSIGN" -E -k "$RUNNER_TEMP/cert.p12" -p "$IOS_P12_PASSWORD" \
             -m "$RUNNER_TEMP/pp.mobileprovision" \
             -o "$RUNNER_TEMP/signed.ipa" "$UNSIGNED_IPA"
           {
