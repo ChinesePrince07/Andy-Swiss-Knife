@@ -22,7 +22,6 @@
 		150E552F1886255256FE86DA /* PomodoroTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CC26334910ED03B763FD900 /* PomodoroTimer.swift */; };
 		1669729142ECD73509E33487 /* PublishingSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F4255C39CB40005A5ACD96 /* PublishingSettingsView.swift */; };
 		19F46B57038614191321347A /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6F0ACE8F87DDCC97438137 /* AppModelContainer.swift */; };
-		1A76E23F2528D67F6043D105 /* APExamsPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D4EB5DFBDA09ADDEBB886A0 /* APExamsPickerView.swift */; };
 		1AD73BD4CB9274FF67827D5A /* PhotoUploadCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C9F3D70066A784D2C1BB87 /* PhotoUploadCoordinator.swift */; };
 		1C831A5BE4D2FD88A34FADBA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A4C5BA3B543E15F98EB3514 /* Assets.xcassets */; };
 		1D4DB867AE623CF06C4ABD79 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3945E622CB61FA58DF1CF76 /* OnboardingView.swift */; };
@@ -58,7 +57,6 @@
 		5BDCF6E54E6BD801C5DCD672 /* PhotoMasonry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE60C7F10227C1540230F6A /* PhotoMasonry.swift */; };
 		5C77A262615C2264337A8668 /* DashboardLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6DED12FF93B8A00E879914 /* DashboardLayout.swift */; };
 		5DB7B7495560BF255A0D44FF /* CalendarImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8914BC4C0FABA3E1577AEDB0 /* CalendarImporter.swift */; };
-		5F4070DF6619FB2C8C288153 /* APExamsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C558BAA9BE4F6C9ACD897743 /* APExamsView.swift */; };
 		5FBC21A3C10965B9C5F05AB0 /* CountdownPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DFC8FAF85B9228D992A4F0 /* CountdownPickerView.swift */; };
 		604B04E2CC242B7D2F51F3A2 /* WebDAVService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAECD7C3107A8F561B775DD7 /* WebDAVService.swift */; };
 		6138315DA6DE72E429B50E33 /* PersonalEventEditSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E5E6B2240DDDDD99C4D10E /* PersonalEventEditSheet.swift */; };
@@ -125,7 +123,6 @@
 		F69FDE14BCF1649B947EFC9A /* ics-canvas-updated.ics in Resources */ = {isa = PBXBuildFile; fileRef = 44599103D2235A4560C56824 /* ics-canvas-updated.ics */; };
 		F8F4B82C4879AB6A90B9272E /* CachedEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEFF8210D8128B55B70DE84F /* CachedEvent.swift */; };
 		FC2162E5F84A795FF566EB47 /* PomodoroTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDD58B20274EFCFC29596675 /* PomodoroTimerTests.swift */; };
-		FE8EF93EACE5353602921849 /* APExams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 182AD802CBC3933B997D1514 /* APExams.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -171,7 +168,6 @@
 		0C8DA70372D27938DC8C9501 /* WidgetReloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetReloader.swift; sourceTree = "<group>"; };
 		136DCB9AE73DA4324A3F14DF /* EventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsView.swift; sourceTree = "<group>"; };
 		1573D420C3E8959C3983BAF0 /* DiningService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiningService.swift; sourceTree = "<group>"; };
-		182AD802CBC3933B997D1514 /* APExams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APExams.swift; sourceTree = "<group>"; };
 		18C35FB3564D92B6FEEC81D6 /* AthleticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthleticsView.swift; sourceTree = "<group>"; };
 		1B730898D56E97BDA512120C /* FilesSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilesSheets.swift; sourceTree = "<group>"; };
 		1C9228AB7BB53CF525E1AA35 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
@@ -225,7 +221,6 @@
 		972D7E648764DEFAD68BBF71 /* AndySwissKnifeTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = AndySwissKnifeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A377EBC72BD04D506FF4E8D /* DTOs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTOs.swift; sourceTree = "<group>"; };
 		9BE60C7F10227C1540230F6A /* PhotoMasonry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoMasonry.swift; sourceTree = "<group>"; };
-		9D4EB5DFBDA09ADDEBB886A0 /* APExamsPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APExamsPickerView.swift; sourceTree = "<group>"; };
 		9DE29B303DD49919976371BC /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 		A3D320E06F4810FBD48A3F23 /* WeatherService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherService.swift; sourceTree = "<group>"; };
 		A88ED0CE044EE770247D3373 /* SwissKnifeWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwissKnifeWidgets.swift; sourceTree = "<group>"; };
@@ -243,7 +238,6 @@
 		B90D09D8AFCE112A0B797759 /* PomodoroLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroLiveActivity.swift; sourceTree = "<group>"; };
 		B9714F48D41526FB4B96674D /* CachedMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedMenu.swift; sourceTree = "<group>"; };
 		B990742E695A11C76312EFB7 /* AthleticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthleticsService.swift; sourceTree = "<group>"; };
-		C558BAA9BE4F6C9ACD897743 /* APExamsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APExamsView.swift; sourceTree = "<group>"; };
 		C8509D41A53C3763789F4834 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		C851A753B87D83DE7D673B96 /* ics-folded-description.ics */ = {isa = PBXFileReference; path = "ics-folded-description.ics"; sourceTree = "<group>"; };
 		C9EB87794E7ACADEB2EC67F4 /* SuffieldAthletics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuffieldAthletics.swift; sourceTree = "<group>"; };
@@ -287,7 +281,6 @@
 			isa = PBXGroup;
 			children = (
 				51EDF3E97540E4D17E8C7D79 /* SwissKnifeApp.swift */,
-				A7C2FFDEFAA684E357D1B05C /* APExams */,
 				7D9293169823088B0E282278 /* Assignments */,
 				6E6D2E0857486F374ECE0C8D /* Athletics */,
 				A534B8B67A77F2638D0E67A1 /* Blog */,
@@ -494,7 +487,6 @@
 		9A39F271EA3ED78C622844F8 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				182AD802CBC3933B997D1514 /* APExams.swift */,
 				3D6F0ACE8F87DDCC97438137 /* AppModelContainer.swift */,
 				EEFF8210D8128B55B70DE84F /* CachedEvent.swift */,
 				B9714F48D41526FB4B96674D /* CachedMenu.swift */,
@@ -521,14 +513,6 @@
 			path = Blog;
 			sourceTree = "<group>";
 		};
-		A7C2FFDEFAA684E357D1B05C /* APExams */ = {
-			isa = PBXGroup;
-			children = (
-				C558BAA9BE4F6C9ACD897743 /* APExamsView.swift */,
-			);
-			path = APExams;
-			sourceTree = "<group>";
-		};
 		BA11035E181C79B8A119C2F3 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -553,7 +537,6 @@
 		D31AE3AB0610EC8CD4FF0B1D /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				9D4EB5DFBDA09ADDEBB886A0 /* APExamsPickerView.swift */,
 				20ACB5F59009C12DE97FEE87 /* AthleticsPickerView.swift */,
 				62067695A52BA871E230D768 /* CalendarImportView.swift */,
 				F3DFC8FAF85B9228D992A4F0 /* CountdownPickerView.swift */,
@@ -744,9 +727,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FE8EF93EACE5353602921849 /* APExams.swift in Sources */,
-				1A76E23F2528D67F6043D105 /* APExamsPickerView.swift in Sources */,
-				5F4070DF6619FB2C8C288153 /* APExamsView.swift in Sources */,
 				19F46B57038614191321347A /* AppModelContainer.swift in Sources */,
 				328FA42CAE93A0C4E3E3D304 /* AssignmentsSyncService.swift in Sources */,
 				D520747D77E76A38D1AE079B /* AssignmentsView.swift in Sources */,

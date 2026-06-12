@@ -127,7 +127,7 @@ struct OnboardingView: View {
             logoMark
                 .padding(.bottom, 4)
 
-            Text("One app for school. Schedule, assignments, athletics, AP exams, study documents.")
+            Text("One app for school. Schedule, assignments, athletics, study documents.")
                 .font(AppType.body)
                 .foregroundStyle(AppColors.secondary)
 
@@ -230,7 +230,7 @@ struct OnboardingView: View {
                 .kerning(2.0)
                 .foregroundStyle(AppColors.primary)
 
-            Text("Pick athletics teams, AP exams, and school countdown events anytime from Settings.")
+            Text("Pick athletics teams and school countdown events anytime from Settings.")
                 .font(AppType.body)
                 .foregroundStyle(AppColors.secondary)
 

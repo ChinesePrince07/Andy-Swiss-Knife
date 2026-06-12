@@ -18,8 +18,6 @@ One app for everything at school. Replaces eight daily apps.
 
 **Athletics** — Follow any of 49 Suffield teams. Toggle multiple teams at once.
 
-**AP Exams** — Pick your exams, see a countdown for each one.
-
 **Countdown** — Count down to any school event. Rename it right on the dashboard.
 
 **Files** — Browse and share study documents. Admins can upload, rename, and delete.

@@ -551,8 +551,6 @@ struct TodayDashboardView: View {
             GlanceCard(label: "Events", primary: nextEventPrimary, secondary: nextEventSecondary)
         case .athletics:
             GlanceCard(label: "Athletics", primary: athleticsPrimary, secondary: athleticsSecondary)
-        case .apExams:
-            CountdownGlanceCard(label: "AP Exams", days: apExamsDays, name: apExamsPrimary, detail: apExamsSecondary)
         case .countdown:
             CountdownGlanceCard(label: "Countdown", days: countdownDays, name: countdownPrimary, detail: countdownSecondary)
         }
@@ -567,7 +565,6 @@ struct TodayDashboardView: View {
         case .pomodoro:  PomodoroView(services: services)
         case .events:    EventsView(services: services)
         case .athletics: AthleticsView(services: services)
-        case .apExams:   APExamsView()
         case .countdown: CountdownView()
         }
     }
@@ -588,26 +585,6 @@ struct TodayDashboardView: View {
         guard let next = CountdownSubscriptions.nextUpcoming(from: modelContext) else { return "—" }
         let df = DateFormatter(); df.dateFormat = "MMM d"
         return df.string(from: next.start)
-    }
-
-    private var apExamsDays: Int? {
-        guard let next = APExamSubscriptions.nextUpcoming() else { return nil }
-        return Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: .now), to: Calendar.current.startOfDay(for: next.date)).day
-    }
-
-    private var apExamsPrimary: String {
-        guard let next = APExamSubscriptions.nextUpcoming() else {
-            return APExamSubscriptions.enabledIDs.isEmpty ? "Tap to pick" : "All done"
-        }
-        return next.name
-    }
-
-    private var apExamsSecondary: String {
-        guard let next = APExamSubscriptions.nextUpcoming() else {
-            return APExamSubscriptions.enabledIDs.isEmpty ? "2026 schedule" : "—"
-        }
-        let df = DateFormatter(); df.dateFormat = "MMM d"
-        return "\(df.string(from: next.date)) · \(next.session.label)"
     }
 
     private var athleticsPrimary: String {

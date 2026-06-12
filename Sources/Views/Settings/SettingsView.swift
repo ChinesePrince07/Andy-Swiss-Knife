@@ -33,7 +33,6 @@ struct SettingsView: View {
                     canvasSection(url: $userSettings.canvasFeedURL)
                     schoolEventsSection(url: $userSettings.eventsICSURL)
                     athleticsSection
-                    apExamsSection
                     countdownSection
                     eventsSection
                     filesAdminSection
@@ -165,16 +164,6 @@ struct SettingsView: View {
             }
         } footer: {
             "Count down to school events like Prom, Graduation, etc."
-        }
-    }
-
-    private var apExamsSection: some View {
-        settingsBlock(title: "AP Exams") {
-            NavigationLink { APExamsPickerView() } label: {
-                brutalRow("Pick your APs", value: "\(APExamSubscriptions.enabledIDs.count) on")
-            }
-        } footer: {
-            "2026 exam schedule. Selected exams show up on the AP Exams card."
         }
     }
 
