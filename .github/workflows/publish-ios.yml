@@ -34,12 +34,11 @@ jobs:
       - name: Install tooling (xcodegen + build zsign)
         run: |
           set -euo pipefail
-          brew install xcodegen
+          brew install xcodegen openssl@3 pkg-config
           git clone --depth 1 https://github.com/zhlynn/zsign.git "$RUNNER_TEMP/zsign"
-          cmake -S "$RUNNER_TEMP/zsign" -B "$RUNNER_TEMP/zsign/build" \
-            -DCMAKE_BUILD_TYPE=Release -DOPENSSL_ROOT_DIR="$(brew --prefix openssl@3)"
-          cmake --build "$RUNNER_TEMP/zsign/build" -j3
-          ZSIGN="$(find "$RUNNER_TEMP/zsign/build" -name zsign -type f -perm +111 | head -1)"
+          export PKG_CONFIG_PATH="$(brew --prefix openssl@3)/lib/pkgconfig"
+          make -C "$RUNNER_TEMP/zsign/build/macos"
+          ZSIGN="$RUNNER_TEMP/zsign/bin/zsign"
           test -x "$ZSIGN"
           echo "ZSIGN=$ZSIGN" >> "$GITHUB_ENV"
           "$ZSIGN" -v || true
