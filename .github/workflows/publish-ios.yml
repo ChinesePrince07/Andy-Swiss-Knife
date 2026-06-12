@@ -36,6 +36,9 @@ jobs:
       - name: Strip widget extension + neutralize entitlements
         run: |
           set -euo pipefail
+          # Config/Secrets.swift is gitignored but declared as a build source —
+          # the committed example compiles (unused enum), satisfying the input.
+          cp Config/Secrets.swift.example Config/Secrets.swift
           # The borrowed profile is for one explicit App ID with no widget
           # profile — drop the widget target and the app's dependency on it.
           yq -i 'del(.targets.SwissKnifeWidgets)' project.yml
