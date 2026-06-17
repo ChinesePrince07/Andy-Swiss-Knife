@@ -696,7 +696,10 @@ import AVFoundation
 import CoreVideo
 import Foundation
 
-final class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
+// @unchecked Sendable: mutable AV state is confined to the private serial queue;
+// onFrame is set once before start(). Required so the @MainActor engine can call
+// configure/start/stop without a cross-isolation "sending non-Sendable" error.
+final class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, @unchecked Sendable {
     let session = AVCaptureSession()
     var onFrame: ((CVPixelBuffer, TimeInterval) -> Void)?
 
