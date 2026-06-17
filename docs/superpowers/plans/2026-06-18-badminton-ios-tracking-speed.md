@@ -1628,29 +1628,57 @@ Calibrate by tapping the two net-post tops, then hit a shuttle. Expected: `LAST`
 ## Task 13: CI unit-test step
 
 **Files:**
-- Modify: `.github/workflows/publish-ios.yml`
+- Create: `.github/workflows/ios-tests.yml`
 
-The publish workflow currently only builds. Add a test step so the pure-logic units run on every push (this is the maintainer's primary verification channel).
+`publish-ios.yml` is **main-only** and does the OTA build, so adding tests there
+would not run on feature branches. Instead, add a **standalone** test workflow
+triggered on every push + PR (any branch) — this is the maintainer's primary
+verification channel and gives branch feedback without triggering an OTA publish.
 
 **Interfaces:** none (CI only).
 
-- [ ] **Step 1: Add a test step before the archive step**
+- [ ] **Step 1: Create the test workflow**
 
-In `.github/workflows/publish-ios.yml`, after the "Generate Xcode project (full — widget kept)" step (`xcodegen generate`) and before "Build UNSIGNED .ipa", insert:
+Create `.github/workflows/ios-tests.yml`:
 
 ```yaml
+name: iOS Unit Tests
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ios-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select latest Xcode (Swift 6 / project format 77 needs Xcode 16+)
+        run: sudo xcode-select -s "$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)"
+      - name: Install xcodegen
+        run: brew install xcodegen
+      - name: Prepare sources (Secrets stub — gitignored but a declared build input)
+        run: cp Config/Secrets.swift.example Config/Secrets.swift
+      - name: Generate Xcode project
+        run: xcodegen generate
       - name: Run unit tests
         run: |
           set -euo pipefail
-          DEST="$(xcrun simctl list devices available | grep -m1 -oE 'iPhone 16[^(]*' | xargs || true)"
+          SIM="$(xcrun simctl list devices available | grep -oE 'iPhone [0-9]+( Pro)?' | sort -V | tail -1)"
           xcodebuild test \
             -project AndySwissKnife.xcodeproj -scheme AndySwissKnife \
-            -destination "platform=iOS Simulator,name=${DEST:-iPhone 16}" \
+            -destination "platform=iOS Simulator,name=${SIM:-iPhone 16}" \
             -only-testing:AndySwissKnifeTests \
-            CODE_SIGNING_ALLOWED=NO | xcpretty || exit 1
+            CODE_SIGNING_ALLOWED=NO
 ```
 
-> If `xcpretty` is unavailable on the runner, drop the `| xcpretty` pipe. The build job already selects Xcode 16 (`macos-15`), which ships iOS 18 simulators including iPhone 16.
+> `macos-15` ships Xcode 16 with iOS 18 simulators (incl. iPhone 16). Building
+> the test target compiles the app target too, so this also catches app-target
+> compile errors on every branch push.
 
 - [ ] **Step 2: Commit**
 
