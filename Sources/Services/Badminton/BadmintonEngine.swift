@@ -78,7 +78,9 @@ final class BadmintonEngine {
     }
 
     func start() async {
-        guard !isRunning else { return }
+        // Skip if already running, or if the user already denied access (avoids
+        // re-running configure on every foreground transition once denied).
+        guard !isRunning, !cameraDenied else { return }
         let ok = await camera.configure(fps: captureFPS)
         guard ok else { cameraDenied = true; return }
         camera.start()
