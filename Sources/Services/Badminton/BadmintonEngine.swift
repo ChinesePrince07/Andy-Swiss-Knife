@@ -6,22 +6,22 @@ import Foundation
 /// Sendable snapshot of one processed frame, handed from the camera's serial
 /// delivery queue to the main actor for publishing.
 struct FrameResult: Sendable {
+    let time: TimeInterval          // this frame's timestamp (always present)
     let frameSize: CGSize
     let trail: [CGPoint]
     let latestPoint: CGPoint?
     let fps: Double
     let shotCount: Int
-    let shot: ShotEvent?
-    /// Trajectory samples captured at the moment of a shot (for speed in P2);
-    /// empty unless `shot != nil`.
-    let samplesAtShot: [TrajectorySample]
+    let shot: ShotEvent?            // non-nil only on the frame a shot is detected
+    let recentSamples: [TrajectorySample]   // trajectory samples (≤ trail window), always
 }
 
 /// Owns the per-frame analysis state (detector, trajectory, shot + fps counters).
-/// Created and used ONLY on the camera's serial delivery queue — never touched
-/// from the main actor — so its mutable state needs no locking and crosses no
-/// isolation boundary. It hands back a Sendable `FrameResult`.
-final class FrameProcessor {
+/// Created on the main actor but used ONLY on the camera's serial delivery queue,
+/// so its mutable state needs no locking. `@unchecked Sendable` lets it be
+/// captured by the `@Sendable` `onFrame` closure; the single-queue confinement is
+/// what makes that assertion sound.
+final class FrameProcessor: @unchecked Sendable {
     private let detector: ShuttleDetector
     private let trajectory = ShuttleTrajectory(trailWindow: 1.0, maxGap: 0.3)
     private let shots = ShotDetector()
@@ -33,14 +33,15 @@ final class FrameProcessor {
         let size = CGSize(width: CVPixelBufferGetWidth(buffer), height: CVPixelBufferGetHeight(buffer))
         fpsCounter.tick(at: time)
         guard let obs = detector.detect(pixelBuffer: buffer, time: time) else {
-            return FrameResult(frameSize: size, trail: trajectory.trail, latestPoint: nil,
-                               fps: fpsCounter.fps, shotCount: shots.shotCount, shot: nil, samplesAtShot: [])
+            return FrameResult(time: time, frameSize: size, trail: trajectory.trail, latestPoint: nil,
+                               fps: fpsCounter.fps, shotCount: shots.shotCount, shot: nil,
+                               recentSamples: trajectory.samples)
         }
         trajectory.add(obs)
         let shot = shots.ingest(TrajectorySample(point: obs.point, time: obs.time))
-        return FrameResult(frameSize: size, trail: trajectory.trail, latestPoint: obs.point,
+        return FrameResult(time: time, frameSize: size, trail: trajectory.trail, latestPoint: obs.point,
                            fps: fpsCounter.fps, shotCount: shots.shotCount, shot: shot,
-                           samplesAtShot: shot == nil ? [] : trajectory.samples)
+                           recentSamples: trajectory.samples)
     }
 }
 
@@ -62,6 +63,7 @@ final class BadmintonEngine {
     let captureFPS: Int
     let camera = CameraSession()
     private let processor: FrameProcessor
+    private var speedTracker = ShotSpeedTracker(window: 0.08)
 
     init(detector: ShuttleDetector = MotionShuttleDetector(), captureFPS: Int = 60) {
         self.captureFPS = captureFPS
@@ -88,19 +90,27 @@ final class BadmintonEngine {
         isRunning = false
     }
 
+    /// Clears the measured speeds (e.g. on recalibration, since prior values were
+    /// computed under the old scale).
+    func resetSpeeds() {
+        speedTracker.resetSpeeds()
+        lastSpeed = nil
+        maxSpeed = nil
+    }
+
     /// Publishes a processed frame's result on the main actor, and — once a
-    /// reference scale is calibrated — computes the peak speed of each shot.
+    /// reference scale is calibrated — measures the peak OUTGOING speed of each
+    /// shot. Speed is deferred via `ShotSpeedTracker` because at the shot frame
+    /// no post-hit samples exist yet.
     func apply(_ result: FrameResult) {
         frameSize = result.frameSize
         fps = result.fps
         trail = result.trail
         latestPoint = result.latestPoint
         shotCount = result.shotCount
-        if let shot = result.shot, let scale = settings.scale,
-           let speed = SpeedEstimator.peakSpeed(
-               samples: result.samplesAtShot, from: shot.time, window: 0.08, scale: scale) {
-            lastSpeed = speed
-            if speed.metersPerSecond > (maxSpeed?.metersPerSecond ?? 0) { maxSpeed = speed }
-        }
+        speedTracker.update(shotTime: result.shot?.time, now: result.time,
+                            samples: result.recentSamples, scale: settings.scale)
+        lastSpeed = speedTracker.lastSpeed
+        maxSpeed = speedTracker.maxSpeed
     }
 }

@@ -9,7 +9,10 @@ import Foundation
 // compiler flagging the cross-isolation send of this non-Sendable wrapper.
 final class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, @unchecked Sendable {
     let session = AVCaptureSession()
-    var onFrame: ((CVPixelBuffer, TimeInterval) -> Void)?
+    /// Set once before `start()`. `@Sendable` because it is invoked from the
+    /// capture delivery queue; the engine assigns a closure that only captures a
+    /// Sendable processor + weak (main-actor) self.
+    var onFrame: (@Sendable (CVPixelBuffer, TimeInterval) -> Void)?
 
     private let queue = DispatchQueue(label: "badminton.camera.frames")
     private let output = AVCaptureVideoDataOutput()
