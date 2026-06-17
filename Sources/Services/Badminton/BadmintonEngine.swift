@@ -55,6 +55,9 @@ final class BadmintonEngine {
     var isRunning = false
     var frameSize: CGSize = .zero
     var cameraDenied = false
+    var lastSpeed: ShotSpeed?
+    var maxSpeed: ShotSpeed?
+    var settings: BadmintonSettings = .shared
 
     let captureFPS: Int
     let camera = CameraSession()
@@ -85,13 +88,19 @@ final class BadmintonEngine {
         isRunning = false
     }
 
-    /// Publishes a processed frame's result. P2 overrides nothing here — it adds
-    /// speed handling in `apply` via an extension/edit (Task 12).
+    /// Publishes a processed frame's result on the main actor, and — once a
+    /// reference scale is calibrated — computes the peak speed of each shot.
     func apply(_ result: FrameResult) {
         frameSize = result.frameSize
         fps = result.fps
         trail = result.trail
         latestPoint = result.latestPoint
         shotCount = result.shotCount
+        if let shot = result.shot, let scale = settings.scale,
+           let speed = SpeedEstimator.peakSpeed(
+               samples: result.samplesAtShot, from: shot.time, window: 0.08, scale: scale) {
+            lastSpeed = speed
+            if speed.metersPerSecond > (maxSpeed?.metersPerSecond ?? 0) { maxSpeed = speed }
+        }
     }
 }
