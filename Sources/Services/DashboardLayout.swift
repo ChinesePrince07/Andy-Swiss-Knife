@@ -9,6 +9,7 @@ enum DashboardCard: String, CaseIterable, Identifiable, Codable {
     case athletics = "athletics"
     case pomodoro = "pomodoro"
     case countdown = "countdown"
+    case badminton = "badminton"
 
     var id: String { rawValue }
 
@@ -21,6 +22,7 @@ enum DashboardCard: String, CaseIterable, Identifiable, Codable {
         case .athletics: return "Athletics"
         case .pomodoro:  return "Pomodoro"
         case .countdown: return "Countdown"
+        case .badminton: return "Badminton"
         }
     }
 
@@ -33,6 +35,7 @@ enum DashboardCard: String, CaseIterable, Identifiable, Codable {
         case .athletics: return "figure.run"
         case .pomodoro:  return "timer"
         case .countdown: return "hourglass"
+        case .badminton: return "figure.badminton"
         }
     }
 }

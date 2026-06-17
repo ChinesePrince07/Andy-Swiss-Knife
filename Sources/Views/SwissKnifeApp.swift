@@ -35,6 +35,7 @@ final class Services {
     let sweeper: TodoSweeper
     let athletics: AthleticsService
     let weather: WeatherService
+    let badminton: BadmintonEngine
 
     init(context: ModelContext) {
         let http = URLSessionHTTPClient()
@@ -46,6 +47,7 @@ final class Services {
         self.sweeper = TodoSweeper(context: context)
         self.athletics = AthleticsService(http: http, context: context)
         self.weather = WeatherService(http: http)
+        self.badminton = BadmintonEngine()
         SnapshotStore.publishTodos(from: context)
         SnapshotStore.publishReminders(from: context)
         let importer = CalendarImporter(context: context)

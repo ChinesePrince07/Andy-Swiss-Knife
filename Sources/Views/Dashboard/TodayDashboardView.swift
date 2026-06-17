@@ -553,6 +553,8 @@ struct TodayDashboardView: View {
             GlanceCard(label: "Athletics", primary: athleticsPrimary, secondary: athleticsSecondary)
         case .countdown:
             CountdownGlanceCard(label: "Countdown", days: countdownDays, name: countdownPrimary, detail: countdownSecondary)
+        case .badminton:
+            GlanceCard(label: "Badminton", primary: "Track", secondary: "Shuttle + speed")
         }
     }
 
@@ -566,6 +568,7 @@ struct TodayDashboardView: View {
         case .events:    EventsView(services: services)
         case .athletics: AthleticsView(services: services)
         case .countdown: CountdownView()
+        case .badminton: BadmintonView(services: services)
         }
     }
 
