@@ -8,9 +8,6 @@ struct Blob: Equatable {
 }
 
 enum MotionBlobFinder {
-    /// Window (in pixels) around the peak used to compute the centroid + area.
-    private static let windowRadius = 6
-
     static func brightestBlob(
         diff: [UInt8], width: Int, height: Int,
         threshold: UInt8, minArea: Int, maxArea: Int,
@@ -35,17 +32,25 @@ enum MotionBlobFinder {
         }
         guard peakX >= 0 else { return nil }
 
-        // 2) Intensity-weighted centroid + bright-pixel area in a window around the peak.
+        // 2) Flood-fill the connected bright region containing the peak (4-neighbour),
+        //    accumulating an intensity-weighted centroid + true pixel area. Measuring the
+        //    whole connected component (not a fixed window) is what lets `maxArea` reject
+        //    large moving objects like a player's body while keeping the small shuttle.
+        var visited = [Bool](repeating: false, count: width * height)
+        var stack: [(Int, Int)] = [(peakX, peakY)]
+        visited[peakY * width + peakX] = true
         var sumW = 0.0, sumX = 0.0, sumY = 0.0, area = 0
-        let x0 = max(0, peakX - windowRadius), x1 = min(width - 1, peakX + windowRadius)
-        let y0 = max(0, peakY - windowRadius), y1 = min(height - 1, peakY + windowRadius)
-        for y in y0...y1 {
-            let row = y * width
-            for x in x0...x1 {
-                let v = diff[row + x]
-                if v < threshold { continue }
-                let w = Double(v)
-                sumW += w; sumX += w * Double(x); sumY += w * Double(y); area += 1
+        while let (x, y) = stack.popLast() {
+            let v = diff[y * width + x]
+            let w = Double(v)
+            sumW += w; sumX += w * Double(x); sumY += w * Double(y); area += 1
+            if area > maxArea { return nil }   // region already too big -> reject early
+            let neighbours = [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
+            for (nx, ny) in neighbours where nx >= 0 && nx < width && ny >= 0 && ny < height {
+                let idx = ny * width + nx
+                if visited[idx] || diff[idx] < threshold { continue }
+                visited[idx] = true
+                stack.append((nx, ny))
             }
         }
         guard sumW > 0, area >= minArea, area <= maxArea else { return nil }
