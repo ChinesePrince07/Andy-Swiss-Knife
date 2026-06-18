@@ -18,6 +18,7 @@ final class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
     private let output = AVCaptureVideoDataOutput()
     private var rotationCoordinator: AVCaptureDevice.RotationCoordinator?
     private var rotationObservation: NSKeyValueObservation?
+    private var isConfigured = false
 
     /// Requests access + configures a 1080p video-data output at `fps`. Returns success.
     func configure(fps: Int) async -> Bool {
@@ -39,6 +40,10 @@ final class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
     }
 
     private func configureLocked(fps: Int) -> Bool {
+        // Idempotent: the session is set up once. Re-running it (on a detector
+        // swap, scene-phase resume, or re-presented view) must NOT try to re-add
+        // the input/output — that fails and was being mis-reported as "denied".
+        if isConfigured { return true }
         session.beginConfiguration()
         session.sessionPreset = .hd1920x1080
         guard let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back),
@@ -74,6 +79,7 @@ final class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
             device.activeVideoMaxFrameDuration = duration
             device.unlockForConfiguration()
         }
+        isConfigured = true
         return true
     }
 

@@ -116,13 +116,12 @@ final class BadmintonEngine {
         isRunning = false
     }
 
-    /// Switch between the TrackNetV3 and classical detectors (takes effect on the
-    /// next start; restarts if currently running).
+    /// Switch between the TrackNetV3 and classical detectors by swapping the
+    /// processor live — no camera restart (which previously re-ran configuration
+    /// and surfaced a spurious "camera denied").
     func toggleDetector() {
         settings.useTrackNet.toggle()
-        guard isRunning else { return }
-        stop()
-        Task { await start() }
+        rebuildProcessor()
     }
 
     /// Build the processor for the currently-selected detector. TrackNet loads the
