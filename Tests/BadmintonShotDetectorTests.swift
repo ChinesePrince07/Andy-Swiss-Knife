@@ -10,34 +10,48 @@ final class BadmintonShotDetectorTests: XCTestCase {
         return events
     }
 
-    func testDetectsHorizontalReversal() {
-        let det = ShotDetector(minPixelSpeed: 300, refractory: 0.2)
-        // moving right (+x) fast, then reversing to left (-x) fast at t=0.3
+    /// A sustained rightward run then a sustained leftward run = two strokes.
+    func testCountsSustainedReversal() {
+        let det = ShotDetector(minPixelSpeed: 350, minRun: 3, refractory: 0.12)
         let events = feed(det, [
-            (0, 100, 0.0), (100, 100, 0.1), (200, 100, 0.2), // rightward ~1000 px/s
-            (120, 100, 0.3), (40, 100, 0.4)                   // leftward ~800 px/s
+            (0, 100, 0.0), (100, 100, 0.05), (200, 100, 0.10), (300, 100, 0.15),  // right run
+            (200, 100, 0.20), (100, 100, 0.25), (0, 100, 0.30)                    // left run
         ])
-        XCTAssertEqual(events.count, 1)
-        XCTAssertEqual(det.shotCount, 1)
+        XCTAssertEqual(events.count, 2)
+        XCTAssertEqual(det.shotCount, 2)
     }
 
-    func testNoShotBelowSpeed() {
-        let det = ShotDetector(minPixelSpeed: 300, refractory: 0.2)
-        // slow drift reversal -> not a shot
+    /// THE regression for the on-device bug: frame-difference noise jumps to random
+    /// positions, flipping horizontal direction nearly every frame. The old
+    /// single-frame-reversal detector counted each flip as a shot; the run-based
+    /// detector must count ZERO, because no direction sustains `minRun` frames.
+    func testRejectsErraticNoise() {
+        let det = ShotDetector(minPixelSpeed: 350, minRun: 3, refractory: 0.12)
         let events = feed(det, [
-            (0, 100, 0.0), (10, 100, 0.1), (20, 100, 0.2),
-            (15, 100, 0.3), (10, 100, 0.4)
+            (0, 100, 0.00), (200, 100, 0.05), (0, 100, 0.10), (200, 100, 0.15),
+            (0, 100, 0.20), (200, 100, 0.25), (0, 100, 0.30), (200, 100, 0.35)
         ])
         XCTAssertEqual(events.count, 0)
+        XCTAssertEqual(det.shotCount, 0)
     }
 
-    func testRefractorySuppressesDoubleCount() {
-        let det = ShotDetector(minPixelSpeed: 300, refractory: 0.5)
+    /// A single slow frame mid-run (e.g. near the apex) must not break the run.
+    func testIgnoresSingleSlowBlipMidRun() {
+        let det = ShotDetector(minPixelSpeed: 350, minRun: 3, refractory: 0.12)
         let events = feed(det, [
-            (0, 100, 0.0), (100, 100, 0.1), (200, 100, 0.2),
-            (120, 100, 0.3),                 // reversal #1 -> shot at 0.3
-            (220, 100, 0.4), (300, 100, 0.5) // reversal #2 within 0.5s refractory -> suppressed
+            (0, 100, 0.00), (100, 100, 0.05), (200, 100, 0.10),
+            (210, 100, 0.15),                                   // slow blip (|vx| < 350) -> ignored
+            (310, 100, 0.20), (410, 100, 0.25)                  // run continues -> one stroke
         ])
         XCTAssertEqual(events.count, 1)
+    }
+
+    /// Slow drift in both directions is never a shot.
+    func testNoShotWhenAllSlow() {
+        let det = ShotDetector(minPixelSpeed: 350, minRun: 3, refractory: 0.12)
+        let events = feed(det, [
+            (0, 100, 0.0), (10, 100, 0.05), (20, 100, 0.10), (15, 100, 0.15), (10, 100, 0.20)
+        ])
+        XCTAssertEqual(events.count, 0)
     }
 }
