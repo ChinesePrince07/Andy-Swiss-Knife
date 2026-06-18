@@ -10,6 +10,7 @@ final class UserSettings {
     private static let eventsKey = "user.eventsICSURL"
     private static let tabsKey = "user.enabledTabs"
     private static let onboardingKey = "user.hasCompletedOnboarding.v1"
+    private static let badmintonSeededKey = "user.badmintonTabSeeded.v1"
 
     var displayName: String {
         didSet { UserDefaults.standard.set(displayName, forKey: Self.nameKey) }
@@ -37,6 +38,17 @@ final class UserSettings {
         self.eventsICSURL = UserDefaults.standard.string(forKey: Self.eventsKey) ?? ""
         self.enabledTabs = Self.loadTabs()
         self.hasCompletedOnboarding = UserDefaults.standard.bool(forKey: Self.onboardingKey)
+        seedBadmintonTabIfNeeded()
+    }
+
+    /// One-time: surface the new Badminton tab for existing installs (so it's a
+    /// real tab out of the box, not something to hunt for in tab settings).
+    private func seedBadmintonTabIfNeeded() {
+        guard !UserDefaults.standard.bool(forKey: Self.badmintonSeededKey) else { return }
+        UserDefaults.standard.set(true, forKey: Self.badmintonSeededKey)
+        if !enabledTabs.contains(.badminton) {
+            enabledTabs.append(.badminton)   // didSet persists
+        }
     }
 
     func resetOnboarding() {

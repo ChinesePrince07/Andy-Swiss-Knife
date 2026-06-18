@@ -77,46 +77,49 @@ final class Services {
 }
 
 enum AppTab: String, Hashable, Codable, CaseIterable, Identifiable {
-    case today, todos, classes, canvas, sports, files, blog, photos
+    case today, todos, classes, canvas, sports, files, blog, photos, badminton
 
     var id: String { rawValue }
 
     var label: String {
         switch self {
-        case .today:   return "TODAY"
-        case .todos:   return "TODOS"
-        case .classes: return "CLASS"
-        case .canvas:  return "CANVAS"
-        case .sports:  return "SPORTS"
-        case .files:   return "FILES"
-        case .blog:    return "BLOG"
-        case .photos:  return "PICS"
+        case .today:     return "TODAY"
+        case .todos:     return "TODOS"
+        case .classes:   return "CLASS"
+        case .canvas:    return "CANVAS"
+        case .sports:    return "SPORTS"
+        case .files:     return "FILES"
+        case .blog:      return "BLOG"
+        case .photos:    return "PICS"
+        case .badminton: return "BADM"
         }
     }
 
     var icon: String {
         switch self {
-        case .today:   return "house"
-        case .todos:   return "list.bullet"
-        case .classes: return "clock"
-        case .canvas:  return "book.closed"
-        case .sports:  return "trophy"
-        case .files:   return "folder"
-        case .blog:    return "square.and.pencil"
-        case .photos:  return "photo"
+        case .today:     return "house"
+        case .todos:     return "list.bullet"
+        case .classes:   return "clock"
+        case .canvas:    return "book.closed"
+        case .sports:    return "trophy"
+        case .files:     return "folder"
+        case .blog:      return "square.and.pencil"
+        case .photos:    return "photo"
+        case .badminton: return "figure.badminton"
         }
     }
 
     var filledIcon: String {
         switch self {
-        case .today:   return "house.fill"
-        case .todos:   return "list.bullet"
-        case .classes: return "clock.fill"
-        case .canvas:  return "book.closed.fill"
-        case .sports:  return "trophy.fill"
-        case .files:   return "folder.fill"
-        case .blog:    return "square.and.pencil"
-        case .photos:  return "photo.fill"
+        case .today:     return "house.fill"
+        case .todos:     return "list.bullet"
+        case .classes:   return "clock.fill"
+        case .canvas:    return "book.closed.fill"
+        case .sports:    return "trophy.fill"
+        case .files:     return "folder.fill"
+        case .blog:      return "square.and.pencil"
+        case .photos:    return "photo.fill"
+        case .badminton: return "figure.badminton"
         }
     }
 
@@ -213,6 +216,11 @@ struct RootView: View {
         case .photos:
             NavigationStack {
                 PhotoGalleryView()
+                    .withSettingsGear(services: services)
+            }
+        case .badminton:
+            NavigationStack {
+                BadmintonView(services: services)
                     .withSettingsGear(services: services)
             }
         }
