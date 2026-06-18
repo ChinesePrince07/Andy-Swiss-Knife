@@ -48,6 +48,8 @@ struct BadmintonView: View {
                     Button("CALIBRATE") { calibrating = true }
                         .disabled(engine.frameSize == .zero)
                     Spacer()
+                    Button(engine.usingTrackNet ? "TRACKNET" : "CLASSIC") { engine.toggleDetector() }
+                    Spacer()
                     Button(engine.settings.unit.label.uppercased()) { toggleUnit() }
                 }
                 .font(AppType.mono).foregroundStyle(.white)

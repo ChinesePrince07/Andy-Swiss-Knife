@@ -2,6 +2,7 @@ import Observation
 import CoreGraphics
 import CoreVideo
 import Foundation
+import os
 
 /// Sendable snapshot of one processed frame, handed from the camera's serial
 /// delivery queue to the main actor for publishing.
@@ -58,21 +59,25 @@ final class BadmintonEngine {
     var cameraDenied = false
     var lastSpeed: ShotSpeed?
     var maxSpeed: ShotSpeed?
+    var usingTrackNet = false
     var settings: BadmintonSettings = .shared
 
     let captureFPS: Int
     let camera = CameraSession()
-    private let processor: FrameProcessor
+    // The processor (incl. its detector) is swapped when the detector mode
+    // changes; the lock lets the @Sendable camera callback read the current one
+    // safely from the delivery queue while start() rebuilds it on the main actor.
+    private let processorBox: OSAllocatedUnfairLock<FrameProcessor>
     private var speedTracker = ShotSpeedTracker(window: 0.08)
 
     init(detector: ShuttleDetector = MotionShuttleDetector(), captureFPS: Int = 60) {
         self.captureFPS = captureFPS
-        self.processor = FrameProcessor(detector: detector)
-        let processor = self.processor
+        self.processorBox = OSAllocatedUnfairLock(initialState: FrameProcessor(detector: detector))
+        let box = processorBox
         camera.onFrame = { [weak self] buffer, time in
             // Runs on the camera's serial delivery queue: do the heavy detection
             // here, then hop only the Sendable result to the main actor.
-            let result = processor.process(buffer, time: time)
+            let result = box.withLockUnchecked { $0.process(buffer, time: time) }
             Task { @MainActor in self?.apply(result) }
         }
     }
@@ -81,6 +86,7 @@ final class BadmintonEngine {
         // Skip if already running, or if the user already denied access (avoids
         // re-running configure on every foreground transition once denied).
         guard !isRunning, !cameraDenied else { return }
+        rebuildProcessor()
         let ok = await camera.configure(fps: captureFPS)
         guard ok else { cameraDenied = true; return }
         camera.start()
@@ -90,6 +96,29 @@ final class BadmintonEngine {
     func stop() {
         camera.stop()
         isRunning = false
+    }
+
+    /// Switch between the TrackNetV3 and classical detectors (takes effect on the
+    /// next start; restarts if currently running).
+    func toggleDetector() {
+        settings.useTrackNet.toggle()
+        guard isRunning else { return }
+        stop()
+        Task { await start() }
+    }
+
+    /// Build the processor for the currently-selected detector. TrackNet loads the
+    /// bundled Core ML model; if that fails it falls back to the classical detector.
+    private func rebuildProcessor() {
+        let detector: ShuttleDetector
+        if settings.useTrackNet, let trackNet = TrackNetShuttleDetector() {
+            detector = trackNet
+            usingTrackNet = true
+        } else {
+            detector = MotionShuttleDetector()
+            usingTrackNet = false
+        }
+        processorBox.withLockUnchecked { $0 = FrameProcessor(detector: detector) }
     }
 
     /// Clears the measured speeds (e.g. on recalibration, since prior values were
