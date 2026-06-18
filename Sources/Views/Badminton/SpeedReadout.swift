@@ -7,19 +7,22 @@ struct SpeedReadout: View {
     let settings: BadmintonSettings
 
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 14) {
             field("LAST", last)
             field("MAX", max)
         }
-        .padding(10)
+        .padding(.horizontal, 8).padding(.vertical, 6)
         .background(Color.black.opacity(0.6))
     }
 
     @ViewBuilder private func field(_ label: String, _ speed: ShotSpeed?) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(label).font(AppType.tiny).foregroundStyle(.white.opacity(0.7))
+        VStack(alignment: .leading, spacing: 1) {
+            Text(label)
+                .font(.system(size: 8, weight: .regular, design: .monospaced))
+                .foregroundStyle(.white.opacity(0.7))
             Text(speed.map { settings.display($0) } ?? "—")
-                .font(AppType.mono).foregroundStyle(AppColors.accent)
+                .font(.system(size: 13, weight: .semibold, design: .monospaced))
+                .foregroundStyle(AppColors.accent)
         }
     }
 }

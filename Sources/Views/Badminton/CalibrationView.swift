@@ -29,8 +29,8 @@ struct CalibrationView: View {
                 .ignoresSafeArea()
                 VStack {
                     Text("TAP THE TOP OF EACH NET POST (1.55 m)")
-                        .font(AppType.mono).foregroundStyle(.white)
-                        .padding(8).background(Color.black.opacity(0.6))
+                        .font(.system(size: 10, weight: .semibold, design: .monospaced)).foregroundStyle(.white)
+                        .padding(.horizontal, 8).padding(.vertical, 5).background(Color.black.opacity(0.6))
                     Spacer()
                     HStack {
                         Button("CANCEL") { onCancel() }
@@ -40,8 +40,8 @@ struct CalibrationView: View {
                         Button("CONFIRM") { confirm(displaySize: geo.size) }
                             .disabled(points.count != 2)
                     }
-                    .font(AppType.mono).foregroundStyle(.white)
-                    .padding().background(Color.black.opacity(0.6))
+                    .font(.system(size: 11, weight: .semibold, design: .monospaced)).foregroundStyle(.white)
+                    .padding(.horizontal, 12).padding(.vertical, 8).background(Color.black.opacity(0.6))
                 }
             }
             .contentShape(Rectangle())

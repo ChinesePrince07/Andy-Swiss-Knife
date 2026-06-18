@@ -5,6 +5,10 @@ struct BadmintonView: View {
     @State private var calibrating = false
     @Environment(\.scenePhase) private var scenePhase
 
+    // Compact HUD fonts (the on-camera overlay text should stay out of the way).
+    private let hudFont = Font.system(size: 10, weight: .semibold, design: .monospaced)
+    private let tinyFont = Font.system(size: 8, weight: .regular, design: .monospaced)
+
     init(services: Services) { self.engine = services.badminton }
 
     var body: some View {
@@ -25,21 +29,22 @@ struct BadmintonView: View {
                     Spacer()
                     Text("SHOTS \(engine.shotCount)")
                 }
-                .font(AppType.mono).foregroundStyle(.white)
-                .padding(8).background(Color.black.opacity(0.55))
+                .font(hudFont).foregroundStyle(.white)
+                .padding(.horizontal, 8).padding(.vertical, 5)
+                .background(Color.black.opacity(0.55))
 
                 Spacer()
 
                 if engine.settings.scale == nil {
                     Text("CALIBRATE TO SHOW SPEED")
-                        .font(AppType.mono).foregroundStyle(.white)
-                        .padding(8).background(Color.black.opacity(0.6))
+                        .font(hudFont).foregroundStyle(.white)
+                        .padding(.horizontal, 8).padding(.vertical, 5).background(Color.black.opacity(0.6))
                 } else {
-                    VStack(spacing: 4) {
+                    VStack(spacing: 3) {
                         SpeedReadout(last: engine.lastSpeed, max: engine.maxSpeed, settings: engine.settings)
                         Text("≈ ESTIMATE — measured at the hit, side-on")
-                            .font(AppType.tiny).foregroundStyle(.white.opacity(0.7))
-                            .padding(.horizontal, 8).padding(.vertical, 4)
+                            .font(tinyFont).foregroundStyle(.white.opacity(0.7))
+                            .padding(.horizontal, 6).padding(.vertical, 3)
                             .background(Color.black.opacity(0.5))
                     }
                 }
@@ -48,19 +53,17 @@ struct BadmintonView: View {
                     Button("CALIBRATE") { calibrating = true }
                         .disabled(engine.frameSize == .zero)
                     Spacer()
-                    Button(engine.usingTrackNet ? "TRACKNET" : "CLASSIC") { engine.toggleDetector() }
-                    Spacer()
                     Button(engine.settings.unit.label.uppercased()) { toggleUnit() }
                 }
-                .font(AppType.mono).foregroundStyle(.white)
-                .padding().background(Color.black.opacity(0.55))
+                .font(hudFont).foregroundStyle(.white)
+                .padding(.horizontal, 10).padding(.vertical, 7).background(Color.black.opacity(0.55))
             }
             .padding()
 
             if engine.cameraDenied {
                 Text("CAMERA ACCESS DENIED — enable it in Settings")
-                    .font(AppType.mono).foregroundStyle(.white)
-                    .padding(10).background(Color.black.opacity(0.7))
+                    .font(hudFont).foregroundStyle(.white)
+                    .padding(8).background(Color.black.opacity(0.7))
             }
         }
         .navigationTitle("Badminton")

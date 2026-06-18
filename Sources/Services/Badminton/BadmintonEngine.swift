@@ -84,7 +84,6 @@ final class BadmintonEngine {
     var lastSpeed: ShotSpeed?
     var maxSpeed: ShotSpeed?
     var poses: [PlayerPose] = []
-    var usingTrackNet = false
     var settings: BadmintonSettings = .shared
 
     let captureFPS: Int
@@ -123,25 +122,10 @@ final class BadmintonEngine {
         isRunning = false
     }
 
-    /// Switch between the TrackNetV3 and classical detectors by swapping the
-    /// processor live — no camera restart (which previously re-ran configuration
-    /// and surfaced a spurious "camera denied").
-    func toggleDetector() {
-        settings.useTrackNet.toggle()
-        rebuildProcessor()
-    }
-
-    /// Build the processor for the currently-selected detector. TrackNet loads the
-    /// bundled Core ML model; if that fails it falls back to the classical detector.
+    /// Build the processor: TrackNetV3 (bundled Core ML) for the shuttle; if the
+    /// model can't load, fall back to the classical detector so it still functions.
     private func rebuildProcessor() {
-        let detector: ShuttleDetector
-        if settings.useTrackNet, let trackNet = TrackNetShuttleDetector() {
-            detector = trackNet
-            usingTrackNet = true
-        } else {
-            detector = MotionShuttleDetector()
-            usingTrackNet = false
-        }
+        let detector: ShuttleDetector = TrackNetShuttleDetector() ?? MotionShuttleDetector()
         let pose = YOLOPoseDetector()   // nil if the model can't load -> no skeletons
         processorBox.withLockUnchecked { $0 = FrameProcessor(detector: detector, poseDetector: pose) }
     }
