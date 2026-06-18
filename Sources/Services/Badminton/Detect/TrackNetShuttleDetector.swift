@@ -10,7 +10,18 @@ import Foundation
 /// channel resized to 512x288 and divided by 255; it returns `heatmaps[1,8,288,512]`
 /// (one sigmoid heatmap per input frame). This detector keeps an 8-frame ring
 /// buffer + an EMA background estimate (a live stand-in for the training-time
-/// median), runs the model each frame, and decodes the NEWEST frame's heatmap.
+/// median), runs the model each frame, and decodes a MIDDLE frame's heatmap.
+///
+/// Why a middle frame and not the newest: TrackNet predicts each frame from the
+/// 8-frame temporal window, and the prediction for a frame at the *edge* of that
+/// window (e.g. the newest, with no future context) is its least reliable — the
+/// reference temporal ensemble weights edge frames 1/20 vs 4/20 for the middle.
+/// Offline study on real footage (1280x720 match video) showed decoding the newest
+/// frame (ch7) gave a p90 frame-to-frame jump of ~203px (the "bouncing" noise),
+/// while decoding the middle (ch4) cut that ~10x to ~22px with the same background.
+/// Cost: the detection lags the live frame by `seqLen-1-decodeChannel` frames
+/// (~50ms at 60fps), so the observation is timestamped with that frame's time to
+/// keep velocities correct.
 ///
 /// Used only on the camera's serial delivery queue (single-threaded access).
 final class TrackNetShuttleDetector: ShuttleDetector {
@@ -19,6 +30,7 @@ final class TrackNetShuttleDetector: ShuttleDetector {
     static let seqLen = 8
     static let inDim = 27          // 3 (bg) + 8*3 (frames)
     static let outChannels = 8
+    static let decodeChannel = 4   // middle of the window: symmetric temporal context
 
     private let model: MLModel
     private let ciContext: CIContext
@@ -27,6 +39,7 @@ final class TrackNetShuttleDetector: ShuttleDetector {
     private let bgAlpha: Float
 
     private var frames: [[Float]] = []   // each: planar RGB [3*plane], normalized 0...1
+    private var times: [TimeInterval] = []   // timestamp of each buffered frame (aligned to `frames`)
     private var bg: [Float]?             // EMA background, planar RGB [3*plane]
     private let input: MLMultiArray      // reused [1,27,288,512] float32
 
@@ -63,7 +76,8 @@ final class TrackNetShuttleDetector: ShuttleDetector {
         }
 
         frames.append(rgb)
-        if frames.count > Self.seqLen { frames.removeFirst() }
+        times.append(time)
+        if frames.count > Self.seqLen { frames.removeFirst(); times.removeFirst() }
         guard frames.count == Self.seqLen, let bg = bg else { return nil }   // warming up
 
         // Pack [bg(3), frame0..7(24)] into the reused input via fast plane copies.
@@ -80,14 +94,16 @@ final class TrackNetShuttleDetector: ShuttleDetector {
               let out = try? model.prediction(from: provider),
               let heat = out.featureValue(for: "heatmaps")?.multiArrayValue else { return nil }
 
-        // Newest frame's heatmap = channel (seqLen-1).
-        guard let hm = extractPlane(heat, channel: Self.seqLen - 1) else { return nil }
+        // Decode a MIDDLE frame's heatmap (see class doc): far less noise than the
+        // newest (edge) frame. The detection belongs to that frame, so report its
+        // timestamp — not the current one — to keep velocities correct.
+        guard let hm = extractPlane(heat, channel: Self.decodeChannel) else { return nil }
         guard let r = HeatmapDecoder.locate(heatmap: hm, width: Self.inW, height: Self.inH, threshold: threshold) else { return nil }
 
         // Scale 512x288 -> full-resolution image pixels (the resize was a stretch).
         let full = CGPoint(x: r.point.x * Double(fullW) / Double(Self.inW),
                            y: r.point.y * Double(fullH) / Double(Self.inH))
-        return ShuttleObservation(point: full, confidence: Double(r.peak), time: time)
+        return ShuttleObservation(point: full, confidence: Double(r.peak), time: times[Self.decodeChannel])
     }
 
     /// CoreImage: pixel buffer (any format) -> 512x288 planar RGB, normalized 0...1.
