@@ -14,7 +14,7 @@ struct BadmintonView: View {
             if engine.isRunning {
                 CameraPreview(session: engine.camera.session).ignoresSafeArea()
                 OverlayRenderer(
-                    trail: engine.trail, latest: engine.latestPoint,
+                    trail: engine.trail, latest: engine.latestPoint, poses: engine.poses,
                     imageSize: engine.frameSize, accent: AppColors.accent
                 ).ignoresSafeArea()
             }

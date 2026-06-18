@@ -15,6 +15,7 @@ struct FrameResult: Sendable {
     let shotCount: Int
     let shot: ShotEvent?            // non-nil only on the frame a shot is detected
     let recentSamples: [TrajectorySample]   // trajectory samples (≤ trail window), always
+    let poses: [PlayerPose]         // most-recent player poses (refreshed every Nth frame)
 }
 
 /// Owns the per-frame analysis state (detector, trajectory, shot + fps counters).
@@ -24,25 +25,41 @@ struct FrameResult: Sendable {
 /// what makes that assertion sound.
 final class FrameProcessor: @unchecked Sendable {
     private let detector: ShuttleDetector
+    private let poseDetector: PoseDetector?
+    private let poseEvery: Int
     private let trajectory = ShuttleTrajectory(trailWindow: 1.0, maxGap: 0.3)
     private let shots = ShotDetector()
     private let fpsCounter = FPSCounter()
+    private var frameCounter = 0
+    private var lastPoses: [PlayerPose] = []
 
-    init(detector: ShuttleDetector) { self.detector = detector }
+    init(detector: ShuttleDetector, poseDetector: PoseDetector? = nil, poseEvery: Int = 5) {
+        self.detector = detector
+        self.poseDetector = poseDetector
+        self.poseEvery = max(1, poseEvery)
+    }
 
     func process(_ buffer: CVPixelBuffer, time: TimeInterval) -> FrameResult {
         let size = CGSize(width: CVPixelBufferGetWidth(buffer), height: CVPixelBufferGetHeight(buffer))
         fpsCounter.tick(at: time)
+
+        // Players move slowly relative to the shuttle, so run the heavier pose
+        // model only every Nth frame; the last poses persist between updates.
+        frameCounter += 1
+        if let poseDetector, frameCounter % poseEvery == 0 {
+            lastPoses = poseDetector.detect(pixelBuffer: buffer)
+        }
+
         guard let obs = detector.detect(pixelBuffer: buffer, time: time) else {
             return FrameResult(time: time, frameSize: size, trail: trajectory.trail, latestPoint: nil,
                                fps: fpsCounter.fps, shotCount: shots.shotCount, shot: nil,
-                               recentSamples: trajectory.samples)
+                               recentSamples: trajectory.samples, poses: lastPoses)
         }
         trajectory.add(obs)
         let shot = shots.ingest(TrajectorySample(point: obs.point, time: obs.time))
         return FrameResult(time: time, frameSize: size, trail: trajectory.trail, latestPoint: obs.point,
                            fps: fpsCounter.fps, shotCount: shots.shotCount, shot: shot,
-                           recentSamples: trajectory.samples)
+                           recentSamples: trajectory.samples, poses: lastPoses)
     }
 }
 
@@ -59,6 +76,7 @@ final class BadmintonEngine {
     var cameraDenied = false
     var lastSpeed: ShotSpeed?
     var maxSpeed: ShotSpeed?
+    var poses: [PlayerPose] = []
     var usingTrackNet = false
     var settings: BadmintonSettings = .shared
 
@@ -118,7 +136,8 @@ final class BadmintonEngine {
             detector = MotionShuttleDetector()
             usingTrackNet = false
         }
-        processorBox.withLockUnchecked { $0 = FrameProcessor(detector: detector) }
+        let pose = YOLOPoseDetector()   // nil if the model can't load -> no skeletons
+        processorBox.withLockUnchecked { $0 = FrameProcessor(detector: detector, poseDetector: pose) }
     }
 
     /// Clears the measured speeds (e.g. on recalibration, since prior values were
@@ -139,6 +158,7 @@ final class BadmintonEngine {
         trail = result.trail
         latestPoint = result.latestPoint
         shotCount = result.shotCount
+        poses = result.poses
         speedTracker.update(shotTime: result.shot?.time, now: result.time,
                             samples: result.recentSamples, scale: settings.scale)
         lastSpeed = speedTracker.lastSpeed
