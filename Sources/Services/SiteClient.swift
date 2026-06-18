@@ -74,6 +74,19 @@ struct R2Photo: Codable, Identifiable, Hashable, Sendable {
     }
 }
 
+/// An afilmory album. `photoIds`/`coverPhotoId` are afilmory ids; `photoKeys`/
+/// `coverKey` are the R2 keys the app works in (enriched by the site bridge).
+struct Album: Codable, Identifiable, Hashable, Sendable {
+    let id: String
+    let name: String
+    let description: String
+    let photoIds: [String]
+    let photoKeys: [String]
+    let coverPhotoId: String?
+    let coverKey: String?
+    let createdAt: String
+}
+
 struct R2PhotoExif: Codable, Sendable {
     let key: String
     let date: String?
@@ -342,6 +355,49 @@ actor SiteClient {
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let body: [String: Any] = ["keys": keys, "triggerDeploy": triggerDeploy]
         req.httpBody = try JSONSerialization.data(withJSONObject: body)
+        _ = try await sendVoid(req)
+    }
+
+    // MARK: - Albums
+
+    func listAlbums() async throws -> [Album] {
+        var (req, _) = try await url(path: "/api/admin/albums")
+        req.httpMethod = "GET"
+        struct R: Decodable { let albums: [Album] }
+        return try await send(req, as: R.self).albums
+    }
+
+    func createAlbum(name: String, description: String = "",
+                     photoKeys: [String] = [], coverKey: String? = nil) async throws -> Album {
+        var (req, _) = try await url(path: "/api/admin/albums")
+        req.httpMethod = "POST"
+        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        var body: [String: Any] = ["name": name, "description": description, "photoKeys": photoKeys]
+        if let coverKey { body["coverKey"] = coverKey }
+        req.httpBody = try JSONSerialization.data(withJSONObject: body)
+        return try await send(req, as: Album.self)
+    }
+
+    /// Update an album. Only the provided fields change. `coverKey` sets the cover;
+    /// `addKeys`/`removeKeys` adjust membership (all in R2 keys).
+    func updateAlbum(id: String, name: String? = nil, description: String? = nil,
+                     coverKey: String? = nil, addKeys: [String] = [], removeKeys: [String] = []) async throws -> Album {
+        var (req, _) = try await url(path: "/api/admin/albums/\(id)")
+        req.httpMethod = "PATCH"
+        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        var body: [String: Any] = [:]
+        if let name { body["name"] = name }
+        if let description { body["description"] = description }
+        if let coverKey { body["coverKey"] = coverKey }
+        if !addKeys.isEmpty { body["addKeys"] = addKeys }
+        if !removeKeys.isEmpty { body["removeKeys"] = removeKeys }
+        req.httpBody = try JSONSerialization.data(withJSONObject: body)
+        return try await send(req, as: Album.self)
+    }
+
+    func deleteAlbum(id: String) async throws {
+        var (req, _) = try await url(path: "/api/admin/albums/\(id)")
+        req.httpMethod = "DELETE"
         _ = try await sendVoid(req)
     }
 

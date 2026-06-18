@@ -44,6 +44,8 @@ struct PhotoGalleryView: View {
     @State private var selectionMode = false
     @State private var selected = Set<String>()
     @State private var pendingDelete = false
+    @State private var showingAlbums = false
+    @State private var showingAddToAlbum = false
     @AppStorage("photos.sort.v1") private var sortRaw: String = PhotoSort.newest.rawValue
     @AppStorage("photos.columns.v1") private var columnsRaw: String = PhotoColumns.auto.rawValue
 
@@ -77,36 +79,44 @@ struct PhotoGalleryView: View {
         } message: {
             Text("Removes from R2 and triggers an afilmory rebuild. Can't be undone.")
         }
+        .sheet(isPresented: $showingAddToAlbum) {
+            AddToAlbumSheet(keys: Array(selected)) {
+                selectionMode = false
+                selected.removeAll()
+            }
+        }
     }
 
     private var authedBody: some View {
         VStack(spacing: 0) {
             header
-            toolbar
-            sortBar
-            content
+            if showingAlbums {
+                AlbumsView()
+            } else {
+                toolbar
+                sortBar
+                content
+            }
         }
     }
 
     private var header: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 8) {
             Rectangle().fill(AppColors.primary).frame(width: 3, height: 16)
-            Text(prefixFilter.isEmpty ? "PICS" : prefixFilter.uppercased())
-                .font(.system(size: 15, weight: .heavy, design: .monospaced))
-                .kerning(1.4)
-                .foregroundStyle(AppColors.primary)
-                .lineLimit(1)
-                .minimumScaleFactor(0.6)
+            chip("PHOTOS", selected: !showingAlbums) { showingAlbums = false }
+            chip("ALBUMS", selected: showingAlbums) { showingAlbums = true }
             Spacer()
-            Button { showingUpload = true } label: {
-                Text("+ UPLOAD")
-                    .font(.system(size: 11, weight: .heavy, design: .monospaced))
-                    .kerning(1.0)
-                    .foregroundStyle(AppColors.surface)
-                    .padding(.horizontal, 12).padding(.vertical, 6)
-                    .background(AppColors.primary)
+            if !showingAlbums {
+                Button { showingUpload = true } label: {
+                    Text("+ UPLOAD")
+                        .font(.system(size: 11, weight: .heavy, design: .monospaced))
+                        .kerning(1.0)
+                        .foregroundStyle(AppColors.surface)
+                        .padding(.horizontal, 12).padding(.vertical, 6)
+                        .background(AppColors.primary)
+                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
         }
         .padding(.horizontal, 16)
         .padding(.top, 12)
@@ -150,6 +160,15 @@ struct PhotoGalleryView: View {
             .buttonStyle(.plain)
 
             if selectionMode && !selected.isEmpty {
+                Button { showingAddToAlbum = true } label: {
+                    Text("+ ALBUM")
+                        .font(.system(size: 10, weight: .heavy, design: .monospaced))
+                        .kerning(1.0)
+                        .foregroundStyle(AppColors.surface)
+                        .padding(.horizontal, 10).padding(.vertical, 8)
+                        .background(AppColors.primary)
+                }
+                .buttonStyle(.plain)
                 Button { pendingDelete = true } label: {
                     Text("DELETE")
                         .font(.system(size: 10, weight: .heavy, design: .monospaced))
