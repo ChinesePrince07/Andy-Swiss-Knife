@@ -51,6 +51,12 @@ final class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
         output.setSampleBufferDelegate(self, queue: queue)
         guard session.canAddOutput(output) else { session.commitConfiguration(); return false }
         session.addOutput(output)
+        // Deliver portrait-up buffers so the detectors see the scene the same way
+        // the (auto-rotated) preview shows it. Without this the models get the raw
+        // landscape sensor buffer — people appear sideways and aren't detected.
+        if let conn = output.connection(with: .video), conn.isVideoRotationAngleSupported(90) {
+            conn.videoRotationAngle = 90
+        }
         session.commitConfiguration()
 
         // Best-effort frame-rate lock.
