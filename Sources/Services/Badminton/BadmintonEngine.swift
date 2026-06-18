@@ -32,6 +32,7 @@ final class FrameProcessor: @unchecked Sendable {
     private let fpsCounter = FPSCounter()
     private var frameCounter = 0
     private var lastPoses: [PlayerPose] = []
+    private var gate = ShuttleGate()
 
     init(detector: ShuttleDetector, poseDetector: PoseDetector? = nil, poseEvery: Int = 5) {
         self.detector = detector
@@ -50,7 +51,13 @@ final class FrameProcessor: @unchecked Sendable {
             lastPoses = poseDetector.detect(pixelBuffer: buffer)
         }
 
-        guard let obs = detector.detect(pixelBuffer: buffer, time: time) else {
+        // Reject teleporting outliers (noise) so the trail follows continuous motion.
+        var accepted: ShuttleObservation?
+        if let detected = detector.detect(pixelBuffer: buffer, time: time),
+           gate.accept(detected.point, time: time, frameSize: size) {
+            accepted = detected
+        }
+        guard let obs = accepted else {
             return FrameResult(time: time, frameSize: size, trail: trajectory.trail, latestPoint: nil,
                                fps: fpsCounter.fps, shotCount: shots.shotCount, shot: nil,
                                recentSamples: trajectory.samples, poses: lastPoses)
