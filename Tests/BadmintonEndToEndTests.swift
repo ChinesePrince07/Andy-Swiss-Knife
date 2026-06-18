@@ -50,6 +50,7 @@ final class BadmintonEndToEndTests: XCTestCase {
         let size = CGSize(width: track.width, height: track.height)
 
         var shotCount = 0
+        var lastTime = 0.0
         for s in track.samples {
             let pt = CGPoint(x: s.x, y: s.y)
             guard gate.accept(pt, time: s.t, frameSize: size) else { continue }   // app applies the gate
@@ -63,6 +64,7 @@ final class BadmintonEndToEndTests: XCTestCase {
             }
             speed.update(shotTime: shot?.time, now: obs.time, samples: trajectory.samples, scale: scale)
             scorer.tick(now: obs.time)
+            lastTime = obs.time
         }
 
         // The real rally produces detectable hits.
@@ -72,7 +74,13 @@ final class BadmintonEndToEndTests: XCTestCase {
             XCTAssertGreaterThan(mx.kmh, 0)
             XCTAssertLessThanOrEqual(mx.metersPerSecond, SpeedEstimator.maxPlausibleMetersPerSecond)
         }
-        // Scoring stays consistent (never negative).
-        XCTAssertGreaterThanOrEqual(scorer.score(for: .p1) + scorer.score(for: .p2), 0)
+        // End the rally; scoring must stay consistent, and a rally with >=2 detected
+        // hits awards exactly one point to the last hitter's side.
+        scorer.tick(now: lastTime + 2.0)
+        let total = scorer.score(for: .p1) + scorer.score(for: .p2)
+        XCTAssertGreaterThanOrEqual(total, 0)
+        if shotCount >= 2 {
+            XCTAssertGreaterThanOrEqual(total, 1, "a rally with >=2 hits should award a point")
+        }
     }
 }
