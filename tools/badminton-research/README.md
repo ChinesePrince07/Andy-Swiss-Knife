@@ -56,11 +56,30 @@ cd /tmp/tnv3   # needs model.py + ckpts/ alongside
 Outputs: a noise-metrics table (bg × channel matrix), `study_xt.png` (shuttle x
 over time per config), and `study_overlay.mp4` (side-by-side Swift-vs-fix overlay).
 
-## Next levers to study (toward "correctly track")
+`sweep.py` runs the threshold × ensemble density sweep; `extract_track.py` dumps a
+fixture for the Swift e2e test; `validate_clip.py` runs the full pipeline on any
+clip. Get fresh footage with `uv pip install yt-dlp` then
+`python -m yt_dlp -f "mp4[height<=720]" --download-sections "*0-25" "ytsearch1:<query>"`.
 
-- **Median-quality live background** (rolling/startup median vs EMA) — further
-  cleanup; mind the detection-count tradeoff.
-- **Light middle-channel ensemble** (avg ch3–ch5) for cleaner peaks without the
-  full-ensemble detection collapse.
-- **Detection threshold** sweep (currently 0.5) for recall vs noise.
-- **Capture frame rate** — model trained ~30 fps; the app feeds 60 fps.
+## Findings log
+
+- **Shipped:** middle-frame decode (vs edge) → ~10× less jitter; 3-window ensemble
+  (ch3/4/5) @ threshold 0.25 → 2–4× detections, still clean; physical speed cap.
+- **Generalization (verified):** on a *different* match clip (Prannoy vs Weng,
+  640×360@25, never tuned on) the shipped config detected **200/220 = 91% with 0%
+  teleport** — the fix is not over-fit to the Twitter clip.
+- **Frame rate (tested, rejected):** subsampling the 60 fps clip to 30/20 fps barely
+  raised detection (63→68→77%) but **doubled/quadrupled teleport** (4.8→10.5→23%).
+  Keep processing every frame at 60 fps.
+- **Orientation:** `ShotDetector` keys on *horizontal* velocity reversals (correct
+  for the app's side-on setup). On an *end-on* broadcast clip (shuttle moves
+  vertically) it under-detects shots — fine for the intended setup, fragile otherwise.
+
+## Open frontier (needs data we don't have offline)
+
+- **Absolute velocity accuracy** can't be validated without a known scale
+  (in-app net-height calibration) + ground-truth speed (a broadcast speed-gun clip,
+  or the user's calibrated footage). On available clips speeds are *plausible* and
+  physically bounded, but not validated against a reference.
+- Levers if such data arrives: median-quality background, wider/smarter speed
+  window for the post-smash blur gap, gap-tolerant / 2-axis shot detection.
