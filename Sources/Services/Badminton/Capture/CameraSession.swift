@@ -16,6 +16,8 @@ final class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
 
     private let queue = DispatchQueue(label: "badminton.camera.frames")
     private let output = AVCaptureVideoDataOutput()
+    private var rotationCoordinator: AVCaptureDevice.RotationCoordinator?
+    private var rotationObservation: NSKeyValueObservation?
 
     /// Requests access + configures a 1080p video-data output at `fps`. Returns success.
     func configure(fps: Int) async -> Bool {
@@ -51,13 +53,18 @@ final class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
         output.setSampleBufferDelegate(self, queue: queue)
         guard session.canAddOutput(output) else { session.commitConfiguration(); return false }
         session.addOutput(output)
-        // Deliver portrait-up buffers so the detectors see the scene the same way
-        // the (auto-rotated) preview shows it. Without this the models get the raw
-        // landscape sensor buffer — people appear sideways and aren't detected.
-        if let conn = output.connection(with: .video), conn.isVideoRotationAngleSupported(90) {
-            conn.videoRotationAngle = 90
-        }
         session.commitConfiguration()
+
+        // Keep delivered buffers horizon-level (upright) as the phone is propped in
+        // any orientation, so the detectors always see an upright scene — tracking
+        // the physical device orientation even though the app UI is portrait-locked.
+        let coordinator = AVCaptureDevice.RotationCoordinator(device: device, previewLayer: nil)
+        rotationCoordinator = coordinator
+        applyCaptureRotation(coordinator.videoRotationAngleForHorizonLevelCapture)
+        rotationObservation = coordinator.observe(\.videoRotationAngleForHorizonLevelCapture, options: [.new]) { [weak self] _, change in
+            guard let self, let angle = change.newValue else { return }
+            self.queue.async { self.applyCaptureRotation(angle) }
+        }
 
         // Best-effort frame-rate lock.
         if let format = bestFormat(for: device, fps: fps), (try? device.lockForConfiguration()) != nil {
@@ -68,6 +75,11 @@ final class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
             device.unlockForConfiguration()
         }
         return true
+    }
+
+    private func applyCaptureRotation(_ angle: CGFloat) {
+        guard let conn = output.connection(with: .video), conn.isVideoRotationAngleSupported(angle) else { return }
+        conn.videoRotationAngle = angle
     }
 
     private func bestFormat(for device: AVCaptureDevice, fps: Int) -> AVCaptureDevice.Format? {
