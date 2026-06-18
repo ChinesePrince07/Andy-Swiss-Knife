@@ -18,9 +18,10 @@ struct BadmintonView: View {
             if engine.isRunning {
                 CameraPreview(session: engine.camera.session).ignoresSafeArea()
                 OverlayRenderer(
-                    trail: engine.trail, latest: engine.latestPoint, poses: engine.poses,
+                    trail: engine.trail, latest: engine.latestPoint, players: engine.players,
                     imageSize: engine.frameSize, accent: AppColors.accent
                 ).ignoresSafeArea()
+                ShotFlash(marker: engine.lastShot, imageSize: engine.frameSize).ignoresSafeArea()
             }
 
             VStack {
@@ -32,6 +33,13 @@ struct BadmintonView: View {
                 .font(hudFont).foregroundStyle(.white)
                 .padding(.horizontal, 8).padding(.vertical, 5)
                 .background(Color.black.opacity(0.55))
+
+                Scoreboard(
+                    p1: engine.scoreP1, p2: engine.scoreP2,
+                    onAdjust: { engine.adjustScore($0, by: $1) },
+                    onReset: { engine.resetScore() }
+                )
+                .padding(.top, 4)
 
                 Spacer()
 
