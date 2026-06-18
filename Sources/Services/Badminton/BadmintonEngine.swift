@@ -95,7 +95,7 @@ final class BadmintonEngine {
     // changes; the lock lets the @Sendable camera callback read the current one
     // safely from the delivery queue while start() rebuilds it on the main actor.
     private let processorBox: OSAllocatedUnfairLock<FrameProcessor>
-    private var speedTracker = ShotSpeedTracker(window: 0.08)
+    private var speedTracker = ShotSpeedTracker(window: 0.12)   // ~7 frames @60fps: enough samples to corroborate the peak + cover the fast post-hit phase
     private let scorer = AutoScorer()
     private var shotSeq = 0
 

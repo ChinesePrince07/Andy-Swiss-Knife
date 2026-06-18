@@ -15,21 +15,34 @@ enum SpeedEstimator {
     /// impossible value (offline study saw an ungated teleport imply 1696 km/h).
     static let maxPlausibleMetersPerSecond = 160.0   // 576 km/h
 
-    /// Peak instantaneous speed over samples within [start, start+window],
-    /// ignoring physically-impossible intervals (detection outliers).
+    /// Peak shuttle speed over samples within [start, start+window].
+    ///
+    /// Uses a CORROBORATED peak, not a raw max: a real shot sustains high speed
+    /// across ≥2 consecutive frames, while a single-frame detection teleport (a jump
+    /// that slips under the trail gate's per-frame ceiling) does not. So the peak is
+    /// the max over consecutive interval-pairs of their *minimum*, which rejects
+    /// isolated spikes. Offline study on real match footage: the raw single-interval
+    /// max pinned every segment at the gate ceiling (~400 km/h, a teleport artifact),
+    /// while the corroborated peak gave plausible, rally-varying speeds (98–204 km/h).
+    /// The physical cap is a final backstop for the rare sustained outlier.
     static func peakSpeed(samples: [TrajectorySample], from start: TimeInterval,
                           window: TimeInterval, scale: ReferenceScale,
                           maxPlausibleMS: Double = maxPlausibleMetersPerSecond) -> ShotSpeed? {
         let win = samples.filter { $0.time >= start && $0.time <= start + window }
         guard win.count >= 2 else { return nil }
-        var peak = 0.0
+
+        var speeds: [Double] = []
         for i in 1..<win.count {
             let dt = win[i].time - win[i - 1].time
             guard dt > 0 else { continue }
-            let speed = scale.meters(from: win[i - 1].point, to: win[i].point) / dt
-            if speed > maxPlausibleMS { continue }   // physically impossible -> detection error
-            peak = max(peak, speed)
+            speeds.append(scale.meters(from: win[i - 1].point, to: win[i].point) / dt)
         }
+        // Need ≥2 consecutive intervals to corroborate; a lone interval is unverifiable.
+        guard speeds.count >= 2 else { return nil }
+
+        var peak = 0.0
+        for i in 1..<speeds.count { peak = max(peak, min(speeds[i], speeds[i - 1])) }
+        peak = min(peak, maxPlausibleMS)
         guard peak > 0 else { return nil }
         return ShotSpeed(metersPerSecond: peak)
     }

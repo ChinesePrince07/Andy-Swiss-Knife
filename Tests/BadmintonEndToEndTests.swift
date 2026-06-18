@@ -44,7 +44,7 @@ final class BadmintonEndToEndTests: XCTestCase {
         var gate = ShuttleGate()
         let trajectory = ShuttleTrajectory(trailWindow: 1.0, maxGap: 0.3)
         let shots = ShotDetector()
-        var speed = ShotSpeedTracker(window: 0.08)
+        var speed = ShotSpeedTracker(window: 0.12)
         let scorer = AutoScorer()
         let scale = ReferenceScale(p1: .zero, p2: CGPoint(x: 1000, y: 0), realMeters: 11.2)!
         let size = CGSize(width: track.width, height: track.height)
