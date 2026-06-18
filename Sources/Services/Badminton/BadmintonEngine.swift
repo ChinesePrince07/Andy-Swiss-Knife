@@ -83,7 +83,10 @@ final class BadmintonEngine {
     var cameraDenied = false
     var lastSpeed: ShotSpeed?
     var maxSpeed: ShotSpeed?
-    var poses: [PlayerPose] = []
+    var players: [LabeledPose] = []
+    var scoreP1 = 0
+    var scoreP2 = 0
+    var lastShot: ShotMarker?
     var settings: BadmintonSettings = .shared
 
     let captureFPS: Int
@@ -93,6 +96,8 @@ final class BadmintonEngine {
     // safely from the delivery queue while start() rebuilds it on the main actor.
     private let processorBox: OSAllocatedUnfairLock<FrameProcessor>
     private var speedTracker = ShotSpeedTracker(window: 0.08)
+    private let scorer = AutoScorer()
+    private var shotSeq = 0
 
     init(detector: ShuttleDetector = MotionShuttleDetector(), captureFPS: Int = 60) {
         self.captureFPS = captureFPS
@@ -148,10 +153,38 @@ final class BadmintonEngine {
         trail = result.trail
         latestPoint = result.latestPoint
         shotCount = result.shotCount
-        poses = result.poses
+        players = PlayerLabeler.assign(result.poses, imageWidth: result.frameSize.width)
+
+        // A detected hit drives both the on-camera flash and the auto-scorer: it's
+        // attributed to the side it occurred on (the hitter's side), then a rally
+        // that goes quiet awards the point to whoever hit last.
+        if let shot = result.shot {
+            let side = PlayerLabeler.side(ofHitAt: shot.point, players: players,
+                                          imageWidth: result.frameSize.width)
+            scorer.registerHit(side: side, time: shot.time)
+            shotSeq += 1
+            lastShot = ShotMarker(id: shotSeq, point: shot.point)
+        }
+        scorer.tick(now: result.time)
+        scoreP1 = scorer.score(for: .p1)
+        scoreP2 = scorer.score(for: .p2)
+
         speedTracker.update(shotTime: result.shot?.time, now: result.time,
                             samples: result.recentSamples, scale: settings.scale)
         lastSpeed = speedTracker.lastSpeed
         maxSpeed = speedTracker.maxSpeed
+    }
+
+    /// Manual score correction (auto detection is experimental).
+    func adjustScore(_ side: PlayerSide, by delta: Int) {
+        scorer.adjust(side, by: delta)
+        scoreP1 = scorer.score(for: .p1)
+        scoreP2 = scorer.score(for: .p2)
+    }
+
+    func resetScore() {
+        scorer.reset()
+        scoreP1 = 0
+        scoreP2 = 0
     }
 }
