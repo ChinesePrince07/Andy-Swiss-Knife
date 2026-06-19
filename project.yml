@@ -42,6 +42,8 @@ targets:
         UIStatusBarStyle: UIStatusBarStyleDefault
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
         NSSupportsLiveActivities: true
         NSCalendarsFullAccessUsageDescription: "Swiss Knife pulls events from your Apple Calendar into Reminders so you can see them alongside your other to-dos."
         NSCameraUsageDescription: "Swiss Knife uses the camera to track the shuttlecock and measure your shot speed."

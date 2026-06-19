@@ -1,8 +1,37 @@
 import SwiftUI
 import SwiftData
+import UIKit
+
+/// The app is portrait by default; the Badminton tab opts into landscape (the
+/// side-on court setup) by widening this mask. `RootView` flips it on tab change.
+final class AppDelegate: NSObject, UIApplicationDelegate {
+    // Read by UIKit on the main thread and written only via AppOrientation.set
+    // (@MainActor), so single-threaded access makes the unchecked global safe.
+    nonisolated(unsafe) static var orientationMask: UIInterfaceOrientationMask = .portrait
+    func application(_ application: UIApplication,
+                     supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        AppDelegate.orientationMask
+    }
+}
+
+@MainActor
+enum AppOrientation {
+    /// Permit `mask` and ask the active scene to re-evaluate — rotating back to a
+    /// supported orientation if the current one is no longer allowed (e.g. leaving
+    /// the Badminton tab while held landscape snaps back to portrait).
+    static func set(_ mask: UIInterfaceOrientationMask) {
+        AppDelegate.orientationMask = mask
+        guard let scene = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .first(where: { $0.activationState == .foregroundActive }) else { return }
+        scene.keyWindow?.rootViewController?.setNeedsUpdateOfSupportedInterfaceOrientations()
+        scene.requestGeometryUpdate(.iOS(interfaceOrientations: mask)) { _ in }
+    }
+}
 
 @main
 struct SwissKnifeApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     let container: ModelContainer
 
     init() {
@@ -144,6 +173,10 @@ struct RootView: View {
                 .onAppear {
                     services.sweeper.sweep()
                     validateSelectedTab()
+                    AppOrientation.set(selectedTab == .badminton ? .allButUpsideDown : .portrait)
+                }
+                .onChange(of: selectedTab) { _, tab in
+                    AppOrientation.set(tab == .badminton ? .allButUpsideDown : .portrait)
                 }
                 .onChange(of: UserSettings.shared.enabledTabs) { _, _ in validateSelectedTab() }
                 .onChange(of: scenePhase) { _, phase in

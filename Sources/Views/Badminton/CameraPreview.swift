@@ -20,8 +20,12 @@ struct CameraPreview: UIViewRepresentable {
         var videoPreviewLayer: AVCaptureVideoPreviewLayer { layer as! AVCaptureVideoPreviewLayer }
     }
 
-    /// Keeps the preview horizon-level (upright) as the phone is propped in any
-    /// orientation, matching the rotation applied to the detector buffers.
+    /// Rotates the preview by the SAME angle the detector buffers use
+    /// (`...HorizonLevelCapture`, NOT `...Preview`). The overlay maps detector
+    /// coordinates straight onto the preview, so the preview MUST show the exact
+    /// pixel orientation of the buffer or the skeleton/shuttle land 90° off — which
+    /// is precisely what happened in landscape, where the capture and preview
+    /// horizon-level angles diverge (they agree in portrait, so it looked fine).
     final class Coordinator {
         private var rotationCoordinator: AVCaptureDevice.RotationCoordinator?
         private var observation: NSKeyValueObservation?
@@ -30,8 +34,8 @@ struct CameraPreview: UIViewRepresentable {
             guard let device = session.inputs.compactMap({ ($0 as? AVCaptureDeviceInput)?.device }).first else { return }
             let coord = AVCaptureDevice.RotationCoordinator(device: device, previewLayer: previewLayer)
             rotationCoordinator = coord
-            Self.apply(coord.videoRotationAngleForHorizonLevelPreview, to: previewLayer)
-            observation = coord.observe(\.videoRotationAngleForHorizonLevelPreview, options: [.new]) { [weak previewLayer] _, change in
+            Self.apply(coord.videoRotationAngleForHorizonLevelCapture, to: previewLayer)
+            observation = coord.observe(\.videoRotationAngleForHorizonLevelCapture, options: [.new]) { [weak previewLayer] _, change in
                 guard let previewLayer, let angle = change.newValue else { return }
                 Self.apply(angle, to: previewLayer)
             }
