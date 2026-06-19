@@ -6,6 +6,7 @@ struct OverlayRenderer: View {
     let players: [LabeledPose]
     let imageSize: CGSize
     let accent: Color
+    var roi: CGRect? = nil   // normalized court region (drawn faintly when set)
 
     private static let kptThreshold: Float = 0.3
 
@@ -40,6 +41,13 @@ struct OverlayRenderer: View {
     }
 
     private func draw(in ctx: GraphicsContext, fit: AspectFit) {
+        // Court region (faint), if set — detections outside it are ignored.
+        if let roi {
+            let px = CGRect(x: roi.minX * imageSize.width, y: roi.minY * imageSize.height,
+                            width: roi.width * imageSize.width, height: roi.height * imageSize.height)
+            ctx.stroke(Path(fit.map(px)), with: .color(.white.opacity(0.3)), lineWidth: 1.5)
+        }
+
         // Player bounding boxes + skeletons (under the shuttle trail).
         for labeled in players {
             let color = Self.color(labeled.side)

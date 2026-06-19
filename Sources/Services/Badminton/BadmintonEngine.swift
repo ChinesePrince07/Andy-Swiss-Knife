@@ -33,11 +33,22 @@ final class FrameProcessor: @unchecked Sendable {
     private var frameCounter = 0
     private var lastPoses: [PlayerPose] = []
     private var gate = ShuttleGate()
+    private var roi: CGRect?   // court area, normalized 0...1; detections outside are dropped
 
-    init(detector: ShuttleDetector, poseDetector: PoseDetector? = nil, poseEvery: Int = 5) {
+    init(detector: ShuttleDetector, poseDetector: PoseDetector? = nil, poseEvery: Int = 5, roi: CGRect? = nil) {
         self.detector = detector
         self.poseDetector = poseDetector
         self.poseEvery = max(1, poseEvery)
+        self.roi = roi
+    }
+
+    /// Update the court ROI live (no detector reload). Called under the processor lock.
+    func updateROI(_ r: CGRect?) { roi = r }
+
+    /// True if `p` (image pixels) is inside the normalized court ROI (or no ROI set).
+    private func inROI(_ p: CGPoint, size: CGSize) -> Bool {
+        guard let roi, size.width > 0, size.height > 0 else { return true }
+        return roi.contains(CGPoint(x: p.x / size.width, y: p.y / size.height))
     }
 
     func process(_ buffer: CVPixelBuffer, time: TimeInterval) -> FrameResult {
@@ -51,9 +62,11 @@ final class FrameProcessor: @unchecked Sendable {
             lastPoses = poseDetector.detect(pixelBuffer: buffer)
         }
 
-        // Reject teleporting outliers (noise) so the trail follows continuous motion.
+        // Drop detections outside the court ROI (background clutter — banners, crowd,
+        // off-court reflections), then reject teleporting outliers (noise).
         var accepted: ShuttleObservation?
         if let detected = detector.detect(pixelBuffer: buffer, time: time),
+           inROI(detected.point, size: size),
            gate.accept(detected.point, time: time, frameSize: size) {
             accepted = detected
         }
@@ -132,7 +145,14 @@ final class BadmintonEngine {
     private func rebuildProcessor() {
         let detector: ShuttleDetector = TrackNetShuttleDetector() ?? MotionShuttleDetector()
         let pose = YOLOPoseDetector()   // nil if the model can't load -> no skeletons
-        processorBox.withLockUnchecked { $0 = FrameProcessor(detector: detector, poseDetector: pose) }
+        let roi = settings.courtROI
+        processorBox.withLockUnchecked { $0 = FrameProcessor(detector: detector, poseDetector: pose, roi: roi) }
+    }
+
+    /// Set (or clear) the court ROI: persisted + applied live to the running processor.
+    func setCourtROI(_ roi: CGRect?) {
+        settings.courtROI = roi
+        processorBox.withLockUnchecked { $0.updateROI(roi) }
     }
 
     /// Clears the measured speeds (e.g. on recalibration, since prior values were

@@ -3,6 +3,7 @@ import SwiftUI
 struct BadmintonView: View {
     let engine: BadmintonEngine
     @State private var calibrating = false
+    @State private var settingCourt = false
     @Environment(\.scenePhase) private var scenePhase
 
     // Compact HUD fonts (the on-camera overlay text should stay out of the way).
@@ -19,7 +20,7 @@ struct BadmintonView: View {
                 CameraPreview(session: engine.camera.session).ignoresSafeArea()
                 OverlayRenderer(
                     trail: engine.trail, latest: engine.latestPoint, players: engine.players,
-                    imageSize: engine.frameSize, accent: AppColors.accent
+                    imageSize: engine.frameSize, accent: AppColors.accent, roi: engine.settings.courtROI
                 ).ignoresSafeArea()
                 ShotFlash(marker: engine.lastShot, imageSize: engine.frameSize).ignoresSafeArea()
             }
@@ -61,6 +62,9 @@ struct BadmintonView: View {
                     Button("CALIBRATE") { calibrating = true }
                         .disabled(engine.frameSize == .zero)
                     Spacer()
+                    Button(engine.settings.courtROI == nil ? "SET COURT" : "COURT ✓") { settingCourt = true }
+                        .disabled(engine.frameSize == .zero)
+                    Spacer()
                     Button(engine.settings.unit.label.uppercased()) { toggleUnit() }
                 }
                 .font(hudFont).foregroundStyle(.white)
@@ -97,6 +101,14 @@ struct BadmintonView: View {
                     calibrating = false
                 },
                 onCancel: { calibrating = false }
+            )
+        }
+        .fullScreenCover(isPresented: $settingCourt) {
+            CourtRegionView(
+                session: engine.camera.session,
+                imageSize: engine.frameSize,
+                onDone: { roi in engine.setCourtROI(roi); settingCourt = false },
+                onCancel: { settingCourt = false }
             )
         }
     }
