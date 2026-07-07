@@ -106,7 +106,7 @@ final class Services {
 }
 
 enum AppTab: String, Hashable, Codable, CaseIterable, Identifiable {
-    case today, todos, classes, canvas, sports, files, blog, photos, badminton
+    case today, todos, classes, canvas, sports, files, blog, photos, fitcheck, badminton
 
     var id: String { rawValue }
 
@@ -120,6 +120,7 @@ enum AppTab: String, Hashable, Codable, CaseIterable, Identifiable {
         case .files:     return "FILES"
         case .blog:      return "BLOG"
         case .photos:    return "PICS"
+        case .fitcheck:  return "FIT"
         case .badminton: return "BADM"
         }
     }
@@ -134,6 +135,7 @@ enum AppTab: String, Hashable, Codable, CaseIterable, Identifiable {
         case .files:     return "folder"
         case .blog:      return "square.and.pencil"
         case .photos:    return "photo"
+        case .fitcheck:  return "tshirt"
         case .badminton: return "figure.badminton"
         }
     }
@@ -148,6 +150,7 @@ enum AppTab: String, Hashable, Codable, CaseIterable, Identifiable {
         case .files:     return "folder.fill"
         case .blog:      return "square.and.pencil"
         case .photos:    return "photo.fill"
+        case .fitcheck:  return "tshirt.fill"
         case .badminton: return "figure.badminton"
         }
     }
@@ -251,6 +254,8 @@ struct RootView: View {
                 PhotoGalleryView()
                     .withSettingsGear(services: services)
             }
+        case .fitcheck:
+            FitCheckView()
         case .badminton:
             NavigationStack {
                 BadmintonView(services: services)

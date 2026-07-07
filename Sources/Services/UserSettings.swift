@@ -11,6 +11,7 @@ final class UserSettings {
     private static let tabsKey = "user.enabledTabs"
     private static let onboardingKey = "user.hasCompletedOnboarding.v1"
     private static let badmintonSeededKey = "user.badmintonTabSeeded.v1"
+    private static let fitcheckSeededKey = "user.fitcheckTabSeeded.v1"
 
     var displayName: String {
         didSet { UserDefaults.standard.set(displayName, forKey: Self.nameKey) }
@@ -39,6 +40,16 @@ final class UserSettings {
         self.enabledTabs = Self.loadTabs()
         self.hasCompletedOnboarding = UserDefaults.standard.bool(forKey: Self.onboardingKey)
         seedBadmintonTabIfNeeded()
+        seedFitCheckTabIfNeeded()
+    }
+
+    /// One-time: surface the new FitCheck tab for existing installs.
+    private func seedFitCheckTabIfNeeded() {
+        guard !UserDefaults.standard.bool(forKey: Self.fitcheckSeededKey) else { return }
+        UserDefaults.standard.set(true, forKey: Self.fitcheckSeededKey)
+        if !enabledTabs.contains(.fitcheck) {
+            enabledTabs.append(.fitcheck)   // didSet persists
+        }
     }
 
     /// One-time: surface the new Badminton tab for existing installs (so it's a
