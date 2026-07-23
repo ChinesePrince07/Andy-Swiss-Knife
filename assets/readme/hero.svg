@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="390" viewBox="0 0 1200 390" role="img" aria-labelledby="title desc">
+  <title id="title">Andy's Swiss Knife</title>
+  <desc id="desc">A brutalist school dashboard made from schedule, task, meal, focus, and file modules.</desc>
+  <rect width="1200" height="390" fill="#FAF5EB"/>
+  <rect x="24" y="24" width="1152" height="342" fill="#FFFFFF" stroke="#111111" stroke-width="4"/>
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#111111">
+    <text x="58" y="70" font-size="18" font-weight="700" letter-spacing="4">IOS 17+ / PERSONAL SCHOOL OS</text>
+    <text x="56" y="150" font-size="65" font-weight="900">ANDY'S</text>
+    <text x="56" y="218" font-size="65" font-weight="900">SWISS KNIFE</text>
+    <rect x="56" y="246" width="112" height="10" fill="#EF341E"/>
+    <text x="56" y="298" font-size="23" font-weight="700">THE WHOLE SCHOOL DAY.</text>
+    <text x="56" y="330" font-size="23">ONE SHARP DASHBOARD.</text>
+  </g>
+  <g transform="translate(665 50)" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="#111111">
+    <rect x="0" y="0" width="454" height="290" fill="#FAF5EB" stroke="#111111" stroke-width="3"/>
+    <text x="20" y="32" font-size="18" font-weight="800" letter-spacing="3">TODAY / 08:10</text>
+    <line x1="0" y1="48" x2="454" y2="48" stroke="#111111" stroke-width="3"/>
+    <g transform="translate(18 68)">
+      <rect width="196" height="86" fill="#FFFFFF" stroke="#111111" stroke-width="3"/>
+      <text x="14" y="26" font-size="16" font-weight="800">NEXT CLASS</text>
+      <text x="14" y="58" font-size="24" font-weight="900">PHYSICS</text>
+      <rect y="75" width="196" height="11" fill="#EF341E"/>
+    </g>
+    <g transform="translate(238 68)">
+      <rect width="198" height="86" fill="#FFFFFF" stroke="#111111" stroke-width="3"/>
+      <text x="14" y="26" font-size="16" font-weight="800">TASKS</text>
+      <text x="14" y="59" font-size="29" font-weight="900">03 OPEN</text>
+    </g>
+    <g transform="translate(18 172)">
+      <rect width="126" height="86" fill="#111111"/>
+      <text x="12" y="25" font-size="15" fill="#FFFFFF" font-weight="800">DINING</text>
+      <text x="12" y="56" font-size="21" fill="#FAF5EB" font-weight="900">LUNCH</text>
+    </g>
+    <g transform="translate(164 172)">
+      <rect width="126" height="86" fill="#F4D300" stroke="#111111" stroke-width="3"/>
+      <text x="12" y="25" font-size="15" font-weight="800">FOCUS</text>
+      <text x="12" y="58" font-size="25" font-weight="900">25:00</text>
+    </g>
+    <g transform="translate(310 172)">
+      <rect width="126" height="86" fill="#FFFFFF" stroke="#111111" stroke-width="3"/>
+      <text x="12" y="25" font-size="15" font-weight="800">FILES</text>
+      <text x="12" y="58" font-size="24" font-weight="900">SYNC</text>
+    </g>
+  </g>
+</svg>

@@ -1,37 +1,72 @@
-# Andy's Swiss Knife
-
-One app for everything at school. Replaces eight daily apps.
-
 <p align="center">
-  <img src="docs/screenshots/dashboard.png" alt="Dashboard" width="320"/>
+  <img src="./assets/readme/hero.svg" width="100%" alt="Andy's Swiss Knife, a brutalist iPhone dashboard for school, tasks, files, and daily life">
 </p>
 
-## What's inside
+<p align="center">
+  <strong>One iPhone app for the school day.</strong><br>
+  Schedule, Canvas assignments, dining, athletics, files, photos, focus sessions, and personal tools—organized around what matters now.
+</p>
 
-**To-Do** — Add tasks, set due dates, drag to reorder. Syncs with Canvas assignments automatically.
+## See today at a glance
 
-**Schedule** — Shows your current or next class all day. Import your schedule from a photo or PDF.
+<p align="center">
+  <img src="./docs/screenshots/dashboard.png" width="360" alt="Andy's Swiss Knife Today dashboard showing classes, tasks, dining, and countdown cards">
+</p>
 
-**Dining** — Today's lunch and dinner menu. Switches meals automatically throughout the day.
+The customizable **Today** dashboard is the center of the app. It surfaces the next class, unfinished work, meals, reminders, countdowns, weather, and other cards without making you open a stack of separate apps.
 
-**Events** — School calendar and your Apple calendars in one scrollable feed.
+## What is inside
 
-**Athletics** — Follow any of 49 Suffield teams. Toggle multiple teams at once.
+- **School** — class schedule, Canvas assignment sync, dining menus, school events, and athletics across Suffield teams.
+- **Get things done** — ordered to-dos, personal reminders, countdowns, calendar import, and a Pomodoro timer with a Live Activity.
+- **Your stuff** — file browsing and sharing, photo albums, a blog editor, and a FitCheck web view.
+- **On court** — an experimental badminton view with camera-based player and shuttle analysis.
+- **At a glance** — Home Screen widgets for tasks, reminders, lunch, and the next class.
 
-**Countdown** — Count down to any school event. Rename it right on the dashboard.
+Tabs and dashboard cards are configurable, so the app can stay narrow even as the project grows.
 
-**Files** — Browse and share study documents. Admins can upload, rename, and delete.
+## Design
 
-**Pomodoro** — 25/5 timer with a live Lock Screen countdown.
+The interface uses a deliberately blunt visual system: zero-radius cards, heavy rules, uppercase mono labels, and six switchable themes.
 
-**Reminders** — Quick personal reminders with optional times.
+`STARK WHITE` · `CREAM` · `INK` · `ACID` · `HAZARD` · `TOXIC`
 
-**Weather** — Today's high and low in the dashboard header.
+## Build
 
-**Widgets** — To-do, reminders, lunch menu, and next class on your Home Screen.
+### Requirements
 
-## Themes
+- Xcode with Swift 6 support
+- An iPhone or simulator running iOS 17 or later
+- An Apple development team selected for the app and widget targets
 
-Stark White · Cream · Ink · Acid · Hazard · Toxic
+### First run
 
-All sharp corners, thick borders, monospaced font throughout.
+1. Clone the repository and open `AndySwissKnife.xcodeproj`.
+2. Copy `Config/Secrets.swift.example` to `Config/Secrets.swift`.
+3. Optionally add your Canvas calendar feed URL to `Secrets.swift`.
+4. Select a development team and a unique bundle identifier for each target.
+5. Build and run the `AndySwissKnife` scheme.
+
+```bash
+cp Config/Secrets.swift.example Config/Secrets.swift
+open AndySwissKnife.xcodeproj
+```
+
+`Config/Secrets.swift` is ignored by Git. Keep feed URLs, publishing secrets, and other credentials out of commits.
+
+## Project map
+
+```text
+Sources/
+├── Models/        SwiftData models and cached remote data
+├── Services/      sync, networking, timers, widgets, and integrations
+├── Styles/        brutalist themes and shared UI primitives
+└── Views/         dashboard plus feature tabs
+Widgets/           Home Screen widgets and Live Activity
+```
+
+The app stores its local data with SwiftData. Remote school, site, and publishing features depend on their corresponding services and user configuration; the core dashboard and personal tools can still run without every integration enabled.
+
+## Status
+
+This is a personal, school-specific iOS project. Some defaults and integrations are tailored to Suffield Academy, and the badminton analysis is experimental. Expect to replace school endpoints or data sources when adapting it elsewhere.
