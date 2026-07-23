@@ -31,29 +31,6 @@ The interface uses a deliberately blunt visual system: zero-radius cards, heavy 
 
 `STARK WHITE` · `CREAM` · `INK` · `ACID` · `HAZARD` · `TOXIC`
 
-## Build
-
-### Requirements
-
-- Xcode with Swift 6 support
-- An iPhone or simulator running iOS 17 or later
-- An Apple development team selected for the app and widget targets
-
-### First run
-
-1. Clone the repository and open `AndySwissKnife.xcodeproj`.
-2. Copy `Config/Secrets.swift.example` to `Config/Secrets.swift`.
-3. Optionally add your Canvas calendar feed URL to `Secrets.swift`.
-4. Select a development team and a unique bundle identifier for each target.
-5. Build and run the `AndySwissKnife` scheme.
-
-```bash
-cp Config/Secrets.swift.example Config/Secrets.swift
-open AndySwissKnife.xcodeproj
-```
-
-`Config/Secrets.swift` is ignored by Git. Keep feed URLs, publishing secrets, and other credentials out of commits.
-
 ## Project map
 
 ```text
